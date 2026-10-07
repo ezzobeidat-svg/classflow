@@ -1,0 +1,11 @@
+{
+ "teacher": {
+  "name": "",
+  "bio": "",
+  "whatsapp": "",
+  "langs": ["ערבית מדוברת", "ערבית ספרותית", "עברית"]
+ },
+ "lessonDuration": 60,
+ "slots": {},
+ "updatedAt": null
+}

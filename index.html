@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>הזמנת שיעור</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--s:#fff;--s2:#F4F7FC;--b:#DEE7F2;--t:#1A2332;--t2:#46505F;--m:#7C8696;--blue:#3B6FE0;--blue-dim:rgba(59,111,224,.09);--green:#0E9F6E;--green-dim:rgba(14,159,110,.1);--red:#E5484D;--sh:0 2px 14px rgba(26,35,50,.07)}
+body{font-family:'Heebo',system-ui,sans-serif;background:linear-gradient(160deg,#EAF1FC 0%,#EEF3FB 45%,#F3F1FB 100%);background-attachment:fixed;color:var(--t);min-height:100vh;-webkit-font-smoothing:antialiased}
+button,input,textarea{font-family:inherit}
+button{cursor:pointer}
+[hidden]{display:none!important}
+.page{max-width:600px;margin:0 auto;padding:1.5rem 1rem 4rem}
+.hero{text-align:center;padding:1.5rem 1rem 1.25rem}
+.avatar{width:82px;height:82px;border-radius:50%;background:linear-gradient(135deg,#3B6FE0,#5B86E8);color:#fff;font-size:2rem;font-weight:800;display:grid;place-items:center;margin:0 auto .8rem;box-shadow:0 6px 22px rgba(59,111,224,.4)}
+.hero h1{font-size:1.6rem;font-weight:800}
+.hero p{color:var(--m);font-size:.9rem;margin-top:2px}
+.tags{display:flex;gap:6px;justify-content:center;margin-top:.7rem;flex-wrap:wrap}
+.tag{background:var(--blue-dim);color:var(--blue);border-radius:99px;font-size:.74rem;font-weight:700;padding:3px 11px}
+.card{background:var(--s);border:1px solid var(--b);border-radius:20px;padding:1.2rem 1.25rem;box-shadow:var(--sh);margin-bottom:.8rem;animation:up .35s ease both;position:relative}
+.ct{display:flex;align-items:center;gap:8px;font-weight:800;font-size:.95rem;margin-bottom:.9rem}
+.ct .muted{font-weight:500;font-size:.8rem}
+.num{width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:.75rem;font-weight:800;flex-shrink:0}
+.muted{color:var(--m)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.field label{display:block;font-size:.78rem;font-weight:700;color:var(--t2);margin-bottom:5px}
+.inp{width:100%;background:var(--s2);border:1.5px solid var(--b);border-radius:12px;padding:11px 13px;font-size:.95rem;color:var(--t);outline:none;transition:border-color .15s,box-shadow .15s}
+.inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,111,224,.12);background:#fff}
+textarea.inp{resize:none;line-height:1.6}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{border:1.5px solid var(--b);background:var(--s2);border-radius:99px;padding:8px 15px;font-size:.88rem;font-weight:600;color:var(--t2);transition:.15s}
+.chip.on{border-color:var(--blue);background:var(--blue-dim);color:var(--blue)}
+.date-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.date-btn{background:var(--green-dim);border:1.5px solid rgba(14,159,110,.3);border-radius:14px;padding:9px 4px;text-align:center;transition:.15s;color:var(--t)}
+.date-btn:hover{transform:translateY(-1px)}
+.date-btn.sel{background:var(--blue);border-color:var(--blue);color:#fff}
+.date-btn .d{display:block;font-size:.66rem;font-weight:700;opacity:.75}
+.date-btn .n{display:block;font-size:.98rem;font-weight:800}
+.date-btn .k{display:block;font-size:.62rem;font-weight:700;color:var(--green);margin-top:1px}
+.date-btn.sel .k{color:#fff}
+.time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.time-btn{background:var(--s2);border:1.5px solid var(--b);border-radius:12px;padding:10px 4px;font-size:.92rem;font-weight:700;color:var(--t);transition:.15s}
+.time-btn:hover{border-color:var(--blue)}
+.time-btn.sel{background:var(--blue);border-color:var(--blue);color:#fff}
+.submit{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg,#3B6FE0,#2B5BC8);color:#fff;border:none;border-radius:15px;padding:15px;font-size:1rem;font-weight:800;box-shadow:0 6px 18px rgba(59,111,224,.35);text-decoration:none;transition:.15s;margin-top:.4rem}
+.submit.wa{background:#25D366;box-shadow:0 6px 18px rgba(37,211,102,.35)}
+.submit:hover{transform:translateY(-1px)}
+.submit[disabled]{opacity:.6;pointer-events:none}
+.empty{text-align:center;padding:1rem;color:var(--m);font-size:.9rem;line-height:1.7}
+.steps{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:.76rem;color:var(--m);margin:.2rem 0 1rem}
+.foot{text-align:center;color:var(--m);font-size:.74rem;margin-top:1.2rem;line-height:1.6}
+.spin{width:28px;height:28px;border:3px solid var(--b);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px}
+.spin.sm{width:16px;height:16px;border-width:2px;border-color:rgba(255,255,255,.35);border-top-color:#fff;margin:0;display:inline-block}
+.ovl{position:fixed;inset:0;background:rgba(20,26,38,.5);backdrop-filter:blur(5px);z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
+.ovl.open{opacity:1;pointer-events:auto}
+.modal{background:#fff;border-radius:22px;padding:1.75rem 1.5rem;width:100%;max-width:400px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2);max-height:92vh;overflow:auto}
+.modal h3{font-size:1.2rem;font-weight:800;margin:.4rem 0}
+.modal p{color:var(--m);font-size:.88rem;line-height:1.6}
+.summary{background:var(--s2);border:1px solid var(--b);border-radius:12px;padding:10px 12px;font-size:.86rem;text-align:right;color:var(--t2);margin:1rem 0;line-height:1.8}
+.mbtn{display:block;width:100%;border-radius:12px;padding:12px;font-size:.92rem;font-weight:700;margin-top:8px;text-decoration:none;border:1.5px solid var(--b);background:var(--s2);color:var(--t)}
+.mbtn.wa{background:#25D366;border-color:#25D366;color:#fff}
+.mbtn.pri{background:var(--blue);border-color:var(--blue);color:#fff}
+#toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#1A2332;color:#fff;padding:10px 20px;border-radius:99px;font-size:.84rem;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;max-width:92vw;text-align:center}
+#toast.show{opacity:1}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+@media(min-width:520px){.date-grid{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:420px){.row2{grid-template-columns:1fr}.time-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div class="page">
+ <div class="hero">
+  <div class="avatar" id="t-av">·</div>
+  <h1 id="t-name">הזמנת שיעור</h1>
+  <p id="t-bio"></p>
+  <div class="tags" id="t-tags"></div>
+ </div>
+ <div class="steps" id="steps"><span>① בוחרים מועד</span><span>② שולחים בקשה</span><span>③ המורה מאשר בוואטסאפ</span></div>
+ <div id="content"><div class="card" style="text-align:center"><div class="spin"></div><p class="muted">טוען שעות פנויות…</p></div></div>
+ <p class="foot">הפרטים נשלחים רק למורה ולא מוצגים לאף אחד אחר.<br>האישור הסופי יגיע אליך בוואטסאפ.</p>
+</div>
+<div class="ovl" id="ovl"><div class="modal" id="modal"></div></div>
+
+<script>
+'use strict';
+const LANG_CODE={'ערבית מדוברת':'a','ערבית ספרותית':'f','עברית':'h'};
+const DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+const DSHORT=['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ש׳'];
+const BOOK_RE=/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/;
+const ERR={
+ rate_limited:'נשלחו כבר כמה בקשות מהמספר הזה בשעה האחרונה. נסה שוב מאוחר יותר.',
+ slot_unavailable:'השעה הזאת כבר לא פנויה. בחר שעה אחרת 🙏',
+ slot_pending:'מישהו אחר ביקש את השעה הזאת ממש עכשיו. בחר שעה אחרת 🙏',
+ bad_name:'נא להזין שם מלא',bad_phone:'נא להזין מספר טלפון תקין',bad_lang:'נא לבחור שפה',bad_slot:'נא לבחור תאריך ושעה'
+};
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??'').replace(/[&<>"'`]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const dkey=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;};
+const parseKey=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d,12);};
+const fmtD=k=>{const d=parseKey(k);return d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();};
+const dayLabel=k=>{const x=parseKey(k);return `יום ${DAYS[x.getDay()]} ${fmtD(k)}`;};
+let _t;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(_t);_t=setTimeout(()=>t.classList.remove('show'),3200);}
+
+let AV=null,selLang='',selDate='',selTime='',sending=false;
+
+async function load(keepForm){
+ try{const r=await fetch('availability.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error();AV=await r.json();}
+ catch(e){if(!keepForm)$('#content').innerHTML='<div class="card empty">⚠️ לא ניתן לטעון את השעות כרגע.<br>נסה לרענן את הדף בעוד רגע.</div>';return;}
+ renderHero();renderForm(keepForm);
+}
+const teacher=()=>(AV&&AV.teacher)||{};
+const waNumber=()=>{const n=String(teacher().whatsapp||'').replace(/\D/g,'');return /^\d{9,15}$/.test(n)?n:'';};
+const scriptUrl=()=>{const u=String((AV&&AV.bookingUrl)||'');return BOOK_RE.test(u)?u:'';};
+function renderHero(){const t=teacher(),name=String(t.name||'').slice(0,60);
+ $('#t-name').textContent=name||'הזמנת שיעור';$('#t-bio').textContent=String(t.bio||'').slice(0,120);$('#t-av').textContent=(name.trim()[0]||'·');
+ if(name)document.title='הזמנת שיעור | '+name;
+ $('#t-tags').innerHTML=Object.keys(LANG_CODE).map(l=>`<span class="tag">${esc(l)}</span>`).join('');}
+function freeDays(){const from=dkey(addDays(new Date(),1)),s=(AV&&AV.slots)||{},out=[];
+ Object.keys(s).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)&&d>=from).sort().slice(0,24).forEach(d=>{const ts=(Array.isArray(s[d])?s[d]:[]).filter(t=>/^\d{2}:\d{2}$/.test(t)).sort();if(ts.length)out.push([d,ts]);});return out;}
+function renderForm(keepForm){
+ const days=freeDays(),wa=waNumber(),api=scriptUrl();
+ if(!api&&!wa){$('#content').innerHTML='<div class="card empty">ההזמנה המקוונת אינה זמינה כרגע 🙏<br>אנא פנה למורה ישירות.</div>';return;}
+ let me={};
+ if(keepForm)me={name:$('#s-name')?.value,phone:$('#s-phone')?.value,lang:selLang,notes:$('#s-notes')?.value};
+ else{try{me=JSON.parse(localStorage.getItem('cf_me')||'{}')||{};}catch(e){}}
+ selDate='';selTime='';
+ $('#content').innerHTML=`
+ <div class="card"><div class="ct"><span class="num">1</span> הפרטים שלך</div>
+  <div class="row2"><div class="field"><label for="s-name">שם מלא *</label><input class="inp" id="s-name" maxlength="60" autocomplete="name" value="${esc(me.name)}"></div>
+  <div class="field"><label for="s-phone">טלפון (וואטסאפ) *</label><input class="inp" id="s-phone" type="tel" maxlength="20" autocomplete="tel" dir="ltr" style="text-align:right" value="${esc(me.phone)}"></div></div>
+  <div class="field"><label>שפה *</label><div class="chips" id="s-lang">${Object.keys(LANG_CODE).map(l=>`<button class="chip" data-lang="${esc(l)}">${esc(l)}</button>`).join('')}</div></div>
+  <input class="hp" id="s-web" tabindex="-1" autocomplete="off" aria-hidden="true"></div>
+ <div class="card"><div class="ct"><span class="num">2</span> בחר תאריך <span class="muted">· ${+AV.lessonDuration||60} דקות לשיעור</span></div>
+  ${days.length?`<div class="date-grid">${days.map(([d,ts])=>{const x=parseKey(d);return `<button class="date-btn" data-date="${d}"><span class="d">${DSHORT[x.getDay()]}</span><span class="n">${x.getDate()}/${x.getMonth()+1}</span><span class="k">${ts.length} ${ts.length===1?'שעה':'שעות'}</span></button>`;}).join('')}</div>`
+  :`<div class="empty">אין כרגע שעות פנויות 🙏${wa?'<br>אפשר לכתוב למורה ישירות':''}</div>${wa?`<a class="submit wa" href="https://wa.me/${wa}" target="_blank" rel="noopener">💬 כתוב בוואטסאפ</a>`:''}`}</div>
+ <div class="card" id="time-card" hidden><div class="ct"><span class="num">3</span> <span id="time-title">בחר שעה</span></div><div class="time-grid" id="times"></div></div>
+ <div class="card"><div class="ct">💬 הערות למורה <span class="muted">(לא חובה)</span></div><textarea class="inp" id="s-notes" rows="2" maxlength="300" placeholder="נושא ספציפי? רמה? שאלה?">${esc(me.notes||'')}</textarea></div>
+ ${days.length?`<button class="submit ${api?'':'wa'}" id="send">${api?'📩 שלח בקשה':'💬 שלח בקשה בוואטסאפ'}</button>`:''}`;
+ if(me.lang&&LANG_CODE[me.lang])pickLang(me.lang);
+}
+function pickLang(l){selLang=l;document.querySelectorAll('#s-lang .chip').forEach(c=>c.classList.toggle('on',c.dataset.lang===l));}
+function pickDate(d){selDate=d;selTime='';document.querySelectorAll('.date-btn').forEach(b=>b.classList.toggle('sel',b.dataset.date===d));
+ const ts=(freeDays().find(x=>x[0]===d)||[,[]])[1],x=parseKey(d);
+ $('#time-title').textContent=`שעות פנויות — יום ${DAYS[x.getDay()]} ${x.getDate()}/${x.getMonth()+1}`;
+ $('#times').innerHTML=ts.map(t=>`<button class="time-btn" data-time="${t}">${t}</button>`).join('');
+ const c=$('#time-card');c.hidden=false;c.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function pickTime(t){selTime=t;document.querySelectorAll('.time-btn').forEach(b=>b.classList.toggle('sel',b.dataset.time===t));}
+
+function collect(){
+ const clean=s=>String(s||'').replace(/\s+/g,' ').replace(/CF:/gi,'CF ').trim();
+ const d={name:clean($('#s-name').value).slice(0,60),phone:$('#s-phone').value.trim().slice(0,20),notes:clean($('#s-notes').value).slice(0,300),lang:selLang,date:selDate,time:selTime};
+ if(d.name.length<2)return toast(ERR.bad_name);
+ if(d.phone.replace(/\D/g,'').length<9)return toast(ERR.bad_phone);
+ if(!d.lang)return toast(ERR.bad_lang);
+ if(!d.date)return toast('נא לבחור תאריך');
+ if(!d.time)return toast('נא לבחור שעה');
+ try{localStorage.setItem('cf_me',JSON.stringify({name:d.name,phone:d.phone,lang:d.lang}));}catch(e){}
+ return d;
+}
+function waMessage(d){const t=teacher();return [`שלום${t.name?' '+String(t.name).slice(0,60):''}! אני רוצה לקבוע שיעור 🙂`,`שם: ${d.name}`,`טלפון: ${d.phone}`,`שפה: ${d.lang}`,`תאריך: ${dayLabel(d.date)}`,`שעה: ${d.time}`,...(d.notes?[`הערות: ${d.notes}`]:[]),'',`קוד: CF:${d.date}T${d.time}:${LANG_CODE[d.lang]}`].join('\n');}
+const waUrl=d=>'https://wa.me/'+waNumber()+'?text='+encodeURIComponent(waMessage(d));
+function modal(html){$('#modal').innerHTML=html;$('#ovl').classList.add('open');}
+const summary=d=>`<div class="summary">👤 ${esc(d.name)}<br>📚 ${esc(d.lang)}<br>📅 ${esc(dayLabel(d.date))}<br>🕐 ${esc(d.time)}</div>`;
+
+async function send(){
+ if(sending)return;const d=collect();if(!d)return;
+ const api=scriptUrl();
+ if(!api){window.open(waUrl(d),'_blank','noopener');return modal(`<div style="font-size:2.6rem">💬</div><h3>ההודעה מוכנה בוואטסאפ</h3><p>לחץ <b>"שלח"</b> בוואטסאפ כדי להעביר את הבקשה למורה.</p>${summary(d)}<a class="mbtn wa" href="${esc(waUrl(d))}" target="_blank" rel="noopener">💬 פתח שוב את וואטסאפ</a><button class="mbtn" data-act="close">סגור</button>`);}
+ const btn=$('#send');sending=true;btn.disabled=true;btn.innerHTML='<span class="spin sm"></span> שולח…';
+ const c=new AbortController(),timer=setTimeout(()=>c.abort(),20000);
+ let res=null;
+ try{const r=await fetch(api,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...d,website:$('#s-web').value}),signal:c.signal});res=await r.json();}
+ catch(e){res=null;}
+ finally{clearTimeout(timer);sending=false;btn.disabled=false;btn.textContent='📩 שלח בקשה';}
+ if(res&&res.ok){
+  if(AV.slots&&AV.slots[d.date])AV.slots[d.date]=AV.slots[d.date].filter(t=>t!==d.time);
+  renderForm(true);$('#s-notes').value='';
+  return modal(`<div style="font-size:2.8rem;animation:pop .45s ease">✅</div><h3>הבקשה נשלחה!</h3><p>המורה קיבל את הבקשה ויאשר אותה <b>בהודעת וואטסאפ</b> למספר שהזנת.</p>${summary(d)}<button class="mbtn pri" data-act="close">מעולה, תודה!</button>`);
+ }
+ if(res&&(res.error==='slot_unavailable'||res.error==='slot_pending')){toast(ERR[res.error]);return load(true);}
+ if(res&&ERR[res.error])return toast(ERR[res.error]);
+ // the script did not answer — offer WhatsApp so the student is never stuck
+ const wa=waNumber();
+ modal(`<div style="font-size:2.4rem">😕</div><h3>השליחה לא הצליחה</h3><p>ייתכן שיש תקלה זמנית.${wa?' אפשר לשלוח את אותה בקשה בוואטסאפ:':' נסה שוב בעוד רגע.'}</p>${summary(d)}
+  ${wa?`<a class="mbtn wa" href="${esc(waUrl(d))}" target="_blank" rel="noopener">💬 שלח בוואטסאפ</a>`:''}<button class="mbtn" data-act="retry">🔄 נסה שוב</button><button class="mbtn" data-act="close">סגור</button>`);
+}
+document.addEventListener('click',e=>{
+ const l=e.target.closest('[data-lang]');if(l)return pickLang(l.dataset.lang);
+ const d=e.target.closest('[data-date]');if(d)return pickDate(d.dataset.date);
+ const t=e.target.closest('[data-time]');if(t)return pickTime(t.dataset.time);
+ if(e.target.closest('#send'))return send();
+ const a=e.target.closest('[data-act]');
+ if(a&&a.dataset.act==='retry'){$('#ovl').classList.remove('open');return send();}
+ if((a&&a.dataset.act==='close')||e.target.id==='ovl')$('#ovl').classList.remove('open');
+});
+load();
+</script>
+</body>
+</html>

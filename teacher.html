@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://api.github.com https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<title>ClassFlow · ניהול מורה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --bg:#EEF3FB;--s:#fff;--s2:#F4F7FC;--s3:#E9EFF8;--b:#DEE7F2;--b2:#CBD6E6;
+ --t:#1A2332;--t2:#46505F;--m:#7C8696;--m2:#AEB6C2;
+ --blue:#3B6FE0;--blue-dim:rgba(59,111,224,.08);
+ --green:#0E9F6E;--green-dim:rgba(14,159,110,.1);
+ --amber:#D9821A;--amber-dim:rgba(224,138,30,.12);
+ --red:#E5484D;--red-dim:rgba(229,72,77,.09);
+ --gold:#C2872B;--violet:#7C3AED;
+ --r:14px;--r2:20px;
+ --sh:0 1px 2px rgba(26,35,50,.04),0 2px 8px rgba(26,35,50,.05);
+ --sh2:0 10px 30px rgba(26,35,50,.12);
+}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Heebo',system-ui,sans-serif;background:linear-gradient(160deg,#EAF1FC 0%,#EEF3FB 45%,#F3F1FB 100%);background-attachment:fixed;color:var(--t);min-height:100vh;line-height:1.55;font-size:15px;-webkit-font-smoothing:antialiased}
+[hidden]{display:none!important}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer}
+a{color:var(--blue)}
+h1,h2,h3{letter-spacing:-.01em;line-height:1.25}
+
+/* header */
+.hdr{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);backdrop-filter:blur(18px) saturate(170%);-webkit-backdrop-filter:blur(18px) saturate(170%);border-bottom:1px solid var(--b)}
+.hdr-in{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 20px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-ic{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#3B6FE0,#2B5BC8);color:#fff;font-weight:900;display:grid;place-items:center;font-size:.85rem;box-shadow:0 3px 10px rgba(59,111,224,.35)}
+.logo-t{font-weight:800;font-size:1.02rem;line-height:1.1}
+.logo-s{font-size:.72rem;color:var(--m)}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.sync{display:flex;align-items:center;gap:6px;border:1px solid var(--b);background:var(--s2);border-radius:99px;padding:5px 11px;font-size:.74rem;color:var(--t2)}
+.sync .dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.sync.pending .dot,.sync.saving .dot{background:var(--amber)}
+.sync.saving .dot{animation:pulse 1s infinite}
+.sync.error{border-color:rgba(229,72,77,.4);color:var(--red)}
+.sync.error .dot{background:var(--red)}
+.nav{max-width:1280px;margin:0 auto;display:flex;gap:4px;padding:0 16px 8px;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav button{flex-shrink:0;border:none;background:none;color:var(--m);font-size:.86rem;font-weight:600;padding:7px 13px;border-radius:10px;white-space:nowrap;transition:.15s}
+.nav button:hover{background:var(--s3);color:var(--t)}
+.nav button.on{background:var(--blue-dim);color:var(--blue);font-weight:800}
+.nbadge{background:var(--amber);color:#fff;font-size:.62rem;font-weight:800;border-radius:99px;padding:0 6px;margin-inline-start:5px}
+
+/* layout */
+.main{max-width:1280px;margin:0 auto;padding:22px 20px 60px}
+.page-h{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.page-h h1{font-size:1.55rem;font-weight:800}
+.page-h p{color:var(--m);font-size:.86rem;margin-top:2px}
+.card{background:var(--s);border:1px solid var(--b);border-radius:var(--r2);padding:18px;box-shadow:var(--sh)}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.card-t{font-size:.98rem;font-weight:800;display:flex;align-items:center;gap:7px}
+.lbl{font-size:.7rem;font-weight:800;color:var(--m);text-transform:uppercase;letter-spacing:.06em}
+.g{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g-main{grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:start}
+.row{display:flex;align-items:center;gap:8px}
+.wrap{flex-wrap:wrap}.between{justify-content:space-between}.grow{flex:1;min-width:0}
+.ctr{text-align:center}.w100{width:100%}
+.muted{color:var(--m)}.sm-t{font-size:.84rem}.xs-t{font-size:.74rem}.b{font-weight:700}
+.mt{margin-top:14px}.mt6{margin-top:6px}.mb{margin-bottom:14px}.mb6{margin-bottom:6px}
+
+/* stats */
+.stat{background:var(--s);border:1px solid var(--b);border-radius:var(--r2);padding:16px 18px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;inset:0 0 auto 0;height:3px;background:var(--c,var(--blue))}
+.stat .k{font-size:.78rem;color:var(--m);font-weight:600}
+.stat .v{font-size:1.75rem;font-weight:900;color:var(--c,var(--blue));line-height:1.15;margin-top:4px;letter-spacing:-.02em}
+.stat .s{font-size:.72rem;color:var(--m2);margin-top:2px}
+
+/* buttons & inputs */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid transparent;border-radius:11px;font-weight:700;font-size:.86rem;padding:9px 16px;transition:.15s;white-space:nowrap;text-decoration:none;line-height:1.2;background:none;color:var(--t)}
+.btn:active{transform:scale(.97)}
+.btn.sm{font-size:.78rem;padding:6px 11px;border-radius:9px}
+.btn.pri{background:linear-gradient(135deg,#3B6FE0,#2B5BC8);color:#fff;box-shadow:0 2px 8px rgba(59,111,224,.3)}
+.btn.pri:hover{box-shadow:0 4px 14px rgba(59,111,224,.42)}
+.btn.ok{background:var(--green);color:#fff}
+.btn.wa{background:#25D366;color:#fff}
+.btn.dan{background:var(--red);color:#fff}
+.btn.ghost{background:var(--s);border-color:var(--b);color:var(--t2)}
+.btn.ghost:hover{background:var(--s3)}
+.btn.soft{background:var(--blue-dim);color:var(--blue)}
+.btn.icon{width:34px;height:34px;padding:0}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.inp,.sel{width:100%;background:var(--s);border:1.5px solid var(--b);border-radius:11px;padding:10px 13px;font-size:.92rem;color:var(--t);outline:none;transition:border-color .15s,box-shadow .15s}
+.inp:focus,.sel:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,111,224,.12)}
+textarea.inp{resize:vertical;line-height:1.6}
+.f{display:flex;flex-direction:column;gap:5px}
+.f>label{font-size:.78rem;font-weight:700;color:var(--t2)}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--s3);color:var(--t2);white-space:nowrap}
+.pill.blue{background:var(--blue-dim);color:var(--blue)}
+.pill.green{background:var(--green-dim);color:var(--green)}
+.pill.amber{background:var(--amber-dim);color:var(--amber)}
+.pill.red{background:var(--red-dim);color:var(--red)}
+.av{width:42px;height:42px;border-radius:50%;color:#fff;display:grid;place-items:center;font-weight:800;flex-shrink:0;font-size:.9rem}
+
+/* lists */
+.list{display:flex;flex-direction:column;gap:10px}
+.item{background:var(--s);border:1px solid var(--b);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px;transition:.15s}
+.item.click{cursor:pointer}
+.item.click:hover{box-shadow:var(--sh2);transform:translateY(-1px)}
+.tbox{min-width:60px;text-align:center;background:var(--blue-dim);border-radius:10px;padding:5px 6px;color:var(--blue);display:flex;flex-direction:column;font-size:.86rem}
+.tbox span{font-size:.68rem;color:var(--m)}
+.wrow{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--s2);border:1px solid var(--b);border-inline-start:3px solid var(--b2);border-radius:10px;cursor:pointer}
+.alert{display:flex;align-items:center;gap:12px;border-radius:14px;padding:11px 15px;margin-bottom:12px;border:1px solid;font-size:.88rem}
+.alert.blue{background:var(--blue-dim);border-color:rgba(59,111,224,.22)}
+.alert.amber{background:var(--amber-dim);border-color:rgba(224,138,30,.28)}
+.alert.red{background:var(--red-dim);border-color:rgba(229,72,77,.28)}
+.empty{text-align:center;padding:28px 12px;color:var(--m);font-size:.88rem}
+.empty .e{font-size:2.1rem;margin-bottom:6px}
+.note{background:var(--s2);border-radius:10px;padding:8px 11px;font-size:.84rem;color:var(--t2);border-inline-start:3px solid var(--b2);white-space:pre-line;margin-top:5px}
+.tabs{display:flex;gap:4px;background:var(--s);border:1px solid var(--b);border-radius:13px;padding:4px;width:fit-content;max-width:100%;overflow-x:auto}
+.tabs button{border:none;background:none;padding:7px 15px;border-radius:9px;font-weight:700;font-size:.84rem;color:var(--m);white-space:nowrap}
+.tabs button.on{background:var(--blue);color:#fff}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1.5px solid var(--b);background:var(--s2);border-radius:99px;padding:6px 13px;font-size:.82rem;font-weight:600;color:var(--t2)}
+.chip.on{border-color:var(--blue);background:var(--blue-dim);color:var(--blue)}
+.stars{display:flex;gap:5px;align-items:center}
+.star{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--b);background:var(--s2);font-size:1.1rem;filter:grayscale(1);opacity:.5}
+.star.on{filter:none;opacity:1;border-color:var(--gold);background:rgba(194,135,43,.1)}
+.bar{height:7px;background:var(--s3);border-radius:99px;overflow:hidden}
+.bar>div{height:100%;border-radius:99px;background:var(--c,var(--green))}
+table.tbl{width:100%;border-collapse:collapse}
+.tbl th{background:var(--s2);font-size:.72rem;color:var(--m);text-align:right;padding:9px 12px;font-weight:800}
+.tbl td{padding:10px 12px;border-top:1px solid var(--b);font-size:.86rem}
+.kv{font-size:.86rem;color:var(--t2);padding:3px 0;word-break:break-all}
+
+/* profile */
+.prof{grid-template-columns:minmax(0,330px) minmax(0,1fr);align-items:start}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.kpi{background:var(--s);border:1px solid var(--b);border-radius:14px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;gap:1px}
+.kpi b{font-size:1rem}
+.kpi span{font-size:.68rem;color:var(--m)}
+.info{display:flex;flex-direction:column;gap:5px;font-size:.88rem;color:var(--t2)}
+.ptabs{display:flex;border-bottom:1px solid var(--b);background:var(--s2)}
+.ptabs button{flex:1;border:none;background:none;padding:13px 8px;font-weight:700;color:var(--m);border-bottom:2px solid transparent;font-size:.88rem}
+.ptabs button.on{color:var(--blue);border-bottom-color:var(--blue);background:var(--s)}
+.pbox{border:1.5px solid var(--b);border-radius:14px;padding:16px;text-align:center;display:flex;flex-direction:column}
+.pbox b{font-size:1.45rem;color:var(--c)}
+.pbox span{font-size:.74rem;color:var(--m)}
+.col-end{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+
+/* calendar */
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--b);border:1px solid var(--b);border-radius:16px;overflow:hidden}
+.cal .h{background:var(--s2);text-align:center;font-size:.74rem;font-weight:800;color:var(--m);padding:8px}
+.cal .c{background:var(--s);min-height:96px;padding:6px;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0}
+.cal .c:hover{background:var(--s2)}
+.cal .c.x{background:var(--s2);opacity:.5;cursor:default}
+.cal .c.past{background:#FAFBFD}
+.cal .c.today{background:var(--blue-dim)}
+.cal.wk .c{min-height:220px}
+.cal .n{font-size:.74rem;font-weight:700;color:var(--m)}
+.cal .today .n{color:var(--blue);font-weight:900}
+.cp{font-size:.68rem;padding:2px 6px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--green-dim);color:var(--green);font-weight:600}
+.cp.unpaid{background:var(--amber-dim);color:var(--amber)}
+.cp.fut{background:var(--blue-dim);color:var(--blue)}
+.cp.cx{background:var(--red-dim);color:var(--red);text-decoration:line-through}
+.cfree{font-size:.62rem;color:var(--m2);margin-top:auto}
+
+/* schedule */
+.sg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.sd{border:1.5px solid var(--b);border-radius:13px;padding:8px 4px;text-align:center;background:var(--s);min-height:88px;transition:.15s;color:var(--t)}
+.sd:hover{transform:translateY(-1px)}
+.sd.past{opacity:.4;cursor:default;background:var(--s2);transform:none}
+.sd.has{background:var(--blue-dim);border-color:rgba(59,111,224,.3)}
+.sd.sel{background:var(--blue);border-color:var(--blue);color:#fff}
+.sd .w{font-size:.66rem;font-weight:700;opacity:.75;display:block}
+.sd .d{font-weight:900;font-size:.95rem;display:block}
+.sd .k{font-size:.64rem;font-weight:700;margin-top:3px;display:block}
+.slot{display:inline-flex;align-items:center;gap:6px;border:1.5px solid rgba(59,111,224,.35);background:var(--blue-dim);color:var(--blue);border-radius:9px;padding:5px 10px;font-weight:700;font-size:.86rem}
+.slot.taken{border-color:rgba(14,159,110,.35);background:var(--green-dim);color:var(--green)}
+.slot button{border:none;background:none;color:inherit;font-size:1.05rem;opacity:.55;line-height:1}
+.slot button:hover{opacity:1}
+
+/* plans */
+.psec{margin-bottom:12px}
+.pre{white-space:pre-line;font-size:.86rem;color:var(--t2);margin-top:3px}
+.vrow{display:grid;grid-template-columns:1fr 1fr 1.4fr auto;gap:8px;align-items:center}
+
+/* chart */
+.chart{display:flex;align-items:flex-end;gap:8px;height:190px}
+.cb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%}
+.cbar{width:100%;border-radius:8px 8px 3px 3px;background:linear-gradient(to top,var(--blue),#8FB0F2)}
+.cv{font-size:.6rem;color:var(--m);white-space:nowrap}
+.cl{font-size:.72rem;color:var(--m)}
+
+/* modal */
+.ovl{position:fixed;inset:0;background:rgba(20,26,38,.5);backdrop-filter:blur(6px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .18s}
+.ovl.open{opacity:1;pointer-events:auto}
+.modal{background:var(--s);border-radius:22px;width:100%;max-width:580px;max-height:92vh;overflow:auto;box-shadow:var(--sh2);transform:scale(.96);transition:transform .2s}
+.modal.wide{max-width:980px}
+.ovl.open .modal{transform:none}
+.mh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 20px;border-bottom:1px solid var(--b);background:var(--s2);position:sticky;top:0;z-index:2}
+.mh h3{font-size:1.06rem;font-weight:800}
+.mbody{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.mf{display:flex;gap:8px;justify-content:flex-end;padding:13px 20px;border-top:1px solid var(--b);background:var(--s2);position:sticky;bottom:0}
+.x{width:32px;height:32px;border-radius:9px;border:1px solid var(--b);background:var(--s);color:var(--m);font-size:1rem;flex-shrink:0}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1A2332;color:#fff;padding:10px 20px;border-radius:99px;font-size:.84rem;font-weight:600;z-index:999;opacity:0;transition:.25s;pointer-events:none;max-width:92vw;text-align:center;box-shadow:var(--sh2)}
+#toast.show{opacity:1;transform:translateX(-50%)}
+
+/* gate */
+.gate{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at 20% 10%,rgba(59,111,224,.25),transparent 50%),linear-gradient(145deg,#0F172A,#1E293B);overflow:auto}
+.gcard{width:100%;max-width:420px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:26px;padding:28px 24px;color:#fff;backdrop-filter:blur(20px);box-shadow:0 30px 80px rgba(0,0,0,.45);margin:auto}
+.gcard.wide{max-width:640px}
+.glogo{width:56px;height:56px;border-radius:17px;background:linear-gradient(135deg,#3B6FE0,#5B86E8);display:grid;place-items:center;font-weight:900;margin:0 auto;box-shadow:0 8px 24px rgba(59,111,224,.45)}
+.gcard h1{font-size:1.4rem;text-align:center;margin-top:10px}
+.gsub{color:rgba(255,255,255,.55);text-align:center;font-size:.86rem;margin-bottom:18px}
+.gcard .f label{color:rgba(255,255,255,.72)}
+.gcard .inp{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14);color:#fff}
+.gcard .inp:focus{border-color:#5B86E8;box-shadow:none}
+.gerr{color:#FCA5A5;font-size:.84rem;min-height:1.3em;margin:10px 0}
+.glink{display:block;margin:12px auto 0;background:none;border:none;color:rgba(255,255,255,.45);text-decoration:underline;font-size:.78rem}
+.gnote{color:rgba(255,255,255,.45);font-size:.74rem;text-align:center;margin-top:12px;line-height:1.6}
+.spin{width:30px;height:30px;border:3px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{50%{opacity:.35}}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.fade{animation:up .25s ease}
+
+@media (max-width:980px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g-main,.g3,.prof{grid-template-columns:1fr}}
+@media (max-width:640px){
+ .g2{grid-template-columns:1fr}.main{padding:16px 12px 50px}.hdr-in{padding:9px 12px}
+ .page-h h1{font-size:1.3rem}.sg{gap:4px}.sd{padding:6px 2px;min-height:74px}
+ .cal .c{min-height:70px;padding:3px}.cp{font-size:.58rem;padding:1px 3px}.cal.wk .c{min-height:140px}
+ .stat .v{font-size:1.4rem}.hide-m{display:none!important}.item{flex-wrap:wrap}
+ .vrow{grid-template-columns:1fr 1fr}.logo-s{display:none}
+}
+</style>
+</head>
+<body>
+<div id="gate" class="gate"></div>
+
+<div id="app" hidden>
+ <header class="hdr">
+  <div class="hdr-in">
+   <div class="logo"><div class="logo-ic">CF</div><div><div class="logo-t">ClassFlow</div><div class="logo-s" id="hdr-name"></div></div></div>
+   <div class="hdr-r">
+    <button class="sync" id="sync" data-a="syncNow" title="סטטוס שמירה ב-GitHub"><span class="dot"></span><span class="txt">מחובר</span></button>
+    <button class="btn ghost sm" data-a="lock">🔒 נעילה</button>
+   </div>
+  </div>
+  <nav class="nav" id="nav"></nav>
+ </header>
+ <main class="main" id="main"></main>
+</div>
+
+<div class="ovl" id="ovl"><div class="modal" id="modal"></div></div>
+<div id="toast"></div>
+
+<script>
+'use strict';
+/* ═══════════ CONSTANTS ═══════════ */
+const LANGS=['ערבית מדוברת','ערבית ספרותית','עברית'];
+const CODE_LANG={a:'ערבית מדוברת',f:'ערבית ספרותית',h:'עברית'};
+const LANG_COLOR={'ערבית מדוברת':'var(--blue)','ערבית ספרותית':'var(--amber)','עברית':'var(--green)'};
+const LEVELS=['מתחיל','בינוני','מתקדם'];
+const DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+const DSHORT=['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ש׳'];
+const MONTHS=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+const COLORS=['#3B6FE0','#D9821A','#0E9F6E','#B54A86','#1F8A8A','#8B6C2E','#7C3AED'];
+const RATE_L=['','חלש','דורש שיפור','טוב','טוב מאוד','מצוין!'];
+const TOPICS=['דקדוק','שיחה חופשית','אוצר מילים','קריאה','כתיבה','הגייה','האזנה'];
+const IMP=[[1,'🔴 דחוף'],[2,'🟠 גבוהה'],[3,'🔵 רגילה'],[4,'🟢 נמוכה'],[5,'⚫ ארכיון']];
+const VIEWS=[['home','🏠','בית'],['students','👥','תלמידים'],['calendar','📅','יומן'],['requests','🔔','בקשות'],['schedule','🕐','זמינות'],['plans','📖','תכניות'],['income','💰','הכנסות'],['settings','⚙️','הגדרות']];
+const TPL={morning:['🌅 בוקר 9–13',540,780],noon:['☀️ צהריים 13–17',780,1020],evening:['🌙 ערב 16–21',960,1260],full:['📆 יום מלא 9–21',540,1260]};
+const MSG_DEF={
+ he:'שלום {name} 😊\nהשיעור שלך אושר ✅\n📅 תאריך: {date}\n🕐 שעה: {time}\nנתראה בקרוב!',
+ ar:'مرحباً {name} 😊\nتم تأكيد درسك ✅\n📅 التاريخ: {date}\n🕐 الساعة: {time}\nأراك قريباً!',
+ declineHe:'שלום {name}, תודה על הפנייה 🙏\nלצערי השעה {time} בתאריך {date} כבר לא פנויה.\nאשמח לקבוע מועד אחר — אפשר לבחור שעה חדשה בדף ההזמנה.',
+ declineAr:'مرحباً {name}، شكراً لتواصلك 🙏\nللأسف الساعة {time} بتاريخ {date} لم تعد متاحة.\nيسعدني تحديد موعد آخر — يمكنك اختيار ساعة جديدة في صفحة الحجز.'
+};
+
+function emptyDB(){const now=new Date().toISOString();return{version:1,createdAt:now,updatedAt:now,
+ settings:{teacherName:'עז אלדין',bio:'מורה לערבית ועברית · שיעורים פרטיים',whatsapp:'',email:'',currency:'₪',defaultRate:150,lessonDuration:60,breakMinutes:0,msg:{enabled:true,lang:'both',...MSG_DEF}},
+ students:[],lessons:[],schedule:{},plans:[],requests:[],
+ packages:[{id:'p1',name:'שיעור בודד',lessons:1,price:160,color:'#3B6FE0'},{id:'p2',name:'חבילת 4',lessons:4,price:580,color:'#0E9F6E'},{id:'p3',name:'חבילת 8',lessons:8,price:1100,color:'#C2872B'},{id:'p4',name:'חבילת 12',lessons:12,price:1560,color:'#7C3AED'}]};}
+function normalizeDB(d){const e=emptyDB();d=(d&&typeof d==='object')?d:{};
+ d.settings={...e.settings,...(d.settings||{})};d.settings.msg={...e.settings.msg,...((d.settings&&d.settings.msg)||{})};
+ for(const k of ['students','lessons','plans','requests','packages'])if(!Array.isArray(d[k]))d[k]=e[k];
+ if(!d.schedule||typeof d.schedule!=='object'||Array.isArray(d.schedule))d.schedule={};
+ d.lessons.forEach(l=>{if(!l.status)l.status='ok';});
+ return d;}
+
+/* ═══════════ UTILS ═══════════ */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=v=>String(v??'').replace(/[&<>"'`]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const clamp=(s,n)=>String(s??'').slice(0,n);
+const val=id=>{const e=document.getElementById(id);return e?String(e.value).trim():'';};
+const num=(id,d=0)=>{const n=parseFloat(val(id));return Number.isFinite(n)?n:d;};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const pad=n=>String(n).padStart(2,'0');
+const dkey=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const todayKey=()=>dkey(new Date());
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;};
+const sundayOf=d=>{const x=new Date(d);x.setHours(12,0,0,0);x.setDate(x.getDate()-x.getDay());return x;};
+const isKey=k=>/^\d{4}-\d{2}-\d{2}$/.test(String(k||''));
+const parseKey=k=>{const [y,m,d]=String(k).split('-').map(Number);return new Date(y,m-1,d,12);};
+const fmtD=k=>{if(!isKey(k))return '';const d=parseKey(k);return d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();};
+const fmtDS=k=>{if(!isKey(k))return '';const d=parseKey(k);return DAYS[d.getDay()]+' '+d.getDate()+'/'+(d.getMonth()+1);};
+const longDate=d=>`יום ${DAYS[d.getDay()]}, ${d.getDate()} ב${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+const t2m=t=>{const [h,m]=String(t||'').split(':').map(Number);return h*60+(m||0);};
+const m2t=m=>pad(Math.floor(m/60))+':'+pad(m%60);
+const money=n=>(DB?DB.settings.currency:'₪')+Math.round(Number(n)||0).toLocaleString('he-IL');
+const phone9=p=>String(p||'').replace(/\D/g,'').slice(-9);
+const samePhone=(a,b)=>phone9(a).length>=9&&phone9(a)===phone9(b);
+const waNum=p=>{const d=String(p||'').replace(/\D/g,'');if(!d)return '';if(d.startsWith('972'))return d;if(d.startsWith('0'))return '972'+d.slice(1);return d.length===9?'972'+d:d;};
+const waOpen=(p,msg)=>window.open('https://wa.me/'+waNum(p)+'?text='+encodeURIComponent(msg),'_blank','noopener');
+const safeColor=c=>/^#[0-9a-f]{6}$/i.test(String(c||''))?c:'#3B6FE0';
+const byTime=(a,b)=>String(a.time).localeCompare(String(b.time));
+const byDT=(a,b)=>(a.date+a.time).localeCompare(b.date+b.time);
+const byDTdesc=(a,b)=>(b.date+b.time).localeCompare(a.date+a.time);
+const byName=(a,b)=>String(a.name).localeCompare(String(b.name),'he');
+function normDate(v){if(v==null||v==='')return '';const s=String(v).trim();if(isKey(s))return s;const m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(m)return `${m[3]}-${pad(m[2])}-${pad(m[1])}`;const d=new Date(v);return isNaN(d)?s:dkey(d);}
+function normTime(v){if(v==null||v==='')return '';const s=String(v).trim();const hm=s.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);if(hm)return pad(hm[1])+':'+hm[2];const d=new Date(v);return isNaN(d)?s:pad(d.getHours())+':'+pad(d.getMinutes());}
+let _tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),3000);}
+function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},800);}
+function csvCell(v){let s=String(v??'');if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}
+function downloadCSV(name,rows){download(name,'\uFEFF'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n'),'text/csv;charset=utf-8');}
+
+/* ═══════════ HTML HELPERS ═══════════ */
+const opt=(v,l,cur)=>`<option value="${esc(v)}" ${String(v)===String(cur??'')?'selected':''}>${esc(l)}</option>`;
+const fld=(id,label,v,type='text',extra='')=>`<div class="f"><label for="${id}">${esc(label)}</label><input class="inp" id="${id}" type="${type}" value="${esc(v??'')}" ${extra}></div>`;
+const area=(id,label,v,rows=3,ph='',extra='')=>`<div class="f"><label for="${id}">${esc(label)}</label><textarea class="inp" id="${id}" rows="${rows}" placeholder="${esc(ph)}" ${extra}>${esc(v??'')}</textarea></div>`;
+const emptyBox=(e,t)=>`<div class="empty">${e?`<div class="e">${e}</div>`:''}${esc(t)}</div>`;
+const stat=(k,v,c,s)=>`<div class="stat" style="--c:${c}"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div>${s?`<div class="s">${esc(s)}</div>`:''}</div>`;
+const sColor=s=>COLORS[[...String(s.id)].reduce((a,c)=>a+c.charCodeAt(0),0)%COLORS.length];
+const initials=n=>String(n||'?').trim().split(/\s+/).map(p=>p[0]||'').join('').slice(0,2)||'?';
+const avatar=(s,size=42)=>`<div class="av" style="background:${sColor(s)};width:${size}px;height:${size}px;font-size:${size>50?'1.2rem':'.9rem'}">${esc(initials(s.name))}</div>`;
+
+/* ═══════════ ENCRYPTED VAULT (token stays on this device only) ═══════════ */
+const VAULT='cf_gh_vault_v1';
+const enc8=s=>new TextEncoder().encode(s);
+function bytesToB64(b){const a=new Uint8Array(b);let s='';for(let i=0;i<a.length;i+=0x8000)s+=String.fromCharCode.apply(null,a.subarray(i,i+0x8000));return btoa(s);}
+const b64ToBytes=s=>Uint8Array.from(atob(String(s).replace(/\s/g,'')),c=>c.charCodeAt(0));
+const utf8ToB64=str=>bytesToB64(enc8(str));
+const b64ToUtf8=s=>new TextDecoder().decode(b64ToBytes(s));
+async function kdf(pass,salt){const base=await crypto.subtle.importKey('raw',enc8(pass),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:310000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);}
+async function sealVault(obj,pass){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));const key=await kdf(pass,salt);const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc8(JSON.stringify(obj)));localStorage.setItem(VAULT,JSON.stringify({v:1,salt:bytesToB64(salt),iv:bytesToB64(iv),ct:bytesToB64(ct)}));}
+async function openVault(pass){const raw=JSON.parse(localStorage.getItem(VAULT)||'null');if(!raw)throw new Error('novault');const key=await kdf(pass,b64ToBytes(raw.salt));const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64ToBytes(raw.iv)},key,b64ToBytes(raw.ct));return JSON.parse(new TextDecoder().decode(pt));}
+const hasVault=()=>!!localStorage.getItem(VAULT);
+
+/* ═══════════ GITHUB API ═══════════ */
+function ghMsg(st,d){const m=(d&&d.message)||'';
+ if(st===401)return 'הטוקן לא תקין או שפג תוקפו';
+ if(st===403)return 'אין הרשאה — ודא שלטוקן יש Contents: Read and write על שני המאגרים'+(m?' ('+m+')':'');
+ if(st===404)return 'לא נמצא — בדוק שם משתמש, שם מאגר, ושהטוקן כולל גישה למאגר';
+ if(st===409)return 'התנגשות גרסאות';
+ return m||('שגיאת GitHub '+st);}
+const GH={cfg:null,
+ async req(method,path,body){
+  const r=await fetch('https://api.github.com'+path,{method,cache:'no-store',headers:Object.assign({'Accept':'application/vnd.github+json','Authorization':'Bearer '+this.cfg.token,'X-GitHub-Api-Version':'2022-11-28'},body?{'Content-Type':'application/json'}:{}),body:body?JSON.stringify(body):undefined});
+  let data=null;try{data=await r.json();}catch(e){}
+  if(!r.ok){const e=new Error(ghMsg(r.status,data));e.status=r.status;e.raw=(data&&data.message)||'';throw e;}
+  return data;},
+ path(repo,file){return `/repos/${encodeURIComponent(this.cfg.owner)}/${encodeURIComponent(repo)}/contents/${file}`;},
+ async get(repo,file,branch){
+  try{const d=await this.req('GET',this.path(repo,file)+(branch?'?ref='+encodeURIComponent(branch):''));
+   if(d.encoding==='none')throw new Error('קובץ הנתונים גדול מ-1MB');
+   return{sha:d.sha,text:b64ToUtf8(d.content||'')};}
+  catch(e){if(e.status===404)return null;throw e;}},
+ async put(repo,file,text,sha,branch,msg){const body={message:msg,content:utf8ToB64(text)};if(sha)body.sha=sha;if(branch)body.branch=branch;const d=await this.req('PUT',this.path(repo,file),body);return d.content.sha;},
+ repo(name){return this.req('GET',`/repos/${encodeURIComponent(this.cfg.owner)}/${encodeURIComponent(name)}`);}
+};
+const isConflict=e=>e&&(e.status===409||(e.status===422&&/sha/i.test(e.raw||'')));
+
+/* ═══════════ SYNC ENGINE ═══════════ */
+let DB=null,dataSha=null,siteSha=null,lastPub='',pubAt=0,dirty=false,saving=false,saveT=null;
+function persist(){dirty=true;setSync('pending');clearTimeout(saveT);saveT=setTimeout(flush,1200);}
+async function flush(){
+ clearTimeout(saveT);
+ if(!DB||!GH.cfg)return;
+ if(saving){saveT=setTimeout(flush,700);return;}
+ if(!dirty)return publish();
+ saving=true;dirty=false;setSync('saving');
+ try{
+  DB.updatedAt=new Date().toISOString();
+  const text=JSON.stringify(DB,null,1);
+  if(text.length>900000)toast('⚠️ קובץ הנתונים מתקרב למגבלה של 1MB — כדאי לארכב תכניות ישנות');
+  dataSha=await GH.put(GH.cfg.dataRepo,'data.json',text,dataSha,GH.cfg.dataBranch,'ClassFlow: עדכון נתונים');
+  setSync('ok');
+  await publish();
+ }catch(e){
+  if(isConflict(e))await reloadAfterConflict();
+  else{dirty=true;setSync('error',e.message);toast('⚠️ השמירה נכשלה: '+e.message);}
+ }finally{saving=false;}
+}
+async function waitIdle(){for(let i=0;i<50&&saving;i++)await sleep(200);}
+async function reloadAfterConflict(){
+ try{const f=await GH.get(GH.cfg.dataRepo,'data.json',GH.cfg.dataBranch);if(f){DB=normalizeDB(JSON.parse(f.text));dataSha=f.sha;}}catch(e){}
+ dirty=false;setSync('ok');render();
+ toast('⚠️ הנתונים עודכנו ממכשיר אחר. נטענה הגרסה העדכנית — בצע שוב את השינוי האחרון');
+}
+function setSync(s,msg=''){const el=$('#sync');if(!el)return;el.className='sync '+s;el.querySelector('.txt').textContent={ok:'נשמר ב-GitHub',pending:'שינויים…',saving:'שומר…',error:'שגיאה – נסה שוב'}[s]||'';el.title=msg;}
+
+/* availability publishing — only free times, never names or phones */
+function freeForDay(d){
+ const times=DB.schedule[d];if(!Array.isArray(times)||!times.length)return [];
+ const dur=+DB.settings.lessonDuration||60,brk=+DB.settings.breakMinutes||0;
+ const busy=DB.lessons.filter(l=>l.date===d&&l.status!=='cancelled').map(l=>{const a=t2m(l.time);return[a-brk,a+(+l.duration||dur)+brk];});
+ return times.filter(t=>{const s=t2m(t),e=s+dur;return !busy.some(([a,b])=>s<b&&e>a);}).sort();
+}
+function freeSlots(){const out={},from=dkey(addDays(new Date(),1));Object.keys(DB.schedule).sort().forEach(d=>{if(d<from)return;const f=freeForDay(d);if(f.length)out[d]=f;});return out;}
+const BOOK_RE=/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/;
+function pubPayload(){const st=DB.settings,p={teacher:{name:st.teacherName||'',bio:st.bio||'',whatsapp:waNum(st.whatsapp),langs:LANGS},lessonDuration:+st.lessonDuration||60,slots:freeSlots()};if(BOOK_RE.test(st.bookingUrl||''))p.bookingUrl=st.bookingUrl;return p;}
+
+/* inbox: requests sent by the Google Script from the booking page */
+let inboxAt=0,inboxBusy=false;
+async function syncInbox(){
+ if(!DB||!GH.cfg||inboxBusy)return;inboxBusy=true;
+ try{
+  const f=await GH.get(GH.cfg.dataRepo,'inbox.json',GH.cfg.dataBranch);inboxAt=Date.now();
+  if(!f||!DB)return;let box;try{box=JSON.parse(f.text);}catch(e){return;}
+  const items=(box&&Array.isArray(box.requests)?box.requests:[]).filter(x=>x&&x.id);if(!items.length)return;
+  const known=new Set(DB.requests.map(r=>String(r.id)));
+  const fresh=items.filter(x=>!known.has(String(x.id)));
+  fresh.forEach(x=>DB.requests.push({id:String(x.id).slice(0,40),name:clamp(x.name,80),phone:clamp(x.phone,30),lang:LANGS.includes(x.lang)?x.lang:'',date:isKey(x.date)?x.date:'',time:/^\d{2}:\d{2}$/.test(x.time||'')?x.time:'',notes:clamp(x.notes,500),status:'pending',source:'web',createdAt:clamp(x.createdAt,40)||new Date().toISOString()}));
+  if(fresh.length){
+   dirty=true;await waitIdle();await flush();
+   if(!DB||dirty||!fresh.every(x=>DB.requests.some(r=>r.id===String(x.id).slice(0,40))))return; // not safely saved yet — keep inbox, retry next time
+   toast('🔔 '+(fresh.length===1?'בקשה חדשה מ'+fresh[0].name:fresh.length+' בקשות חדשות'));
+   if(view==='home'||(view==='requests'&&!reqDraft))render();else renderNav();
+  }
+  const ids=new Set(items.map(x=>String(x.id)));
+  const g=await GH.get(GH.cfg.dataRepo,'inbox.json',GH.cfg.dataBranch);if(!g)return;
+  let cur;try{cur=JSON.parse(g.text);}catch(e){return;}
+  const rest=(Array.isArray(cur.requests)?cur.requests:[]).filter(x=>!(x&&ids.has(String(x.id))));
+  await GH.put(GH.cfg.dataRepo,'inbox.json',JSON.stringify({requests:rest},null,1),g.sha,GH.cfg.dataBranch,'ClassFlow: קליטת בקשות');
+ }catch(e){if(!isConflict(e))console.warn('inbox:',e.message);}
+ finally{inboxBusy=false;}
+}
+async function publish(retry){
+ if(!DB||!GH.cfg)return;
+ const p=pubPayload(),cmp=JSON.stringify(p);
+ if(cmp===lastPub)return;
+ try{
+  siteSha=await GH.put(GH.cfg.siteRepo,'availability.json',JSON.stringify({...p,updatedAt:new Date().toISOString()},null,1),siteSha,GH.cfg.siteBranch,'ClassFlow: עדכון זמינות');
+  lastPub=cmp;pubAt=Date.now();const el=$('#pub-info');if(el)el.textContent=pubInfo();
+ }catch(e){
+  if(isConflict(e)&&!retry){const f=await GH.get(GH.cfg.siteRepo,'availability.json',GH.cfg.siteBranch).catch(()=>null);siteSha=f?f.sha:null;return publish(true);}
+  toast('⚠️ פרסום הזמינות נכשל: '+e.message);
+ }
+}
+function pubInfo(){const n=Object.values(freeSlots()).reduce((a,v)=>a+v.length,0);return `${n} שעות פנויות מוצגות כרגע לתלמידים`+(pubAt?' · עודכן '+new Date(pubAt).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}):'')+' · שינויים מתפרסמים אוטומטית (הדף מתעדכן תוך כדקה)';}
+function studentUrl(){const c=GH.cfg;if(!c)return '';const host=c.owner.toLowerCase()+'.github.io';return c.siteRepo.toLowerCase()===host?`https://${host}/`:`https://${host}/${c.siteRepo}/`;}
+
+/* ═══════════ SESSION / GATE ═══════════ */
+async function startSession(cfg){
+ GH.cfg=cfg;gate('loading');
+ try{
+  const f=await GH.get(cfg.dataRepo,'data.json',cfg.dataBranch);
+  if(f){DB=normalizeDB(JSON.parse(f.text));dataSha=f.sha;}else{DB=emptyDB();dataSha=null;dirty=true;}
+  const a=await GH.get(cfg.siteRepo,'availability.json',cfg.siteBranch).catch(()=>null);
+  siteSha=a?a.sha:null;lastPub='';
+  if(a){try{const o=JSON.parse(a.text);delete o.updatedAt;lastPub=JSON.stringify(o);}catch(e){}}
+  const cut=dkey(addDays(new Date(),-30));Object.keys(DB.schedule).forEach(k=>{if(k<cut){delete DB.schedule[k];dirty=true;}});
+  $('#gate').hidden=true;$('#app').hidden=false;lastAct=Date.now();
+  view='home';render();
+  flush().then(syncInbox);
+ }catch(e){GH.cfg=null;DB=null;gate('unlock',e.message+(e.status===401?' — לחץ "חיבור מחדש" והזן טוקן חדש (הנתונים שמורים ב-GitHub)':''));}
+}
+async function lock(force){
+ await waitIdle();if(dirty)await flush();await waitIdle();
+ if(dirty&&!force&&!confirm('יש שינויים שעדיין לא נשמרו ב-GitHub. לנעול בכל זאת?'))return;
+ GH.cfg=null;DB=null;dataSha=siteSha=null;dirty=false;closeModal();$('#main').innerHTML='';$('#app').hidden=true;gate('unlock');
+}
+const gf=(id,l,v,t='text')=>`<div class="f"><label for="${id}">${esc(l)}</label><input class="inp" id="${id}" type="${t}" value="${esc(v)}" autocomplete="${t==='password'?'new-password':'off'}" spellcheck="false" dir="ltr"></div>`;
+function gate(mode,err=''){
+ const g=$('#gate');g.hidden=false;
+ if(mode==='loading'){g.innerHTML=`<div class="gcard ctr fade"><div class="spin"></div><p class="gsub" style="margin:14px 0 0">טוען נתונים מ-GitHub…</p></div>`;return;}
+ if(mode==='unlock'){g.innerHTML=`<div class="gcard fade"><div class="glogo">CF</div><h1>ClassFlow</h1><p class="gsub">כניסת מורה</p>
+  <div class="f"><label for="g-pass">סיסמה</label><input class="inp" id="g-pass" type="password" autocomplete="current-password" dir="ltr"></div>
+  <div class="gerr" id="g-err">${esc(err)}</div>
+  <button class="btn pri w100" data-a="unlock">כניסה</button>
+  <button class="glink" data-a="forgetDevice">שכחתי סיסמה / חיבור מחדש</button></div>`;
+  setTimeout(()=>{const p=$('#g-pass');if(p)p.focus();},60);return;}
+ const h=location.hostname.endsWith('.github.io')?location.hostname.split('.')[0]:'';
+ const seg=location.pathname.split('/').filter(Boolean)[0]||'';
+ const site=h?(seg&&!seg.endsWith('.html')?seg:h+'.github.io'):'classflow';
+ g.innerHTML=`<div class="gcard wide fade"><div class="glogo">CF</div><h1>הגדרה ראשונית</h1><p class="gsub">חיבור ClassFlow ל-GitHub · פעם אחת בכל מכשיר</p>
+  <div class="g g2" style="gap:12px">${gf('g-owner','שם משתמש GitHub',h)}${gf('g-site','מאגר האתר (ציבורי)',site)}${gf('g-data','מאגר הנתונים (חייב להיות פרטי)','classflow-data')}${gf('g-token','טוקן גישה (Fine-grained)','','password')}${gf('g-p1','סיסמת כניסה (לפחות 8 תווים)','','password')}${gf('g-p2','אימות סיסמה','','password')}</div>
+  <div class="gerr" id="g-err">${esc(err)}</div>
+  <button class="btn pri w100" data-a="setup">🔗 התחבר</button>
+  <p class="gnote">הטוקן נשמר רק במכשיר הזה, מוצפן בסיסמה שלך (AES-256).<br>הוראות יצירת המאגרים והטוקן נמצאות בקובץ README.</p>
+  ${hasVault()?'<button class="glink" data-a="toUnlock">← חזרה לכניסה</button>':''}</div>`;
+}
+
+/* ═══════════ ROUTER ═══════════ */
+let view='home',viewArg=null;
+const R={},A={},C={},I={};
+function go(v,arg){view=v;viewArg=arg??null;render();window.scrollTo(0,0);}
+function renderNav(){
+ if(!DB)return;
+ const pend=DB.requests.filter(r=>r.status==='pending').length;
+ $('#nav').innerHTML=VIEWS.map(([k,i,t])=>`<button class="${view===k||(view==='profile'&&k==='students')?'on':''}" data-a="go" data-id="${k}">${i} ${t}${k==='requests'&&pend?`<span class="nbadge">${pend}</span>`:''}</button>`).join('');
+ document.title=(pend?`(${pend}) `:'')+'ClassFlow · ניהול מורה';
+}
+function render(){
+ if(!DB)return;
+ renderNav();
+ $('#hdr-name').textContent=DB.settings.teacherName||'';
+ $('#main').innerHTML=`<div class="fade">${(R[view]||R.home)()}</div>`;
+}
+
+/* ═══════════ DATA HELPERS ═══════════ */
+const stu=id=>DB.students.find(s=>s.id===id);
+const sname=id=>{const s=stu(id);return s?s.name:'תלמיד שנמחק';};
+const activeLessons=()=>DB.lessons.filter(l=>l.status!=='cancelled');
+const lessonPrice=l=>{if(l.price!==undefined&&l.price!==''&&l.price!==null)return Number(l.price)||0;const s=stu(l.studentId);return Number(s&&s.rate)||DB.settings.defaultRate;};
+function studentStats(s){
+ const tk=todayKey(),all=DB.lessons.filter(l=>l.studentId===s.id),act=all.filter(l=>l.status!=='cancelled');
+ const paid=act.filter(l=>l.paid).reduce((a,l)=>a+lessonPrice(l),0);
+ const due=act.filter(l=>!l.paid&&l.date<=tk),debt=due.reduce((a,l)=>a+lessonPrice(l),0);
+ const last=act.filter(l=>l.date<=tk).sort(byDTdesc)[0];
+ const rated=act.filter(l=>+l.rating>0),avg=rated.length?(rated.reduce((a,l)=>a+(+l.rating),0)/rated.length).toFixed(1):'—';
+ return{all,act,count:act.length,paid,debt,dueCount:due.length,last,avg,cancelled:all.length-act.length,late:act.filter(l=>l.attendance==='late').length,remaining:Math.max(0,(+s.bought||0)-act.length)};
+}
+function totalDebt(){let sum=0,count=0;DB.students.forEach(s=>{const d=studentStats(s).debt;if(d>0){sum+=d;count++;}});return{sum,count};}
+function findClash(date,time,dur,exId){const s=t2m(time),e=s+(dur||+DB.settings.lessonDuration||60);return DB.lessons.find(l=>l.id!==exId&&l.date===date&&l.status!=='cancelled'&&s<t2m(l.time)+(+l.duration||60)&&e>t2m(l.time));}
+function fill(tpl,name,date,time){return String(tpl||'').replace(/\{name\}/g,name||'').replace(/\{date\}/g,date||'').replace(/\{time\}/g,time||'');}
+function buildMsg(kind,name,date,time){const m=DB.settings.msg,ds=fmtD(date);const he=fill(kind==='ok'?m.he:m.declineHe,name,ds,time),ar=fill(kind==='ok'?m.ar:m.declineAr,name,ds,time);return m.lang==='he'?he:m.lang==='ar'?ar:he+'\n\n'+ar;}
+
+/* ═══════════ MODAL ═══════════ */
+function openModal(html,wide){const m=$('#modal');m.className='modal'+(wide?' wide':'');m.innerHTML=html;m.scrollTop=0;$('#ovl').classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(){$('#ovl').classList.remove('open');document.body.style.overflow='';}
+let _ask=null,_askAlt=null;
+function ask(title,text,okLabel,cb,o={}){_ask=cb;_askAlt=o.altCb||null;
+ openModal(`<div class="mbody ctr" style="padding:26px 22px 10px"><div style="font-size:2.3rem">${o.icon||'⚠️'}</div><h3 style="font-size:1.12rem">${esc(title)}</h3><p class="muted sm-t" style="white-space:pre-line">${esc(text)}</p></div>
+ <div class="mf" style="justify-content:center;flex-wrap:wrap"><button class="btn ghost" data-a="close">ביטול</button>${o.alt?`<button class="btn ghost" data-a="askAlt">${esc(o.alt)}</button>`:''}<button class="btn ${o.danger?'dan':'pri'}" data-a="askOk">${esc(okLabel)}</button></div>`);}
+A.askOk=()=>{const f=_ask;_ask=null;closeModal();if(f)f();};
+A.askAlt=()=>{const f=_askAlt;_askAlt=null;closeModal();if(f)f();};
+A.close=()=>closeModal();
+
+/* ═══════════ HOME ═══════════ */
+R.home=()=>{
+ const st=DB.settings,tk=todayKey(),now=new Date(),nowT=m2t(now.getHours()*60+now.getMinutes()),ym=tk.slice(0,7),act=activeLessons();
+ const todayL=act.filter(l=>l.date===tk).sort(byTime),next=todayL.find(l=>l.time>=nowT);
+ const monthPaid=act.filter(l=>l.paid&&String(l.date).slice(0,7)===ym).reduce((a,l)=>a+lessonPrice(l),0);
+ const monthCount=act.filter(l=>String(l.date).slice(0,7)===ym).length;
+ const debt=totalDebt(),pend=DB.requests.filter(r=>r.status==='pending');
+ const wEnd=dkey(addDays(now,7)),week=act.filter(l=>l.date>tk&&l.date<=wEnd).sort(byDT);
+ const first=(st.teacherName||'').split(' ')[0];
+ return `<div class="page-h"><div><h1>שלום${first?', '+esc(first):''} 👋</h1><p>${esc(longDate(now))}</p></div>
+  <div class="row wrap"><button class="btn ghost" data-a="go" data-id="requests">📥 בקשה מוואטסאפ</button><button class="btn pri" data-a="lessonModal">＋ שיעור חדש</button></div></div>
+ ${!st.whatsapp?`<div class="alert red"><span>⚠️</span><div class="grow">עדיין לא הוגדר מספר וואטסאפ — תלמידים לא יוכלו לשלוח בקשות.</div><button class="btn sm ghost" data-a="go" data-id="settings">להגדרות</button></div>`:''}
+ ${next?`<div class="alert blue"><span>⏰</span><div class="grow"><b>השיעור הבא: ${esc(sname(next.studentId))}</b> <span class="muted">· ${esc(next.time)} · בעוד ${t2m(next.time)-t2m(nowT)} דק׳</span></div><button class="btn sm ghost" data-a="report" data-id="${esc(next.id)}">דיווח</button></div>`:''}
+ ${pend.length?`<div class="alert amber"><span>🔔</span><div class="grow"><b>${pend.length} בקשות ממתינות לאישור</b></div><button class="btn sm ghost" data-a="go" data-id="requests">לבקשות</button></div>`:''}
+ ${debt.count?`<div class="alert amber"><span>💳</span><div class="grow"><b>${debt.count} תלמידים עם חוב פתוח</b> <span class="muted">· ${money(debt.sum)}</span></div><button class="btn sm ghost" data-a="go" data-id="income">להכנסות</button></div>`:''}
+ <div class="g g4 mb">
+  ${stat('שיעורים היום',todayL.length,'var(--blue)',todayL.length?'':'יום פנוי')}
+  ${stat('הכנסה החודש',money(monthPaid),'var(--green)',monthCount+' שיעורים החודש')}
+  ${stat('חובות פתוחים',money(debt.sum),'var(--amber)',debt.count+' תלמידים')}
+  ${stat('תלמידים פעילים',DB.students.filter(s=>s.isActive!==false).length,'var(--violet)','מתוך '+DB.students.length)}
+ </div>
+ <div class="g g-main">
+  <div class="card"><div class="card-h"><div class="card-t">📋 השיעורים של היום</div><button class="btn sm ghost" data-a="go" data-id="calendar">ליומן</button></div>
+   ${todayL.length?`<div class="list">${todayL.map(l=>lessonRow(l,nowT,next&&next.id===l.id)).join('')}</div>`:emptyBox('🌤️','אין שיעורים היום')}</div>
+  <div class="g" style="align-content:start">
+   <div class="card"><div class="card-h"><div class="card-t">🗓️ השבוע הקרוב</div><span class="pill blue">${week.length}</span></div>
+    ${week.length?`<div class="list" style="gap:6px">${week.slice(0,8).map(l=>{const d=parseKey(l.date);return `<div class="wrow" style="border-inline-start-color:${LANG_COLOR[l.lang]||'var(--b2)'}" data-a="report" data-id="${esc(l.id)}"><div class="ctr" style="min-width:46px"><div class="xs-t muted">${DAYS[d.getDay()]}</div><b class="sm-t">${d.getDate()}/${d.getMonth()+1}</b></div><div class="grow"><div class="b sm-t">${esc(sname(l.studentId))}</div><div class="xs-t muted">${esc(l.time)} · ${esc(l.lang)}</div></div></div>`;}).join('')}</div>`:emptyBox('','אין שיעורים בשבוע הקרוב')}</div>
+   <div class="card"><div class="card-t mb">🌐 לפי שפה</div>${langBreakdown()}</div>
+  </div>
+ </div>`;
+};
+function lessonRow(l,nowT,isNext){const past=l.time<nowT&&!isNext;
+ return `<div class="item" style="${isNext?'border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,111,224,.12);':''}${past?'opacity:.6':''}">
+ <div class="tbox"><b>${esc(l.time)}</b><span>${m2t(t2m(l.time)+(+l.duration||60))}</span></div>
+ <div class="grow"><div class="b">${esc(sname(l.studentId))}</div><div class="xs-t muted">${esc(l.lang)}</div></div>
+ ${l.paid?'<span class="pill green">✓ שולם</span>':`<button class="btn sm ok" data-a="markPaid" data-id="${esc(l.id)}">סמן שולם</button>`}
+ <button class="btn sm ${isNext?'pri':'ghost'}" data-a="report" data-id="${esc(l.id)}">📝 דיווח</button></div>`;}
+function langBreakdown(){const act=activeLessons();if(!act.length)return emptyBox('','אין שיעורים עדיין');const c={};act.forEach(l=>{const k=l.lang||'אחר';c[k]=(c[k]||0)+1;});
+ return Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([k,n])=>{const p=Math.round(n/act.length*100),col=LANG_COLOR[k]||'var(--m)';return `<div class="mb"><div class="row between sm-t mb6"><span>${esc(k)}</span><b style="color:${col}">${p}% · ${n}</b></div><div class="bar" style="--c:${col}"><div style="width:${p}%"></div></div></div>`;}).join('');}
+
+/* ═══════════ STUDENTS ═══════════ */
+let stuQ='',stuF='',stuL='';
+R.students=()=>`<div class="page-h"><div><h1>👥 תלמידים</h1><p>${DB.students.length} תלמידים · ${DB.students.filter(s=>s.isActive!==false).length} פעילים</p></div>
+ <div class="row wrap"><button class="btn ghost sm" data-a="exportStudents">⬇️ CSV</button><button class="btn pri" data-a="studentModal">＋ תלמיד חדש</button></div></div>
+ <div class="card mb" style="padding:12px"><div class="row wrap">
+  <input class="inp grow" id="stu-q" placeholder="🔍 חיפוש: שם, טלפון, עיר…" value="${esc(stuQ)}" data-i="stuFilter" style="min-width:200px">
+  <select class="sel" style="width:auto" id="stu-f" data-c="stuFilter">${opt('','כל הסטטוסים',stuF)}${opt('active','פעילים',stuF)}${opt('inactive','לא פעילים',stuF)}${opt('debt','עם חוב',stuF)}</select>
+  <select class="sel" style="width:auto" id="stu-l" data-c="stuFilter">${opt('','כל השפות',stuL)}${LANGS.map(l=>opt(l,l,stuL)).join('')}</select>
+ </div></div>
+ <div id="stu-list">${studentList()}</div>`;
+I.stuFilter=C.stuFilter=()=>{stuQ=val('stu-q');stuF=$('#stu-f').value;stuL=$('#stu-l').value;$('#stu-list').innerHTML=studentList();};
+function studentList(){
+ const q=stuQ.toLowerCase();
+ const rows=DB.students.map(s=>({s,x:studentStats(s)})).filter(({s,x})=>{
+  if(q&&![s.name,s.phone,s.email,s.city,s.lang].join(' ').toLowerCase().includes(q))return false;
+  if(stuL&&s.lang!==stuL)return false;
+  if(stuF==='active'&&s.isActive===false)return false;
+  if(stuF==='inactive'&&s.isActive!==false)return false;
+  if(stuF==='debt'&&!(x.debt>0))return false;return true;
+ }).sort((a,b)=>(b.s.isActive!==false)-(a.s.isActive!==false)||byName(a.s,b.s));
+ if(!rows.length)return emptyBox('👥',DB.students.length?'לא נמצאו תלמידים':'עדיין אין תלמידים — הוסף את הראשון');
+ return `<div class="list">${rows.map(({s,x})=>`<div class="item click" data-a="profile" data-id="${esc(s.id)}" style="${x.debt>0?'border-inline-start:4px solid var(--red)':''}">
+  ${avatar(s)}
+  <div class="grow"><div class="b">${esc(s.name)} ${s.isActive===false?'<span class="pill">לא פעיל</span>':''}</div>
+   <div class="row wrap xs-t muted" style="gap:8px;margin-top:3px">${s.lang?`<span class="pill blue">${esc(s.lang)}</span>`:''}${s.phone?`<span>📱 ${esc(s.phone)}</span>`:''}${s.city?`<span>📍 ${esc(s.city)}</span>`:''}${x.last?`<span>🕐 ${fmtD(x.last.date)}</span>`:''}</div></div>
+  <div class="ctr hide-m" style="min-width:80px"><div class="b" style="color:var(--blue);font-size:1.15rem">${x.count}</div><div class="xs-t muted">שיעורים${s.bought?' · '+x.remaining+' נותרו':''}</div></div>
+  <div>${x.debt>0?`<span class="pill red">חוב ${money(x.debt)}</span>`:x.paid?`<span class="pill green">✓ ${money(x.paid)}</span>`:'<span class="pill">ללא חוב</span>'}</div>
+  <button class="btn icon soft" data-a="lessonModal" data-sid="${esc(s.id)}" title="שיעור חדש">＋</button>
+ </div>`).join('')}</div>`;
+}
+function studentForm(s){return `<div class="g g2">
+ ${fld('sf-name','שם מלא *',s.name,'text','maxlength="80"')}${fld('sf-phone','טלפון *',s.phone,'tel','maxlength="30"')}
+ ${fld('sf-email','אימייל',s.email,'email','maxlength="120"')}${fld('sf-city','עיר',s.city,'text','maxlength="60"')}
+ <div class="f"><label for="sf-lang">שפה</label><select class="sel" id="sf-lang">${LANGS.map(l=>opt(l,l,s.lang||LANGS[0])).join('')}</select></div>
+ <div class="f"><label for="sf-level">רמה</label><select class="sel" id="sf-level">${LEVELS.map(l=>opt(l,l,s.level||LEVELS[0])).join('')}</select></div>
+ ${fld('sf-rate','תעריף לשיעור ('+DB.settings.currency+')',s.rate??DB.settings.defaultRate,'number','min="0"')}${fld('sf-bought','שיעורים ששולמו מראש (קרדיט)',s.bought??0,'number','min="0"')}
+ ${fld('sf-source','מקור הגעה',s.source,'text','list="src-list" maxlength="40"')}${fld('sf-start','תאריך התחלה',s.startDate||todayKey(),'date')}
+ </div><datalist id="src-list"><option>המלצה</option><option>פייסבוק</option><option>אינסטגרם</option><option>גוגל</option><option>WhatsApp</option></datalist>
+ <div class="mt">${area('sf-notes','הערות / בקשות מיוחדות',s.notes,2,'','maxlength="2000"')}</div>`;}
+A.studentModal=()=>openModal(`<div class="mh"><h3>👤 תלמיד חדש</h3><button class="x" data-a="close">✕</button></div><div class="mbody">${studentForm({})}</div><div class="mf"><button class="btn ghost" data-a="close">ביטול</button><button class="btn pri" data-a="saveStudent" data-id="">➕ הוסף תלמיד</button></div>`);
+A.saveStudent=id=>{
+ const name=clamp(val('sf-name'),80),phone=clamp(val('sf-phone'),30);
+ if(!name)return toast('נא למלא שם');if(!phone)return toast('נא למלא טלפון');
+ const dup=DB.students.find(x=>x.id!==id&&samePhone(x.phone,phone));if(dup)return toast('⚠️ כבר קיים תלמיד עם המספר הזה: '+dup.name);
+ let s=id?stu(id):null;const isNew=!s;
+ if(isNew){s={id:uid(),isActive:true,createdAt:new Date().toISOString()};DB.students.push(s);}
+ Object.assign(s,{name,phone,email:clamp(val('sf-email'),120),city:clamp(val('sf-city'),60),lang:val('sf-lang'),level:val('sf-level'),rate:Math.max(0,num('sf-rate',DB.settings.defaultRate)),bought:Math.max(0,Math.round(num('sf-bought',0))),source:clamp(val('sf-source'),40),startDate:val('sf-start'),notes:clamp(val('sf-notes'),2000)});
+ persist();closeModal();toast(isNew?'✅ '+name+' נוסף':'✅ נשמר');
+ if(isNew)go('profile',s.id);else render();
+};
+A.exportStudents=()=>{const rows=[['שם','טלפון','אימייל','שפה','רמה','עיר','מקור','שיעורים','שולם','חוב','תעריף','תחילה','סטטוס']];
+ DB.students.forEach(s=>{const x=studentStats(s);rows.push([s.name,s.phone,s.email,s.lang,s.level,s.city,s.source,x.count,x.paid,x.debt,s.rate,s.startDate,s.isActive!==false?'פעיל':'לא פעיל']);});
+ downloadCSV('students.csv',rows);};
+
+/* ═══════════ PROFILE ═══════════ */
+let pTab='history';
+A.profile=id=>{pTab='history';go('profile',id);};
+A.pTab=t=>{pTab=t;render();};
+R.profile=()=>{const s=stu(viewArg);if(!s)return emptyBox('🤷','התלמיד לא נמצא');
+ const x=studentStats(s),pkg=DB.packages.find(p=>p.id===s.packageId);
+ const kpi=(i,l,v,c)=>`<div class="kpi"><div>${i}</div><b style="color:${c}">${esc(v)}</b><span>${l}</span></div>`;
+ return `<div class="row between wrap mb"><button class="btn ghost sm" data-a="go" data-id="students">→ חזרה לתלמידים</button>
+  <div class="row">${s.phone?`<a class="btn wa sm" href="https://wa.me/${esc(waNum(s.phone))}" target="_blank" rel="noopener">💬 וואטסאפ</a>`:''}<button class="btn pri sm" data-a="lessonModal" data-sid="${esc(s.id)}">＋ שיעור חדש</button></div></div>
+ <div class="g prof">
+  <div class="g" style="align-content:start">
+   <div class="card"><div class="row" style="gap:14px">${avatar(s,58)}<div class="grow"><h2 style="font-size:1.25rem;margin-bottom:4px">${esc(s.name)}</h2><span class="pill ${s.isActive===false?'':'green'}">${s.isActive===false?'לא פעיל':'● פעיל'}</span></div></div>
+    <div class="info mt">${[['🌐',[s.lang,s.level].filter(Boolean).join(' · ')],['📱',s.phone],['✉️',s.email],['📍',s.city],['🧭',s.source],['📅',s.startDate?'התחיל ב-'+fmtD(s.startDate):'']].filter(r=>r[1]).map(([i,v])=>`<div>${i} ${esc(v)}</div>`).join('')}</div>
+    ${s.notes?`<div class="note mt">${esc(s.notes)}</div>`:''}</div>
+   <div class="kpis">${kpi('📚','שיעורים',x.count,'var(--blue)')}${kpi('💰','שולם',money(x.paid),'var(--green)')}${kpi('💳','חוב',x.debt?money(x.debt):'אין',x.debt?'var(--red)':'var(--green)')}${kpi('⭐','דירוג',x.avg,'var(--gold)')}${kpi('❌','ביטולים',x.cancelled,'var(--m)')}${kpi('⏰','איחורים',x.late,'var(--m)')}</div>
+   <div class="card"><div class="card-t mb">📦 חבילה וקרדיט</div>
+    <select class="sel" data-c="assignPkg" data-id="${esc(s.id)}"><option value="">ללא חבילה</option>${DB.packages.map(p=>opt(p.id,`${p.name} · ${p.lessons} שיעורים · ${money(p.price)}`,s.packageId)).join('')}</select>
+    ${s.bought?`<div class="row between sm-t mt"><span>${Math.min(x.count,s.bought)} מתוך ${s.bought} נוצלו</span><b style="color:${x.remaining<=1?'var(--red)':'var(--green)'}">${x.remaining} נותרו</b></div>
+    <div class="bar mt6" style="--c:${pkg?safeColor(pkg.color):'var(--blue)'}"><div style="width:${Math.min(100,Math.round(x.count/s.bought*100))}%"></div></div>
+    ${x.remaining===0?'<div class="alert red sm-t mt" style="margin-bottom:0">הקרדיט נגמר — זה הזמן להציע חבילה חדשה</div>':''}`:'<p class="xs-t muted mt">אין קרדיט שיעורים מראש</p>'}
+    <button class="btn ghost sm mt" data-a="addCredits" data-id="${esc(s.id)}">＋ הוסף שיעורים לקרדיט</button></div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+   <div class="ptabs">${[['history','📚 היסטוריה'],['pay','💳 תשלומים'],['edit','✏️ פרטים']].map(([k,t])=>`<button class="${pTab===k?'on':''}" data-a="pTab" data-id="${k}">${t}</button>`).join('')}</div>
+   <div style="padding:18px">${pTab==='pay'?payTab(s,x):pTab==='edit'?editTab(s):histTab(s,x)}</div>
+  </div>
+ </div>`;};
+function histTab(s,x){const list=[...x.all].sort(byDTdesc),tk=todayKey();
+ if(!list.length)return emptyBox('📚','אין שיעורים עדיין');
+ return `<div class="list">${list.map(l=>{const cx=l.status==='cancelled',fut=l.date>tk;
+  return `<div class="item" style="align-items:flex-start;border-inline-start:4px solid ${cx?'var(--b2)':l.paid?'var(--green)':fut?'var(--blue)':'var(--amber)'};${cx?'opacity:.6':''}">
+   <div class="ctr" style="min-width:62px"><b class="sm-t">${fmtDS(l.date)}</b><div class="xs-t muted">${esc(l.time)}</div></div>
+   <div class="grow"><div class="row wrap" style="gap:6px"><b class="sm-t">${esc(l.lang)}</b>${cx?'<span class="pill red">בוטל</span>':''}${fut&&!cx?'<span class="pill blue">עתידי</span>':''}${l.attendance==='late'?'<span class="pill amber">איחר</span>':''}${+l.rating?`<span style="color:var(--gold)">${'★'.repeat(+l.rating)}</span>`:''}${l.effort==='high'?'🔥':l.effort==='low'?'😴':''}</div>
+    ${l.topics?`<div class="xs-t" style="color:var(--blue);margin-top:3px">📌 ${esc(l.topics)}</div>`:''}
+    ${l.freeText?`<div class="note">${esc(l.freeText)}</div>`:''}
+    ${l.homework?`<div class="xs-t muted mt6">📝 שיעורי בית: ${esc(l.homework)}</div>`:''}
+    ${l.teacherNotes?`<div class="xs-t muted mt6">🔒 ${esc(l.teacherNotes)}</div>`:''}
+    ${l.notes?`<div class="xs-t muted mt6">💬 ${esc(l.notes)}</div>`:''}</div>
+   <div class="col-end">${cx?'':`<span class="pill ${l.paid?'green':'amber'}">${l.paid?'✓ ':''}${money(lessonPrice(l))}</span>`}
+    <div class="row" style="gap:4px">${!cx&&!l.paid?`<button class="btn sm ok" data-a="markPaid" data-id="${esc(l.id)}">שולם</button>`:''}<button class="btn sm ghost" data-a="report" data-id="${esc(l.id)}">📝</button><button class="btn sm ghost" data-a="lessonModal" data-id="${esc(l.id)}" title="עריכה">⚙️</button></div></div>
+  </div>`;}).join('')}</div>`;}
+function payTab(s,x){const unpaid=x.act.filter(l=>!l.paid).sort(byDT),tk=todayKey();
+ return `<div class="g g2 mb"><div class="pbox" style="--c:var(--green)"><b>${money(x.paid)}</b><span>שולם</span></div><div class="pbox" style="--c:${x.debt?'var(--red)':'var(--green)'}"><b>${x.debt?money(x.debt):'✓'}</b><span>חוב על שיעורים שהתקיימו</span></div></div>
+ ${unpaid.length?`<div class="row between wrap mb"><div class="lbl">לא שולמו (${unpaid.length})</div>${x.dueCount?`<button class="btn sm ok" data-a="payAll" data-id="${esc(s.id)}">סמן את כל החוב כשולם</button>`:''}</div>
+ <div class="list">${unpaid.map(l=>`<div class="item"><div class="grow"><b class="sm-t">${fmtDS(l.date)} · ${esc(l.time)}</b><div class="xs-t muted">${esc(l.lang)}${l.date>tk?' · עתידי':''}</div></div><b style="color:var(--amber)">${money(lessonPrice(l))}</b><button class="btn sm ok" data-a="markPaid" data-id="${esc(l.id)}">שולם</button></div>`).join('')}</div>`:emptyBox('🎉','כל השיעורים שולמו')}`;}
+function editTab(s){return `${studentForm(s)}<div class="row wrap mt"><button class="btn pri" data-a="saveStudent" data-id="${esc(s.id)}">💾 שמור שינויים</button><button class="btn ghost" data-a="toggleActive" data-id="${esc(s.id)}">${s.isActive===false?'▶️ הפעל מחדש':'⏸ סמן כלא פעיל'}</button><button class="btn ghost" style="color:var(--red)" data-a="delStudent" data-id="${esc(s.id)}">🗑️ מחיקה</button></div>`;}
+C.assignPkg=(sid,el)=>{const s=stu(sid),p=DB.packages.find(x=>x.id===el.value);if(!s)return;
+ if(!p){s.packageId='';persist();render();return;}
+ render();
+ const per=Math.round(p.price/Math.max(1,p.lessons));
+ ask('שיוך חבילה',`לשייך את "${p.name}" ל-${s.name}?\nיתווספו ${p.lessons} שיעורים לקרדיט, והתעריף לשיעורים הבאים יעודכן ל-${money(per)}.\nשיעורים קיימים לא ישתנו.`,'שייך חבילה',()=>{
+  s.packageId=p.id;s.bought=(+s.bought||0)+(+p.lessons||0);s.rate=per;(s.pkgLog=s.pkgLog||[]).push({date:todayKey(),pkg:p.name,lessons:p.lessons,price:p.price});
+  persist();render();toast('✅ החבילה שויכה · '+s.bought+' שיעורים בקרדיט');},{icon:'📦'});};
+A.addCredits=id=>{const s=stu(id);if(!s)return;const n=parseInt(prompt('כמה שיעורים להוסיף לקרדיט?','4'),10);if(!n||n<1||n>200)return;s.bought=(+s.bought||0)+n;persist();render();toast('✅ נוספו '+n+' שיעורים');};
+A.toggleActive=id=>{const s=stu(id);if(!s)return;s.isActive=s.isActive===false;persist();render();toast(s.name+' — '+(s.isActive?'פעיל':'לא פעיל'));};
+A.delStudent=id=>{const s=stu(id);if(!s)return;const n=DB.lessons.filter(l=>l.studentId===id).length;
+ ask('מחיקת '+s.name,`פעולה זו תמחק גם ${n} שיעורים של התלמיד מהדוחות.\nאם התלמיד רק הפסיק ללמוד — עדיף "סמן כלא פעיל".\n(הגרסה הקודמת תישאר בהיסטוריה של GitHub)`,'מחק לצמיתות',()=>{
+  DB.students=DB.students.filter(x=>x.id!==id);DB.lessons=DB.lessons.filter(l=>l.studentId!==id);persist();go('students');toast('נמחק');},{danger:true,icon:'🗑️'});};
+A.markPaid=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;l.paid=true;persist();render();toast('✅ סומן כשולם');};
+A.payAll=sid=>{const tk=todayKey();const ls=DB.lessons.filter(l=>l.studentId===sid&&!l.paid&&l.status!=='cancelled'&&l.date<=tk);
+ ask('סימון תשלום',`לסמן ${ls.length} שיעורים (${money(ls.reduce((a,l)=>a+lessonPrice(l),0))}) כשולמו?`,'סמן כשולם',()=>{ls.forEach(l=>l.paid=true);persist();render();toast('✅ סומן');},{icon:'💳'});};
+
+/* ═══════════ LESSON + REPORT ═══════════ */
+A.lessonModal=(id,el)=>{
+ if(!DB.students.length){toast('הוסף תלמיד קודם');return go('students');}
+ const l=id?DB.lessons.find(x=>x.id===id):null,ds=(el&&el.dataset)||{};
+ const sid=l?l.studentId:(ds.sid||''),s0=stu(sid),dur=l?l.duration:DB.settings.lessonDuration;
+ openModal(`<div class="mh"><h3>${l?'⚙️ עריכת שיעור':'📅 שיעור חדש'}</h3><button class="x" data-a="close">✕</button></div>
+ <div class="mbody"><div class="g g2">
+  <div class="f"><label for="lf-s">תלמיד *</label><select class="sel" id="lf-s" data-c="lfStudent"><option value="">בחר תלמיד…</option>${DB.students.filter(s=>s.isActive!==false||s.id===sid).sort(byName).map(s=>opt(s.id,s.name,sid)).join('')}</select></div>
+  <div class="f"><label for="lf-lang">שפה</label><select class="sel" id="lf-lang">${LANGS.map(x=>opt(x,x,l?l.lang:(s0&&s0.lang)||LANGS[0])).join('')}</select></div>
+  ${fld('lf-date','תאריך *',l?l.date:(ds.date||todayKey()),'date')}${fld('lf-time','שעה *',l?l.time:'','time')}
+  <div class="f"><label for="lf-dur">משך (דק׳)</label><select class="sel" id="lf-dur">${[30,45,60,75,90,120].map(d=>opt(d,d,dur)).join('')}</select></div>
+  ${fld('lf-price','מחיר ('+DB.settings.currency+')',l?l.price:(s0?s0.rate:DB.settings.defaultRate),'number','min="0"')}
+ </div>
+ <div class="row wrap" style="gap:18px"><label class="row sm-t"><input type="checkbox" id="lf-paid" ${l&&l.paid?'checked':''}> שולם</label>${l?`<label class="row sm-t"><input type="checkbox" id="lf-cx" ${l.status==='cancelled'?'checked':''}> השיעור בוטל</label>`:''}</div>
+ ${area('lf-notes','הערות',l?l.notes:'',2,'','maxlength="2000"')}</div>
+ <div class="mf">${l?`<button class="btn ghost" style="color:var(--red);margin-inline-end:auto" data-a="delLesson" data-id="${esc(l.id)}">🗑️ מחיקה</button>`:''}<button class="btn ghost" data-a="close">ביטול</button><button class="btn pri" data-a="saveLesson" data-id="${l?esc(l.id):''}">💾 שמור</button></div>`);};
+C.lfStudent=()=>{const s=stu(val('lf-s'));if(s){$('#lf-lang').value=s.lang||LANGS[0];$('#lf-price').value=s.rate??DB.settings.defaultRate;}};
+A.saveLesson=id=>{
+ const d={studentId:val('lf-s'),lang:val('lf-lang'),date:val('lf-date'),time:val('lf-time'),duration:+val('lf-dur')||60,price:Math.max(0,num('lf-price',0)),paid:$('#lf-paid').checked,notes:clamp(val('lf-notes'),2000)};
+ const cx=$('#lf-cx');if(cx)d.status=cx.checked?'cancelled':'ok';
+ if(!stu(d.studentId))return toast('בחר תלמיד');
+ if(!isKey(d.date)||!/^\d{2}:\d{2}$/.test(d.time))return toast('בחר תאריך ושעה');
+ const save=()=>{let l=id?DB.lessons.find(x=>x.id===id):null;const isNew=!l;
+  if(isNew){l={id:uid(),createdAt:new Date().toISOString(),status:'ok'};DB.lessons.push(l);}
+  Object.assign(l,d);persist();closeModal();render();toast(isNew?'✅ השיעור נוסף':'✅ נשמר');};
+ const c=d.status==='cancelled'?null:findClash(d.date,d.time,d.duration,id||null);
+ if(c)return ask('התנגשות בלוח',`כבר יש שיעור עם ${sname(c.studentId)} ב-${c.time}. לשמור בכל זאת?`,'שמור בכל זאת',save,{icon:'⏰'});
+ save();};
+A.delLesson=id=>ask('מחיקת שיעור','למחוק את השיעור? (אם השיעור בוטל — עדיף לסמן "בוטל" כדי לשמור היסטוריה)','מחק',()=>{DB.lessons=DB.lessons.filter(l=>l.id!==id);persist();render();toast('השיעור נמחק');},{danger:true,icon:'🗑️'});
+
+let rp={};
+A.report=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;const s=stu(l.studentId);
+ rp={rating:+l.rating||0,att:l.attendance||(l.status==='cancelled'?'absent':'present'),effort:l.effort||'',paid:!!l.paid};
+ const chips=(k,opts,cur)=>`<div class="chips">${opts.map(([v,t])=>`<button class="chip ${String(cur)===String(v)?'on':''}" data-a="rpSet" data-k="${k}" data-id="${v}">${t}</button>`).join('')}</div>`;
+ openModal(`<div class="mh"><div><h3>📝 דיווח שיעור — ${esc(s?s.name:'')}</h3><div class="xs-t muted">${esc(l.lang)} · ${fmtDS(l.date)} · ${esc(l.time)}</div></div><button class="x" data-a="close">✕</button></div>
+ <div class="mbody">
+  <div><div class="lbl mb6">נוכחות</div>${chips('att',[['present','✅ הגיע'],['late','⏰ איחר'],['absent','❌ לא הגיע / בוטל']],rp.att)}</div>
+  <div><div class="lbl mb6">הערכת השיעור</div><div class="stars">${[1,2,3,4,5].map(n=>`<button class="star ${n<=rp.rating?'on':''}" data-a="rpStar" data-id="${n}">⭐</button>`).join('')}<span class="sm-t muted" id="rp-rl" style="margin-inline-start:6px">${RATE_L[rp.rating]||''}</span></div></div>
+  <div><div class="lbl mb6">מאמץ התלמיד</div>${chips('effort',[['','—'],['high','🔥 גבוה'],['medium','👍 בינוני'],['low','😴 נמוך']],rp.effort)}</div>
+  <div><div class="lbl mb6">נושאים שנלמדו</div><div class="chips mb6">${TOPICS.map(t=>`<button class="chip" data-a="rpTopic" data-id="${esc(t)}">${esc(t)}</button>`).join('')}</div><input class="inp" id="rp-topics" value="${esc(l.topics)}" maxlength="300" placeholder="נושאים נוספים…"></div>
+  ${area('rp-free','📋 מה קרה בשיעור',l.freeText,3,'התקדמות, תובנות, קשיים…','maxlength="3000"')}
+  <div class="g g2">${area('rp-hw','📝 שיעורי בית',l.homework,2,'','maxlength="1000"')}${area('rp-notes','🔒 הערות פרטיות',l.teacherNotes,2,'','maxlength="2000"')}</div>
+  <div><div class="lbl mb6">תשלום</div>${chips('paid',[['0','💳 לא שולם'],['1','✅ שולם']],rp.paid?'1':'0')}</div>
+ </div>
+ <div class="mf"><button class="btn ghost" data-a="close">ביטול</button><button class="btn pri" data-a="saveReport" data-id="${esc(l.id)}">💾 שמור דיווח</button></div>`);};
+A.rpSet=(v,el)=>{const k=el.dataset.k;rp[k]=k==='paid'?v==='1':v;el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===el));};
+A.rpStar=n=>{rp.rating=+n;$$('#modal .star').forEach((b,i)=>b.classList.toggle('on',i<rp.rating));$('#rp-rl').textContent=RATE_L[rp.rating]||'';};
+A.rpTopic=t=>{const i=$('#rp-topics');const cur=i.value.trim();if(!cur.split(/[,،]\s*/).includes(t))i.value=cur?cur+', '+t:t;};
+A.saveReport=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;
+ Object.assign(l,{attendance:rp.att,rating:rp.rating||0,effort:rp.effort,paid:!!rp.paid,topics:clamp(val('rp-topics'),300),freeText:clamp(val('rp-free'),3000),homework:clamp(val('rp-hw'),1000),teacherNotes:clamp(val('rp-notes'),2000)});
+ l.status=rp.att==='absent'?'cancelled':'ok';
+ persist();closeModal();render();toast('✅ הדיווח נשמר');};
+
+/* ═══════════ CALENDAR ═══════════ */
+let calMode='month',calOff=0;
+R.calendar=()=>{const tk=todayKey();let cells='',label='';
+ const head=DSHORT.map(d=>`<div class="h">${d}</div>`).join('');
+ if(calMode==='month'){const now=new Date(),b=new Date(now.getFullYear(),now.getMonth()+calOff,1,12);label=MONTHS[b.getMonth()]+' '+b.getFullYear();
+  const first=b.getDay(),days=new Date(b.getFullYear(),b.getMonth()+1,0).getDate(),total=Math.ceil((first+days)/7)*7;
+  for(let i=0;i<total;i++){const n=i-first+1;cells+=(n<1||n>days)?'<div class="c x"></div>':calCell(dkey(new Date(b.getFullYear(),b.getMonth(),n,12)),tk,false);}}
+ else{const s=addDays(sundayOf(new Date()),calOff*7),e=addDays(s,6);label=`${s.getDate()}/${s.getMonth()+1} – ${e.getDate()}/${e.getMonth()+1}/${e.getFullYear()}`;for(let i=0;i<7;i++)cells+=calCell(dkey(addDays(s,i)),tk,true);}
+ return `<div class="page-h"><div><h1>📅 יומן שיעורים</h1><p>לחץ על יום כדי להוסיף שיעור · לחץ על שיעור כדי לדווח</p></div><button class="btn pri" data-a="lessonModal">＋ שיעור</button></div>
+ <div class="row wrap between mb"><div class="row"><button class="btn ghost icon" data-a="calNav" data-id="-1" title="הקודם">→</button><button class="btn ghost sm" data-a="calNav" data-id="0">היום</button><button class="btn ghost icon" data-a="calNav" data-id="1" title="הבא">←</button><b style="margin-inline-start:6px">${esc(label)}</b></div>
+ <div class="tabs"><button class="${calMode==='month'?'on':''}" data-a="calMode" data-id="month">חודש</button><button class="${calMode==='week'?'on':''}" data-a="calMode" data-id="week">שבוע</button></div></div>
+ <div class="cal ${calMode==='week'?'wk':''}">${head}${cells}</div>
+ <div class="row wrap xs-t muted mt" style="gap:12px"><span class="cp">שולם</span><span class="cp unpaid">לא שולם</span><span class="cp fut">עתידי</span><span class="cp cx">בוטל</span></div>`;};
+function calCell(d,tk,big){const ls=DB.lessons.filter(l=>l.date===d).sort(byTime),free=d>tk?freeForDay(d).length:0,dd=parseKey(d);
+ return `<div class="c ${d===tk?'today':''} ${d<tk?'past':''}" data-a="dayAdd" data-id="${d}"><div class="n">${big?DAYS[dd.getDay()]+' ':''}${dd.getDate()}${big?'/'+(dd.getMonth()+1):''}</div>
+ ${ls.map(l=>`<div class="cp ${l.status==='cancelled'?'cx':l.paid?'':l.date>tk?'fut':'unpaid'}" data-a="report" data-id="${esc(l.id)}" title="${esc(l.time+' · '+sname(l.studentId))}">${esc(l.time)} ${esc(sname(l.studentId))}</div>`).join('')}
+ ${free?`<div class="cfree">${free} שעות פנויות</div>`:''}</div>`;}
+A.calNav=d=>{const n=+d;calOff=n===0?0:calOff+n;render();};
+A.calMode=m=>{calMode=m;calOff=0;render();};
+A.dayAdd=d=>A.lessonModal('',{dataset:{date:d}});
+
+/* ═══════════ REQUESTS (from WhatsApp) ═══════════ */
+let reqDraft=null;
+function parseRequest(text){
+ const t=String(text||'').slice(0,4000);
+ const codes=[...t.matchAll(/CF:(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})(?::([a-z]))?/g)],m=codes[codes.length-1];
+ const line=lbl=>{const x=t.match(new RegExp('^[\\s*_~]*(?:'+lbl+')[\\s*_~]*[:：]\\s*(.+)$','m'));return x?x[1].replace(/[*_~]/g,'').trim():'';};
+ const name=clamp(line('שם|الاسم|اسم|Name'),80);
+ const phone=clamp(line('טלפון|الهاتف|هاتف|Phone').replace(/[^\d+\-\s]/g,'').trim(),30);
+ const notes=clamp(line('הערות|ملاحظات|Notes'),500);
+ const ll=line('שפה|اللغة|Language');
+ const lang=(m&&m[3]&&CODE_LANG[m[3]])||LANGS.find(x=>ll.includes(x))||'';
+ let date=m?m[1]:'',time=m?m[2]:'';
+ if(!date){const d=t.match(/(\d{1,2})[\/.](\d{1,2})[\/.](\d{4})/);if(d)date=`${d[3]}-${pad(d[2])}-${pad(d[1])}`;}
+ if(!time){const h=t.match(/(?:^|\D)(\d{1,2}):(\d{2})(?!\d)/);if(h)time=pad(h[1])+':'+h[2];}
+ return{name,phone,lang,date,time,notes,found:!!m};
+}
+R.requests=()=>{const pend=DB.requests.filter(r=>r.status==='pending').sort((a,b)=>byDT(a,b)),done=DB.requests.filter(r=>r.status!=='pending').sort((a,b)=>String(b.handledAt).localeCompare(String(a.handledAt))).slice(0,12);
+ const auto=BOOK_RE.test(DB.settings.bookingUrl||'');
+ return `<div class="page-h"><div><h1>🔔 בקשות שיעור</h1><p>${auto?'בקשות מדף ההזמנה מגיעות לכאן אוטומטית (בדיקה כל 30 שניות)':'הדבק הודעת וואטסאפ מתלמיד — המערכת מזהה את הפרטים'}</p></div>${auto?'<button class="btn ghost sm" data-a="checkInbox">🔄 בדוק עכשיו</button>':''}</div>
+ ${auto?'':`<div class="alert amber"><span>📨</span><div class="grow sm-t">קבלת בקשות אוטומטית עדיין לא מחוברת — כרגע התלמידים שולחים בוואטסאפ.</div><button class="btn sm ghost" data-a="go" data-id="settings">לחיבור הסקריפט</button></div>`}
+ <div class="alert blue"><span>🔗</span><div class="grow sm-t" style="word-break:break-all">דף ההזמנה לתלמידים: <a href="${esc(studentUrl())}" target="_blank" rel="noopener">${esc(studentUrl())}</a></div><button class="btn sm ghost" data-a="copyLink">העתק</button></div>
+ <div class="g g-main">
+  <div class="card"><div class="card-h"><div class="card-t">⏳ ממתינות לאישור</div><span class="pill amber">${pend.length}</span></div>
+   ${pend.length?`<div class="list">${pend.map(reqCard).join('')}</div>`:emptyBox('🎉','אין בקשות ממתינות')}
+   ${done.length?`<div class="lbl mt mb6">טופלו לאחרונה</div><div class="list" style="gap:4px">${done.map(r=>`<div class="row sm-t" style="padding:4px 0"><span>${r.status==='approved'?'✅':'✋'}</span><span class="grow">${esc(r.name)} · ${fmtDS(r.date)} ${esc(r.time)}</span></div>`).join('')}</div>`:''}</div>
+  <div class="card"><div class="card-t mb">📥 הוספה ידנית</div><p class="xs-t muted mb6">קיבלת בקשה בוואטסאפ או בטלפון? הדבק את ההודעה או מלא ידנית.</p>
+   <textarea class="inp" id="rq-paste" rows="4" placeholder="הדבק כאן הודעת וואטסאפ…"></textarea>
+   <div class="row wrap mt"><button class="btn pri sm" data-a="parseReq">🔍 קרא את ההודעה</button><button class="btn ghost sm" data-a="blankReq">✍️ מילוי ידני</button></div>
+   <div id="rq-form">${reqDraft?reqForm(reqDraft):''}</div></div>
+ </div>`;};
+A.checkInbox=async(_,btn)=>{btn.disabled=true;await syncInbox();btn.disabled=false;toast('✅ נבדק');};
+function reqForm(d){return `<div class="fade mt" style="border-top:1px dashed var(--b2);padding-top:14px">
+ <div class="row between wrap mb"><div class="card-t">${d._id?'✏️ עריכת בקשה':'📋 פרטי הבקשה'}</div>${d.found===false?'<span class="pill amber">לא נמצא קוד הזמנה — בדוק את הפרטים</span>':''}</div>
+ <div class="g g2">${fld('rq-name','שם *',d.name,'text','maxlength="80" data-i="rqCheck"')}${fld('rq-phone','טלפון',d.phone,'tel','maxlength="30" data-i="rqCheck"')}
+  <div class="f"><label for="rq-lang">שפה</label><select class="sel" id="rq-lang">${LANGS.map(x=>opt(x,x,d.lang||LANGS[0])).join('')}</select></div>
+  <div class="g g2" style="gap:8px">${fld('rq-date','תאריך *',d.date,'date','data-i="rqCheck"')}${fld('rq-time','שעה *',d.time,'time','data-i="rqCheck"')}</div></div>
+ <div class="mt">${fld('rq-notes','הערות',d.notes,'text','maxlength="500"')}</div>
+ <div id="rq-check" class="mt">${reqCheckHTML(d)}</div>
+ <div class="row wrap mt"><button class="btn ok" data-a="approveDraft">✅ אשר ושלח אישור</button><button class="btn ghost" data-a="pendDraft">⏳ שמור כממתינה</button><button class="btn ghost" data-a="clearDraft">ביטול</button></div></div>`;}
+function reqCheckHTML(d){const out=[],s=d.phone&&DB.students.find(x=>samePhone(x.phone,d.phone));
+ out.push(s?`<span class="pill green">✓ תלמיד קיים: ${esc(s.name)}</span>`:'<span class="pill blue">🆕 תלמיד חדש — ייווצר אוטומטית</span>');
+ if(isKey(d.date)&&/^\d{2}:\d{2}$/.test(d.time||'')){const c=findClash(d.date,d.time,+DB.settings.lessonDuration,null);
+  if(d.date<todayKey())out.push('<span class="pill red">⚠️ התאריך כבר עבר</span>');
+  else if(c)out.push(`<span class="pill red">⚠️ מתנגש עם ${esc(sname(c.studentId))} ב-${esc(c.time)}</span>`);
+  else if(!(DB.schedule[d.date]||[]).includes(d.time))out.push('<span class="pill amber">ℹ️ השעה לא מוגדרת בזמינות</span>');
+  else out.push('<span class="pill green">✓ השעה פנויה</span>');}
+ return `<div class="chips">${out.join('')}</div>`;}
+function reqCard(r){return `<div class="item" style="flex-direction:column;align-items:stretch;gap:8px">
+ <div class="row"><div class="av" style="background:var(--amber)">${esc(initials(r.name))}</div><div class="grow"><b>${esc(r.name)}</b> ${r.source==='web'?'<span class="pill blue">🌐 מהאתר</span>':''}<div class="xs-t muted">${esc(r.lang)} · ${fmtDS(r.date)||'?'} · ${esc(r.time)}${r.phone?' · 📱 '+esc(r.phone):''}</div></div></div>
+ ${r.notes?`<div class="note">💬 ${esc(r.notes)}</div>`:''}${reqCheckHTML(r)}
+ <div class="row wrap"><button class="btn sm ok" data-a="approvePending" data-id="${esc(r.id)}">✅ אשר</button><button class="btn sm ghost" data-a="editPending" data-id="${esc(r.id)}">✏️</button><button class="btn sm ghost" style="color:var(--red)" data-a="rejectPending" data-id="${esc(r.id)}">✋ דחה</button>${r.phone?`<a class="btn sm wa" href="https://wa.me/${esc(waNum(r.phone))}" target="_blank" rel="noopener">💬</a>`:''}</div></div>`;}
+const readDraft=()=>({name:clamp(val('rq-name'),80),phone:clamp(val('rq-phone'),30),lang:val('rq-lang'),date:val('rq-date'),time:val('rq-time'),notes:clamp(val('rq-notes'),500),_id:reqDraft?reqDraft._id:undefined});
+I.rqCheck=()=>{const el=$('#rq-check');if(el)el.innerHTML=reqCheckHTML(readDraft());};
+A.parseReq=()=>{const t=$('#rq-paste').value;if(!t.trim())return toast('הדבק קודם את ההודעה');reqDraft=parseRequest(t);$('#rq-form').innerHTML=reqForm(reqDraft);};
+A.blankReq=()=>{reqDraft={name:'',phone:'',lang:LANGS[0],date:'',time:'',notes:''};$('#rq-form').innerHTML=reqForm(reqDraft);};
+A.clearDraft=()=>{reqDraft=null;render();};
+A.copyLink=()=>{navigator.clipboard.writeText(studentUrl()).then(()=>toast('✅ הקישור הועתק'),()=>toast(studentUrl()));};
+function trimRequests(){const done=DB.requests.filter(r=>r.status!=='pending').sort((a,b)=>String(b.handledAt).localeCompare(String(a.handledAt)));const keep=new Set(done.slice(0,200).map(r=>r.id));DB.requests=DB.requests.filter(r=>r.status==='pending'||keep.has(r.id));}
+A.pendDraft=()=>{const d=readDraft();if(!d.name)return toast('חסר שם');
+ let r=d._id?DB.requests.find(x=>x.id===d._id):null;if(!r){r={id:uid(),createdAt:new Date().toISOString(),status:'pending'};DB.requests.push(r);}
+ const {_id,...rest}=d;Object.assign(r,rest);reqDraft=null;persist();render();toast('⏳ נשמר ברשימת הממתינות');};
+function approveReq(d,reqId){
+ if(!d.name)return toast('חסר שם התלמיד');
+ if(!isKey(d.date)||!/^\d{2}:\d{2}$/.test(d.time||''))return toast('חסרים תאריך ושעה תקינים');
+ const doIt=()=>{const now=new Date().toISOString();
+  let s=d.phone?DB.students.find(x=>samePhone(x.phone,d.phone)):null,isNew=false;
+  if(!s){s={id:uid(),name:d.name,phone:d.phone,lang:d.lang,level:'מתחיל',rate:DB.settings.defaultRate,bought:0,isActive:true,startDate:todayKey(),notes:'',createdAt:now};DB.students.push(s);isNew=true;}
+  const l={id:uid(),studentId:s.id,lang:d.lang||s.lang,date:d.date,time:d.time,duration:+DB.settings.lessonDuration||60,price:+s.rate||DB.settings.defaultRate,paid:false,status:'ok',notes:d.notes||'',createdAt:now};DB.lessons.push(l);
+  let r=reqId?DB.requests.find(x=>x.id===reqId):null;if(!r){r={id:uid(),createdAt:now};DB.requests.push(r);}
+  Object.assign(r,{name:d.name,phone:d.phone,lang:d.lang,date:d.date,time:d.time,notes:d.notes,status:'approved',handledAt:now,lessonId:l.id});trimRequests();
+  if(DB.settings.msg.enabled&&d.phone)waOpen(d.phone,buildMsg('ok',d.name,d.date,d.time));
+  reqDraft=null;persist();render();toast('✅ אושר — השיעור נוסף ליומן'+(isNew?' · נוצר תלמיד חדש':''));};
+ const c=findClash(d.date,d.time,+DB.settings.lessonDuration,null);
+ if(c)return ask('השעה תפוסה',`כבר קיים שיעור עם ${sname(c.studentId)} ב-${c.time}. לאשר בכל זאת?`,'אשר בכל זאת',doIt,{icon:'⏰'});
+ doIt();}
+A.approveDraft=()=>{const d=readDraft();approveReq(d,d._id);};
+A.approvePending=id=>{const r=DB.requests.find(x=>x.id===id);if(r)approveReq({name:r.name,phone:r.phone,lang:r.lang,date:r.date,time:r.time,notes:r.notes},id);};
+A.editPending=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;reqDraft={...r,_id:id};render();setTimeout(()=>{const f=$('#rq-form');if(f)f.scrollIntoView({behavior:'smooth',block:'center'});},60);};
+A.rejectPending=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;
+ const done=()=>{r.status='rejected';r.handledAt=new Date().toISOString();trimRequests();persist();render();toast('הבקשה נדחתה');};
+ ask('דחיית בקשה',`לדחות את הבקשה של ${r.name}?`,r.phone?'דחה ושלח הודעה':'דחה',()=>{if(r.phone)waOpen(r.phone,buildMsg('no',r.name,r.date,r.time));done();},{alt:r.phone?'דחה בלי הודעה':'',altCb:done,danger:true,icon:'✋'});};
+
+/* ═══════════ SCHEDULE (availability) ═══════════ */
+let schedSel=null;
+const genSlots=(from,to)=>{const dur=+DB.settings.lessonDuration||60,brk=+DB.settings.breakMinutes||0,out=[];for(let t=from;t+dur<=to;t+=dur+brk)out.push(m2t(t));return out;};
+const nextSuggest=slots=>{if(!slots.length)return '16:00';const n=t2m(slots[slots.length-1])+(+DB.settings.lessonDuration||60)+(+DB.settings.breakMinutes||0);return n<23*60?m2t(n):slots[slots.length-1];};
+R.schedule=()=>{const st=DB.settings,tk=todayKey(),start=sundayOf(new Date());let cells='';
+ for(let i=0;i<28;i++){const d=dkey(addDays(start,i)),dd=parseKey(d),past=d<tk,slots=DB.schedule[d]||[],booked=DB.lessons.filter(l=>l.date===d&&l.status!=='cancelled').length;
+  cells+=`<button class="sd ${past?'past':''} ${slots.length&&!past?'has':''} ${schedSel===d?'sel':''}" ${past?'disabled':`data-a="schedPick" data-id="${d}"`}><span class="w">${DSHORT[dd.getDay()]}</span><span class="d">${dd.getDate()}/${dd.getMonth()+1}</span><span class="k">${past?'':slots.length?slots.length+' שעות':'—'}</span>${booked&&!past?`<span class="k" style="opacity:.85">📚 ${booked}</span>`:''}</button>`;}
+ return `<div class="page-h"><div><h1>🕐 זמינות לשיעורים</h1><p>בחר תאריך והגדר שעות. רק השעות הפנויות (בלי שיעורים קיימים) מוצגות בדף ההזמנה — בלי שמות ובלי מספרים.</p></div>
+  <div class="row wrap"><div class="f"><label for="sc-dur">משך שיעור</label><select class="sel" id="sc-dur" data-c="setDur" style="width:auto">${[30,45,60,75,90,120].map(d=>opt(d,d+' דק׳',st.lessonDuration)).join('')}</select></div>
+  <div class="f"><label for="sc-brk">הפסקה (דק׳)</label><input class="inp" id="sc-brk" type="number" min="0" max="120" step="5" value="${+st.breakMinutes||0}" data-c="setBreak" style="width:90px"></div></div></div>
+ <div class="alert blue sm-t"><span>📢</span><div class="grow" id="pub-info">${esc(pubInfo())}</div><a class="btn sm ghost" href="${esc(studentUrl())}" target="_blank" rel="noopener">צפה בדף</a></div>
+ <div class="card mb"><div class="sg">${DSHORT.map(d=>`<div class="ctr lbl">${d}</div>`).join('')}${cells}</div></div>
+ ${schedSel?dayPanel(schedSel):'<div class="empty">👆 בחר תאריך כדי להגדיר שעות פנויות</div>'}`;};
+function dayPanel(d){const slots=[...(DB.schedule[d]||[])].sort(),ls=DB.lessons.filter(l=>l.date===d&&l.status!=='cancelled'),dd=parseKey(d);
+ return `<div class="card fade"><div class="card-h"><div><div class="card-t">יום ${DAYS[dd.getDay()]} ${fmtD(d)}</div><div class="xs-t muted">${slots.length} שעות מוגדרות · ${ls.length} שיעורים קבועים · ${freeForDay(d).length} פנויות לתלמידים</div></div><button class="x" data-a="schedPick" data-id="">✕</button></div>
+ <div class="row wrap" style="gap:6px;min-height:36px">${slots.length?slots.map(t=>{const l=ls.find(x=>x.time===t);return `<span class="slot ${l?'taken':''}">${esc(t)}${l?' · '+esc(sname(l.studentId)):''}<button data-a="slotDel" data-id="${esc(t)}" title="הסר">×</button></span>`;}).join(''):'<span class="muted sm-t">אין שעות ליום זה</span>'}</div>
+ <div class="row wrap mt"><input class="inp" type="time" id="sc-time" value="${nextSuggest(slots)}" style="width:auto"><button class="btn pri sm" data-a="slotAdd">＋ הוסף שעה</button><span class="muted xs-t">אחרי כל הוספה מוצעת השעה הבאה לפי משך השיעור וההפסקה</span></div>
+ <div class="row wrap mt" style="gap:6px"><span class="lbl">תבניות:</span>${Object.entries(TPL).map(([k,v])=>`<button class="btn sm ghost" data-a="slotTpl" data-id="${k}">${v[0]}</button>`).join('')}</div>
+ <div class="row wrap mt" style="gap:6px"><button class="btn sm ghost" data-a="slotCopy">📋 העתק לאותו יום ב-3 השבועות הבאים</button><button class="btn sm ghost" style="color:var(--red)" data-a="slotClear">🚫 נקה את היום</button></div></div>`;}
+A.schedPick=d=>{schedSel=d||null;render();};
+A.slotAdd=()=>{const t=val('sc-time');if(!/^\d{2}:\d{2}$/.test(t))return toast('בחר שעה');const a=DB.schedule[schedSel]||(DB.schedule[schedSel]=[]);if(a.includes(t))return toast('השעה כבר קיימת');a.push(t);a.sort();persist();render();};
+A.slotDel=t=>{const a=DB.schedule[schedSel]||[];DB.schedule[schedSel]=a.filter(x=>x!==t);if(!DB.schedule[schedSel].length)delete DB.schedule[schedSel];persist();render();};
+A.slotTpl=k=>{const v=TPL[k];if(!v)return;DB.schedule[schedSel]=genSlots(v[1],v[2]);persist();render();toast('✅ הוחלה תבנית — '+DB.schedule[schedSel].length+' שעות');};
+A.slotClear=()=>{delete DB.schedule[schedSel];persist();render();toast('היום נוקה');};
+A.slotCopy=()=>{const src=DB.schedule[schedSel]||[];if(!src.length)return toast('אין שעות להעתקה');for(let w=1;w<=3;w++){DB.schedule[dkey(addDays(parseKey(schedSel),7*w))]=[...src];}persist();render();toast('✅ הועתק ל-3 השבועות הבאים');};
+C.setDur=(_,el)=>{DB.settings.lessonDuration=+el.value||60;persist();render();};
+C.setBreak=(_,el)=>{DB.settings.breakMinutes=Math.max(0,Math.min(120,Math.round(+el.value||0)));persist();render();};
+
+/* ═══════════ LESSON PLANS ═══════════ */
+let planQ='',planL='',planOpen=null,pd=null;
+R.plans=()=>`<div class="page-h"><div><h1>📖 תכניות שיעור</h1><p>תכנן, תעד מילים ושיטות, וצבור הערות ורפלקציה</p></div><button class="btn pri" data-a="planModal">＋ תכנית חדשה</button></div>
+ <div class="card mb" style="padding:12px"><div class="row wrap"><input class="inp grow" id="pl-q" placeholder="🔍 חיפוש לפי נושא, חומר או מילה…" value="${esc(planQ)}" data-i="planFilter" style="min-width:200px"><select class="sel" style="width:auto" id="pl-l" data-c="planFilter">${opt('','כל השפות',planL)}${LANGS.map(l=>opt(l,l,planL)).join('')}</select></div></div>
+ <div id="plan-list">${planList()}</div>`;
+I.planFilter=C.planFilter=()=>{planQ=val('pl-q');planL=$('#pl-l').value;$('#plan-list').innerHTML=planList();};
+function planList(){const q=planQ.toLowerCase();
+ const ps=DB.plans.filter(p=>{if(planL&&p.lang!==planL)return false;if(!q)return true;return [p.topic,p.focus,p.materials,p.goals,...(p.vocab||[]).flatMap(v=>[v.word,v.meaning])].join(' ').toLowerCase().includes(q);})
+  .sort((a,b)=>(+a.importance||3)-(+b.importance||3)||String(b.updatedAt).localeCompare(String(a.updatedAt)));
+ if(!ps.length)return emptyBox('📖',DB.plans.length?'לא נמצאו תכניות':'עדיין אין תכניות — צור את הראשונה');
+ return `<div class="list">${ps.map(p=>{const open=planOpen===p.id,tr=+p.teacherRating||0,sr=+p.studentRating||0,imp=IMP.find(x=>x[0]===(+p.importance||3));
+  return `<div class="card" style="padding:0;overflow:hidden"><div class="row" style="padding:13px 16px;cursor:pointer" data-a="planToggle" data-id="${esc(p.id)}">
+   <div class="grow"><div class="b">${esc(p.topic)}</div><div class="row wrap xs-t muted" style="gap:8px;margin-top:3px"><span class="pill blue">${esc(p.lang)}</span><span>${esc(p.level)}</span><span>⏱ ${esc(p.duration)} דק׳</span>${(p.vocab||[]).length?`<span>📚 ${p.vocab.length} מילים</span>`:''}${(p.notesLog||[]).length?`<span>📝 ${p.notesLog.length}</span>`:''}</div></div>
+   ${tr||sr?`<span class="hide-m" style="color:var(--gold);font-weight:700">★ ${((tr&&sr)?(tr+sr)/2:(tr||sr)).toFixed(1)}</span>`:''}<span class="pill">${imp?imp[1]:''}</span><span class="muted">${open?'▲':'▼'}</span></div>
+   ${open?planBody(p):''}</div>`;}).join('')}</div>`;}
+function planBody(p){const sec=(t,v,c)=>v?`<div class="psec"><div class="lbl" style="color:${c||'var(--blue)'}">${t}</div><div class="pre">${esc(v)}</div></div>`:'';
+ return `<div style="padding:4px 16px 16px;border-top:1px solid var(--b)"><div class="g g3 mt">
+  <div>${sec('🎯 נקודות דגש',p.focus)}${sec('🏆 מטרות',p.goals,'var(--green)')}${sec('📚 חומרים',p.materials,'var(--m)')}</div>
+  <div>${(p.vocab||[]).length?`<div class="psec"><div class="lbl">📚 מילים</div>${p.vocab.map(v=>`<div class="sm-t"><b>${esc(v.word)}</b>${v.meaning?' — '+esc(v.meaning):''}</div>`).join('')}</div>`:''}${sec('🧠 שיטת הסבר',p.teachMethod,'var(--violet)')}${sec('🏋️ תרגילים',p.exercises,'var(--amber)')}</div>
+  <div>${sec('✅ מה עבד',p.reflectGood,'var(--green)')}${sec('❌ מה היה קשה',p.reflectHard,'var(--red)')}${sec('➡️ לשיעור הבא',p.reflectNext,'var(--blue)')}${(p.notesLog||[]).length?sec('📝 הערה אחרונה',p.notesLog[0].text,'var(--m)'):''}</div>
+ </div><div class="row wrap mt"><button class="btn sm pri" data-a="planModal" data-id="${esc(p.id)}">✏️ עריכה</button><button class="btn sm ghost" data-a="planPrint" data-id="${esc(p.id)}">🖨️ הדפסה / PDF</button><button class="btn sm ghost" style="color:var(--red)" data-a="planDel" data-id="${esc(p.id)}">🗑️ מחיקה</button></div></div>`;}
+A.planToggle=id=>{planOpen=planOpen===id?null:id;$('#plan-list').innerHTML=planList();};
+const starRow=(k,v)=>`<div class="stars">${[1,2,3,4,5].map(n=>`<button class="star ${n<=v?'on':''}" data-a="pStar" data-k="${k}" data-id="${n}">⭐</button>`).join('')}</div>`;
+A.planModal=id=>{const p=id?DB.plans.find(x=>x.id===id):null;
+ pd=p?JSON.parse(JSON.stringify(p)):{id:'',topic:'',lang:LANGS[0],level:LEVELS[0],duration:60,vocab:[],notesLog:[],importance:3,teacherRating:0,studentRating:0};
+ pd.vocab=pd.vocab||[];pd.notesLog=pd.notesLog||[];
+ openModal(`<div class="mh"><h3>${p?'✏️ '+esc(p.topic):'📝 תכנית שיעור חדשה'}</h3><button class="x" data-a="close">✕</button></div>
+ <div style="padding:12px 20px 0"><div class="tabs">${[['info','📋 פרטים'],['vocab','📚 מילים ושיטה'],['notes','📝 הערות'],['reflect','🔍 רפלקציה']].map(([k,t],i)=>`<button class="${i?'':'on'}" data-a="pmTab" data-id="${k}">${t}</button>`).join('')}</div></div>
+ <div class="mbody">
+  <div data-pane="info" class="g">${fld('pm-topic','נושא השיעור *',pd.topic,'text','maxlength="150"')}
+   <div class="g g3"><div class="f"><label for="pm-lang">שפה</label><select class="sel" id="pm-lang">${LANGS.map(x=>opt(x,x,pd.lang)).join('')}</select></div><div class="f"><label for="pm-level">רמה</label><select class="sel" id="pm-level">${[...LEVELS,'כל הרמות'].map(x=>opt(x,x,pd.level)).join('')}</select></div><div class="f"><label for="pm-dur">דקות</label><select class="sel" id="pm-dur">${[45,60,90,120].map(x=>opt(x,x,pd.duration)).join('')}</select></div></div>
+   ${area('pm-focus','🎯 נקודות דגש — מה חשוב שהתלמיד יצא איתו',pd.focus,2)}${area('pm-goals','🏆 מטרות השיעור',pd.goals,2)}${area('pm-mat','📚 חומרים (שורה לכל פריט)',pd.materials,3)}
+   <div class="g g2">${area('pm-extra','🌱 חומר להעשרה',pd.extra,2)}${area('pm-ex','✨ דוגמאות ותרגולים שעבדו',pd.examples,2)}</div></div>
+  <div data-pane="vocab" class="g" hidden>
+   <div class="vrow"><input class="inp" id="pv-w" placeholder="מילה" maxlength="80"><input class="inp" id="pv-m" placeholder="משמעות" maxlength="120"><input class="inp" id="pv-e" placeholder="דוגמה במשפט" maxlength="200"><button class="btn pri sm" data-a="vAdd">＋ הוסף</button></div>
+   <div id="pm-vlist">${vocabList()}</div>
+   ${area('pm-vn','✏️ מילים וביטויים נוספים',pd.vocabNotes,2)}${area('pm-method','🧠 שיטת ההסבר וההוראה',pd.teachMethod,3)}${area('pm-exer','🏋️ תרגילים ותרגול',pd.exercises,3)}</div>
+  <div data-pane="notes" class="g" hidden>${area('pm-note','הערה חדשה','',3,'מה קרה? מה עבד? מה היה קשה?')}<div><button class="btn pri sm" data-a="nAdd">＋ הוסף הערה</button></div><div id="pm-nlist">${notesList()}</div></div>
+  <div data-pane="reflect" class="g" hidden>${area('pm-rg','✅ מה עבד טוב?',pd.reflectGood,2)}${area('pm-rh','❌ מה היה קשה או לא עבד?',pd.reflectHard,2)}${area('pm-rc','🔄 מה אשנה בפעם הבאה?',pd.reflectChange,2)}${area('pm-rn','➡️ המלצות לשיעור הבא',pd.reflectNext,3)}
+   <div class="g g3"><div><div class="lbl mb6">⭐ הערכת המורה</div>${starRow('teacherRating',+pd.teacherRating||0)}</div><div><div class="lbl mb6">⭐ הערכת התלמידים</div>${starRow('studentRating',+pd.studentRating||0)}</div><div class="f"><label for="pm-imp">חשיבות</label><select class="sel" id="pm-imp">${IMP.map(([v,t])=>opt(v,t,pd.importance||3)).join('')}</select></div></div></div>
+ </div>
+ <div class="mf"><button class="btn ghost" data-a="close">סגור</button><button class="btn pri" data-a="planSave">💾 שמור תכנית</button></div>`,true);};
+A.pmTab=k=>{$$('#modal [data-pane]').forEach(p=>p.hidden=p.dataset.pane!==k);$$('#modal .tabs button').forEach(b=>b.classList.toggle('on',b.dataset.id===k));};
+function vocabList(){if(!pd.vocab.length)return '<div class="muted sm-t ctr" style="padding:8px">עדיין לא נוספו מילים</div>';
+ return `<div class="list" style="gap:6px">${pd.vocab.map(v=>`<div class="vrow" style="background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:7px 10px"><b class="sm-t">${esc(v.word)}</b><span class="sm-t">${esc(v.meaning||'—')}</span><span class="xs-t muted">${esc(v.example||'')}</span><button class="btn icon ghost" data-a="vDel" data-id="${esc(v.id)}">×</button></div>`).join('')}</div>`;}
+function notesList(){if(!pd.notesLog.length)return '<div class="muted sm-t ctr" style="padding:8px">עדיין אין הערות</div>';
+ return `<div class="list" style="gap:6px">${pd.notesLog.map(n=>`<div class="item" style="align-items:flex-start"><div class="grow"><div class="xs-t muted">🕐 ${esc(new Date(n.date).toLocaleString('he-IL',{dateStyle:'short',timeStyle:'short'}))}</div><div class="pre">${esc(n.text)}</div></div><button class="btn icon ghost" data-a="nDel" data-id="${esc(n.id)}">×</button></div>`).join('')}</div>`;}
+A.vAdd=()=>{const w=val('pv-w');if(!w)return toast('כתוב מילה');pd.vocab.push({id:uid(),word:clamp(w,80),meaning:clamp(val('pv-m'),120),example:clamp(val('pv-e'),200)});['pv-w','pv-m','pv-e'].forEach(i=>$('#'+i).value='');$('#pm-vlist').innerHTML=vocabList();$('#pv-w').focus();};
+A.vDel=id=>{pd.vocab=pd.vocab.filter(v=>v.id!==id);$('#pm-vlist').innerHTML=vocabList();};
+A.nAdd=()=>{const t=val('pm-note');if(!t)return toast('כתוב הערה');pd.notesLog.unshift({id:uid(),text:clamp(t,3000),date:new Date().toISOString()});$('#pm-note').value='';$('#pm-nlist').innerHTML=notesList();toast('הערה נוספה — לחץ "שמור תכנית"');};
+A.nDel=id=>{pd.notesLog=pd.notesLog.filter(n=>n.id!==id);$('#pm-nlist').innerHTML=notesList();};
+A.pStar=(n,el)=>{pd[el.dataset.k]=+n;el.parentElement.querySelectorAll('.star').forEach((b,i)=>b.classList.toggle('on',i<+n));};
+A.planSave=()=>{const topic=clamp(val('pm-topic'),150);if(!topic){A.pmTab('info');return toast('נא להזין נושא');}
+ const L=n=>clamp(val(n),5000);
+ Object.assign(pd,{topic,lang:val('pm-lang'),level:val('pm-level'),duration:+val('pm-dur')||60,focus:L('pm-focus'),goals:L('pm-goals'),materials:L('pm-mat'),extra:L('pm-extra'),examples:L('pm-ex'),vocabNotes:L('pm-vn'),teachMethod:L('pm-method'),exercises:L('pm-exer'),reflectGood:L('pm-rg'),reflectHard:L('pm-rh'),reflectChange:L('pm-rc'),reflectNext:L('pm-rn'),importance:+val('pm-imp')||3,updatedAt:new Date().toISOString()});
+ if(!pd.id){pd.id=uid();pd.createdAt=pd.updatedAt;DB.plans.unshift(pd);}else{const i=DB.plans.findIndex(x=>x.id===pd.id);if(i>=0)DB.plans[i]=pd;else DB.plans.unshift(pd);}
+ planOpen=pd.id;persist();closeModal();render();toast('✅ "'+topic+'" נשמר');};
+A.planDel=id=>{const p=DB.plans.find(x=>x.id===id);if(!p)return;ask('מחיקת תכנית',`למחוק את "${p.topic}"?`,'מחק',()=>{DB.plans=DB.plans.filter(x=>x.id!==id);persist();render();toast('נמחק');},{danger:true,icon:'📖'});};
+A.planPrint=id=>{const p=DB.plans.find(x=>x.id===id);if(!p)return;const w=window.open('','_blank');if(!w)return toast('אפשר חלונות קופצים בדפדפן');
+ const sec=(t,v)=>v?`<h3>${t}</h3><div class="p">${esc(v)}</div>`:'';
+ w.document.write(`<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8"><title>${esc(p.topic)}</title><style>body{font-family:Heebo,Arial,sans-serif;max-width:760px;margin:0 auto;padding:2rem;color:#1A2332}h1{font-size:1.4rem;margin-bottom:4px}h3{font-size:.8rem;color:#46505F;margin:18px 0 4px;text-transform:uppercase;letter-spacing:.05em}.p{white-space:pre-line;font-size:.92rem;line-height:1.7}.m{color:#7C8696;font-size:.85rem}table{width:100%;border-collapse:collapse;font-size:.86rem}td,th{border:1px solid #DEE7F2;padding:5px 8px;text-align:right}</style></head><body>
+ <h1>${esc(p.topic)}</h1><div class="m">${esc(p.lang)} · ${esc(p.level)} · ${esc(p.duration)} דקות</div>
+ ${sec('🎯 נקודות דגש',p.focus)}${sec('🏆 מטרות',p.goals)}${sec('📚 חומרים',p.materials)}
+ ${(p.vocab||[]).length?`<h3>📚 מילים</h3><table><tr><th>מילה</th><th>משמעות</th><th>דוגמה</th></tr>${p.vocab.map(v=>`<tr><td><b>${esc(v.word)}</b></td><td>${esc(v.meaning)}</td><td>${esc(v.example)}</td></tr>`).join('')}</table>`:''}
+ ${sec('✏️ מילים נוספות',p.vocabNotes)}${sec('🧠 שיטת הסבר',p.teachMethod)}${sec('🏋️ תרגילים',p.exercises)}${sec('✨ דוגמאות שעבדו',p.examples)}${sec('🌱 העשרה',p.extra)}
+ ${sec('✅ מה עבד',p.reflectGood)}${sec('❌ מה היה קשה',p.reflectHard)}${sec('🔄 מה לשנות',p.reflectChange)}${sec('➡️ לשיעור הבא',p.reflectNext)}
+ ${(p.notesLog||[]).length?`<h3>📝 הערות</h3>${p.notesLog.map(n=>`<div class="p">• ${esc(n.text)} <span class="m">(${esc(new Date(n.date).toLocaleDateString('he-IL'))})</span></div>`).join('')}`:''}
+ </body></html>`);w.document.close();setTimeout(()=>w.print(),300);};
+
+/* ═══════════ INCOME ═══════════ */
+let incTab='summary';
+R.income=()=>`<div class="page-h"><div><h1>💰 הכנסות</h1><p>תשלומים, חובות וחבילות</p></div></div>
+ <div class="tabs mb">${[['summary','📊 סיכום'],['packages','📦 חבילות'],['history','🧾 היסטוריה']].map(([k,t])=>`<button class="${incTab===k?'on':''}" data-a="incTab" data-id="${k}">${t}</button>`).join('')}</div>
+ ${incTab==='packages'?incPackages():incTab==='history'?incHistory():incSummary()}`;
+A.incTab=t=>{incTab=t;render();};
+function incSummary(){const act=activeLessons(),tk=todayKey(),ym=tk.slice(0,7),paid=act.filter(l=>l.paid);
+ const tot=paid.reduce((a,l)=>a+lessonPrice(l),0),debt=totalDebt(),month=paid.filter(l=>String(l.date).slice(0,7)===ym).reduce((a,l)=>a+lessonPrice(l),0),future=act.filter(l=>!l.paid&&l.date>tk).reduce((a,l)=>a+lessonPrice(l),0);
+ const rows=DB.students.map(s=>({s,x:studentStats(s)})).filter(r=>r.x.count).sort((a,b)=>b.x.debt-a.x.debt||b.x.paid-a.x.paid);
+ return `<div class="g g4 mb">${stat('סה״כ התקבל',money(tot),'var(--green)',paid.length+' שיעורים ששולמו')}${stat('חובות פתוחים',money(debt.sum),'var(--amber)',debt.count+' תלמידים')}${stat('התקבל החודש',money(month),'var(--blue)',MONTHS[new Date().getMonth()])}${stat('צפוי משיעורים עתידיים',money(future),'var(--violet)','')}</div>
+ <div class="g g-main"><div class="card"><div class="card-t mb">לפי תלמיד</div>${rows.length?rows.map(({s,x})=>{const pct=x.paid+x.debt?Math.round(x.paid/(x.paid+x.debt)*100):100;
+  return `<div style="padding:11px 0;border-bottom:1px solid var(--b)"><div class="row wrap mb6"><div class="grow"><b class="sm-t" style="cursor:pointer" data-a="profile" data-id="${esc(s.id)}">${esc(s.name)}</b><div class="xs-t muted">${x.count} שיעורים · ${money(s.rate)} לשיעור</div></div><span class="pill green">${money(x.paid)}</span>${x.debt?`<span class="pill red">חוב ${money(x.debt)}</span><button class="btn sm ok" data-a="payAll" data-id="${esc(s.id)}">שולם</button>`:''}</div><div class="bar"><div style="width:${pct}%"></div></div></div>`;}).join(''):emptyBox('','אין עדיין שיעורים')}</div>
+ <div class="card"><div class="card-t mb">📊 6 חודשים אחרונים</div>${chart6()}</div></div>`;}
+function chart6(){const now=new Date(),data=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1),ym=d.getFullYear()+'-'+pad(d.getMonth()+1);data.push({l:MONTHS[d.getMonth()].slice(0,3),v:activeLessons().filter(l=>l.paid&&String(l.date).slice(0,7)===ym).reduce((a,l)=>a+lessonPrice(l),0)});}
+ const max=Math.max(1,...data.map(d=>d.v));return `<div class="chart">${data.map(d=>`<div class="cb"><div class="cv">${d.v?money(d.v):''}</div><div class="cbar" style="height:${Math.max(3,Math.round(d.v/max*140))}px"></div><div class="cl">${d.l}</div></div>`).join('')}</div>`;}
+function incPackages(){return `<div class="row between wrap mb"><p class="muted sm-t">שיוך חבילה לתלמיד (בפרופיל שלו) מוסיף קרדיט שיעורים ומעדכן את התעריף לשיעורים הבאים.</p><button class="btn pri sm" data-a="pkgAdd">＋ חבילה</button></div>
+ <div class="g g3">${DB.packages.map(p=>{const used=DB.students.filter(s=>s.packageId===p.id).length,per=p.lessons?Math.round(p.price/p.lessons):0,c=safeColor(p.color),id=esc(p.id);
+  return `<div class="card" style="border-top:4px solid ${c}"><div class="row mb"><input type="color" value="${c}" data-c="pkgEdit" data-id="${id}" data-k="color" style="width:34px;height:34px;border:none;background:none;flex-shrink:0"><input class="inp grow b" value="${esc(p.name)}" maxlength="60" data-c="pkgEdit" data-id="${id}" data-k="name"><button class="btn icon ghost" data-a="pkgDel" data-id="${id}">🗑️</button></div>
+  <div class="g g2" style="gap:8px"><div class="f"><label>שיעורים</label><input class="inp" type="number" min="1" value="${+p.lessons||1}" data-c="pkgEdit" data-id="${id}" data-k="lessons"></div><div class="f"><label>מחיר כולל (${esc(DB.settings.currency)})</label><input class="inp" type="number" min="0" value="${+p.price||0}" data-c="pkgEdit" data-id="${id}" data-k="price"></div></div>
+  <div class="row between mt sm-t"><span class="muted">${money(per)} לשיעור</span><span class="pill">${used} תלמידים</span></div></div>`;}).join('')}</div>`;}
+C.pkgEdit=(id,el)=>{const p=DB.packages.find(x=>x.id===id);if(!p)return;const k=el.dataset.k;let v=el.value;
+ if(k==='lessons')v=Math.max(1,Math.round(+v||1));else if(k==='price')v=Math.max(0,Math.round(+v||0));else if(k==='color')v=safeColor(v);else v=clamp(v,60);
+ p[k]=v;persist();render();};
+A.pkgAdd=()=>{DB.packages.push({id:uid(),name:'חבילה חדשה',lessons:4,price:4*(+DB.settings.defaultRate||150),color:'#7C3AED'});persist();render();};
+A.pkgDel=id=>{const p=DB.packages.find(x=>x.id===id);if(!p)return;ask('מחיקת חבילה',`למחוק את "${p.name}"? קרדיט קיים של תלמידים לא ישתנה.`,'מחק',()=>{DB.packages=DB.packages.filter(x=>x.id!==id);persist();render();},{danger:true,icon:'📦'});};
+function incHistory(){const paid=activeLessons().filter(l=>l.paid).sort(byDTdesc);
+ return `<div class="card"><div class="card-h"><div class="card-t">🧾 תשלומים (${paid.length})</div><button class="btn ghost sm" data-a="exportPayments">⬇️ CSV</button></div>
+ ${paid.length?`<div style="overflow-x:auto"><table class="tbl"><tr><th>תאריך</th><th>תלמיד</th><th>שפה</th><th style="text-align:left">סכום</th></tr>${paid.slice(0,400).map(l=>`<tr><td>${fmtD(l.date)}</td><td class="b">${esc(sname(l.studentId))}</td><td class="muted">${esc(l.lang)}</td><td style="text-align:left;color:var(--green);font-weight:700">${money(lessonPrice(l))}</td></tr>`).join('')}</table></div>`:emptyBox('','אין תשלומים עדיין')}</div>`;}
+A.exportPayments=()=>{const rows=[['תאריך','שעה','תלמיד','שפה','סכום','שולם','סטטוס']];DB.lessons.slice().sort(byDT).forEach(l=>rows.push([l.date,l.time,sname(l.studentId),l.lang,lessonPrice(l),l.paid?'כן':'לא',l.status==='cancelled'?'בוטל':'']));downloadCSV('payments.csv',rows);};
+
+/* ═══════════ SETTINGS ═══════════ */
+R.settings=()=>{const st=DB.settings,m=st.msg,c=GH.cfg,lock=localStorage.getItem('cf_autolock')||'20',old=oldLocal();
+ return `<div class="page-h"><div><h1>⚙️ הגדרות</h1><p>ההגדרות נשמרות במאגר הפרטי שלך ב-GitHub</p></div></div>
+ <div class="g g2">
+  <div class="card"><div class="card-t mb">👤 פרופיל מורה</div><div class="g">${fld('st-name','שם (מוצג לתלמידים)',st.teacherName,'text','maxlength="60"')}${fld('st-bio','תיאור קצר (מוצג לתלמידים)',st.bio,'text','maxlength="120"')}${fld('st-wa','מספר וואטסאפ לקבלת בקשות *',st.whatsapp,'tel','maxlength="20" placeholder="05X-XXXXXXX"')}${fld('st-email','אימייל',st.email,'email','maxlength="120"')}</div>
+   <button class="btn pri mt" data-a="saveProfile">💾 שמור</button></div>
+  <div class="card"><div class="card-t mb">📐 ברירות מחדל לשיעור</div><div class="g g2">
+   <div class="f"><label for="st-dur">משך שיעור</label><select class="sel" id="st-dur">${[30,45,60,75,90,120].map(d=>opt(d,d+' דקות',st.lessonDuration)).join('')}</select></div>
+   ${fld('st-brk','הפסקה בין שיעורים (דק׳)',st.breakMinutes,'number','min="0" max="120" step="5"')}
+   ${fld('st-rate','תעריף ברירת מחדל',st.defaultRate,'number','min="0" step="10"')}
+   <div class="f"><label for="st-cur">מטבע</label><select class="sel" id="st-cur">${['₪','$','€'].map(x=>opt(x,x,st.currency)).join('')}</select></div></div>
+   <button class="btn pri mt" data-a="saveDefaults">💾 שמור</button></div>
+  <div class="card" style="grid-column:1/-1;border-top:4px solid ${BOOK_RE.test(st.bookingUrl||'')?'var(--green)':'var(--amber)'}"><div class="card-h wrap"><div class="card-t">📨 קבלת בקשות אוטומטית (Google Script)</div>${BOOK_RE.test(st.bookingUrl||'')?'<span class="pill green">● מחובר</span>':'<span class="pill amber">לא מחובר — התלמידים שולחים בוואטסאפ</span>'}</div>
+   <p class="sm-t muted mb">הסקריפט מקבל את הבקשה מדף ההזמנה ומעביר אותה ישירות ללוח הזה. הוראות ההתקנה בקובץ README (שלב 6).</p>
+   <div class="row wrap" style="align-items:flex-end"><div class="grow" style="min-width:260px">${fld('st-burl','כתובת ה-Web App של הסקריפט',st.bookingUrl,'url','dir="ltr" placeholder="https://script.google.com/macros/s/…/exec"')}</div>
+   <button class="btn ghost" data-a="testBooking">🔍 בדוק</button><button class="btn pri" data-a="saveBooking">💾 שמור ופרסם</button>${st.bookingUrl?'<button class="btn ghost" style="color:var(--red)" data-a="clearBooking">נתק</button>':''}</div>
+   ${inboxAt?`<p class="xs-t muted mt">בדיקה אחרונה של תיבת הבקשות: ${esc(new Date(inboxAt).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',second:'2-digit'}))}</p>`:''}</div>
+  <div class="card" style="grid-column:1/-1"><div class="card-h wrap"><div class="card-t">💬 הודעות וואטסאפ</div><label class="row sm-t"><input type="checkbox" id="st-men" ${m.enabled?'checked':''}> לפתוח הודעת אישור אוטומטית כשמאשרים בקשה</label></div>
+   <div class="f mb" style="max-width:260px"><label for="st-mlang">שפת ההודעות</label><select class="sel" id="st-mlang">${[['both','עברית + ערבית'],['he','עברית'],['ar','ערבית']].map(([v,t])=>opt(v,t,m.lang)).join('')}</select></div>
+   <div class="g g2">${area('st-mhe','✅ אישור — עברית',m.he,5)}${area('st-mar','✅ אישור — ערבית',m.ar,5)}${area('st-mdhe','✋ דחייה — עברית',m.declineHe,4)}${area('st-mdar','✋ דחייה — ערבית',m.declineAr,4)}</div>
+   <p class="xs-t muted mt">משתנים: {name} שם התלמיד · {date} תאריך · {time} שעה</p>
+   <div class="row mt"><button class="btn pri" data-a="saveMsgs">💾 שמור</button><button class="btn ghost" data-a="resetMsgs">שחזר ברירת מחדל</button></div></div>
+  <div class="card"><div class="card-t mb">🔐 אבטחה</div>
+   <div class="g">${fld('st-op','סיסמה נוכחית','','password','autocomplete="current-password"')}${fld('st-np','סיסמה חדשה (לפחות 8 תווים)','','password','autocomplete="new-password"')}${fld('st-np2','אימות סיסמה חדשה','','password','autocomplete="new-password"')}</div>
+   <button class="btn ghost sm mt" data-a="changePass">🔑 שנה סיסמה</button>
+   <div class="f mt" style="max-width:260px"><label for="st-lock">נעילה אוטומטית אחרי חוסר פעילות</label><select class="sel" id="st-lock" data-c="setAutoLock">${['5','10','20','30','60'].map(x=>opt(x,x+' דקות',lock)).join('')}</select></div>
+   <div class="row wrap mt"><button class="btn ghost sm" data-a="lock">🔒 נעל עכשיו</button><button class="btn ghost sm" style="color:var(--red)" data-a="forgetDevice">🗑️ נתק מכשיר זה</button></div>
+   <p class="xs-t muted mt">הטוקן שמור רק במכשיר הזה, מוצפן בסיסמה שלך (AES-256). "נתק מכשיר" מוחק אותו מהמכשיר — הנתונים נשארים ב-GitHub. אם מכשיר אבד: בטל את הטוקן באתר GitHub.</p></div>
+  <div class="card"><div class="card-t mb">🐙 חיבור GitHub</div>
+   <div class="kv">משתמש: <b>${esc(c.owner)}</b></div><div class="kv">🔒 נתונים: <b>${esc(c.dataRepo)}</b> (פרטי)</div><div class="kv">🌐 אתר: <b>${esc(c.siteRepo)}</b></div><div class="kv">דף ההזמנה: <a href="${esc(studentUrl())}" target="_blank" rel="noopener">${esc(studentUrl())}</a></div>
+   <div class="row wrap mt"><button class="btn ghost sm" data-a="checkConn">🔍 בדוק חיבור</button><button class="btn ghost sm" data-a="forcePublish">📢 פרסם זמינות עכשיו</button></div>
+   <div class="lbl mt mb6">החלפת טוקן (כשפג תוקפו)</div><div class="g">${fld('st-tok','טוקן חדש','','password','autocomplete="off" dir="ltr"')}${fld('st-tokp','הסיסמה שלך','','password','autocomplete="current-password"')}</div><button class="btn ghost sm mt" data-a="replaceToken">🔁 החלף טוקן</button></div>
+  <div class="card" style="grid-column:1/-1"><div class="card-t mb">💾 גיבוי וייבוא</div><div class="g g3">
+   <div><div class="b sm-t mb6">גיבוי</div><p class="xs-t muted mb6">GitHub שומר היסטוריה מלאה של כל שינוי (Commits). אפשר גם להוריד עותק מקומי.</p><div class="row wrap"><button class="btn ghost sm" data-a="backup">⬇️ הורד גיבוי</button><label class="btn ghost sm">⬆️ שחזור מקובץ<input type="file" accept=".json,application/json" data-c="restore" hidden></label></div></div>
+   <div><div class="b sm-t mb6">ייבוא מ-Google Sheets (המערכת הישנה)</div><div class="g" style="gap:8px">${fld('im-url','כתובת Apps Script','','url','dir="ltr" placeholder="https://script.google.com/macros/s/…/exec"')}${fld('im-pass','סיסמת הגיליון','','text','dir="ltr" placeholder="classflow2024"')}</div><button class="btn ghost sm mt" data-a="importSheets">📥 ייבא מ-Sheets</button></div>
+   <div><div class="b sm-t mb6">ייבוא מהדפדפן הזה</div><p class="xs-t muted mb6">${old?`נמצאו נתונים של המערכת הישנה: ${old.students.length} תלמידים, ${old.lessons.length} שיעורים`:'לא נמצאו נתונים של המערכת הישנה בדפדפן הזה'}</p><button class="btn ghost sm" data-a="importLocal" ${old?'':'disabled'}>📥 ייבא</button></div>
+  </div><p class="xs-t muted mt">הייבוא מוסיף רק מה שחסר ולא מוחק דבר. אחרי שהייבוא הצליח, השבת את ה-Apps Script הישן (Deploy → Manage deployments → Archive) כדי שהנתונים הישנים לא יישארו חשופים.</p></div>
+ </div>`;};
+async function pingScript(url){const c=new AbortController(),t=setTimeout(()=>c.abort(),15000);try{const r=await fetch(url,{signal:c.signal});const d=await r.json();return d&&d.ok&&d.service==='classflow-intake';}catch(e){return false;}finally{clearTimeout(t);}}
+A.testBooking=async(_,btn)=>{const u=val('st-burl');if(!BOOK_RE.test(u))return toast('הכתובת צריכה להיראות כך: https://script.google.com/macros/s/…/exec');btn.disabled=true;toast('⏳ בודק…');const ok=await pingScript(u);btn.disabled=false;toast(ok?'✅ הסקריפט עונה ומוכן':'⚠️ אין תשובה — ודא שהפריסה היא Web app עם גישה "Anyone"');};
+A.saveBooking=async(_,btn)=>{const u=val('st-burl');if(!BOOK_RE.test(u))return toast('הכתובת צריכה להיראות כך: https://script.google.com/macros/s/…/exec');btn.disabled=true;const ok=await pingScript(u);btn.disabled=false;
+ const save=()=>{DB.settings.bookingUrl=u;persist();render();toast('✅ נשמר — דף ההזמנה ישלח בקשות דרך הסקריפט (תוך כדקה)');};
+ if(ok)save();else ask('הסקריפט לא ענה','לא התקבלה תשובה מהכתובת. לשמור בכל זאת? (אם הסקריפט לא יעבוד — התלמידים יקבלו אפשרות לשלוח בוואטסאפ)','שמור בכל זאת',save);};
+A.clearBooking=()=>ask('ניתוק הסקריפט','דף ההזמנה יחזור לשליחת בקשות בוואטסאפ.','נתק',()=>{DB.settings.bookingUrl='';persist();render();},{icon:'📨'});
+A.saveProfile=()=>{const st=DB.settings,wa=val('st-wa');if(wa&&wa.replace(/\D/g,'').length<9)return toast('מספר וואטסאפ לא תקין');
+ st.teacherName=clamp(val('st-name'),60);st.bio=clamp(val('st-bio'),120);st.whatsapp=clamp(wa,20);st.email=clamp(val('st-email'),120);persist();render();toast('✅ הפרופיל נשמר ויתפרסם בדף ההזמנה');};
+A.saveDefaults=()=>{const st=DB.settings;st.lessonDuration=+val('st-dur')||60;st.breakMinutes=Math.max(0,Math.min(120,Math.round(num('st-brk',0))));st.defaultRate=Math.max(0,num('st-rate',150));const c=val('st-cur');st.currency=['₪','$','€'].includes(c)?c:'₪';persist();render();toast('✅ נשמר');};
+A.saveMsgs=()=>{const m=DB.settings.msg;m.enabled=$('#st-men').checked;m.lang=['both','he','ar'].includes(val('st-mlang'))?val('st-mlang'):'both';m.he=clamp(val('st-mhe'),2000);m.ar=clamp(val('st-mar'),2000);m.declineHe=clamp(val('st-mdhe'),2000);m.declineAr=clamp(val('st-mdar'),2000);persist();toast('✅ ההודעות נשמרו');};
+A.resetMsgs=()=>{Object.assign(DB.settings.msg,MSG_DEF);persist();render();toast('שוחזרו הודעות ברירת המחדל');};
+C.setAutoLock=(_,el)=>{localStorage.setItem('cf_autolock',el.value);toast('✅ נעילה אוטומטית אחרי '+el.value+' דקות');};
+A.changePass=async()=>{const op=$('#st-op').value,np=$('#st-np').value,np2=$('#st-np2').value;if(np.length<8)return toast('סיסמה חדשה: לפחות 8 תווים');if(np!==np2)return toast('הסיסמאות אינן תואמות');
+ try{const cfg=await openVault(op);await sealVault(cfg,np);['st-op','st-np','st-np2'].forEach(i=>$('#'+i).value='');toast('✅ הסיסמה עודכנה');}catch(e){toast('הסיסמה הנוכחית שגויה');}};
+A.checkConn=async()=>{try{const d=await GH.repo(GH.cfg.dataRepo);await GH.repo(GH.cfg.siteRepo);toast(d.private?'✅ החיבור תקין · מאגר הנתונים פרטי':'⛔ אזהרה: מאגר הנתונים ציבורי! הפוך אותו לפרטי מיד');}catch(e){toast('⚠️ '+e.message);}};
+A.forcePublish=async()=>{lastPub='';await publish();toast('📢 הזמינות פורסמה');};
+A.replaceToken=async()=>{const tok=val('st-tok'),p=$('#st-tokp').value;if(tok.length<20)return toast('הדבק את הטוקן המלא');
+ let cfg;try{cfg=await openVault(p);}catch(e){return toast('סיסמה שגויה');}
+ const old=GH.cfg;GH.cfg={...old,token:tok};
+ try{const d=await GH.repo(old.dataRepo);if(!d.private)throw new Error('מאגר הנתונים אינו פרטי');cfg.token=tok;await sealVault(cfg,p);$('#st-tok').value='';$('#st-tokp').value='';toast('✅ הטוקן הוחלף');}
+ catch(e){GH.cfg=old;toast('⚠️ '+e.message);}};
+A.backup=()=>download('classflow-backup-'+todayKey()+'.json',JSON.stringify(DB,null,2),'application/json');
+C.restore=(_,el)=>{const f=el.files&&el.files[0];el.value='';if(!f)return;if(f.size>5e6)return toast('הקובץ גדול מדי');
+ f.text().then(t=>{let o;try{o=JSON.parse(t);}catch(e){return toast('קובץ לא תקין');}
+  if(!o||!Array.isArray(o.students))return toast('זה לא קובץ גיבוי של ClassFlow');
+  ask('שחזור מגיבוי',`הנתונים הנוכחיים יוחלפו בגיבוי (${o.students.length} תלמידים, ${(o.lessons||[]).length} שיעורים).\nהגרסה הנוכחית תישאר בהיסטוריה של GitHub.`,'שחזר',()=>{DB=normalizeDB(o);persist();render();toast('✅ שוחזר');},{danger:true,icon:'♻️'});});};
+
+/* ── import from old system (Google Sheets / this browser) ── */
+function mapSched(ds){const out={};if(ds&&typeof ds==='object')Object.entries(ds).forEach(([k,v])=>{const d=normDate(k);if(isKey(d)&&v&&!v.blocked&&Array.isArray(v.slots)&&v.slots.length)out[d]=v.slots.map(normTime).filter(t=>/^\d{2}:\d{2}$/.test(t)).sort();});return out;}
+function oldSettings(profile,msg,av){const s={};if(profile){if(profile.name)s.teacherName=profile.name;if(profile.bio)s.bio=profile.bio;if(profile.phone)s.whatsapp=profile.phone;if(profile.email)s.email=profile.email;}
+ if(av){if(av.lessonDuration)s.lessonDuration=+av.lessonDuration;if(av.breakMinutes!=null)s.breakMinutes=+av.breakMinutes||0;if(av.defaultRate)s.defaultRate=+av.defaultRate;if(av.currency)s.currency=av.currency;}
+ if(msg){s.msg={};if(msg.lang)s.msg.lang=msg.lang;if(msg.templateHe)s.msg.he=msg.templateHe;if(msg.templateAr)s.msg.ar=msg.templateAr;if(msg.enabled!=null)s.msg.enabled=!!msg.enabled;}return s;}
+function oldLocal(){try{const app=JSON.parse(localStorage.getItem('cf_app')||'null');if(!app||!Array.isArray(app.students))return null;const J=k=>{try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}};
+ const av=J('cf_availability')||{};return{students:app.students||[],lessons:app.lessons||[],plans:J('cf_lesson_plans')||[],packages:J('cf_packages')||[],schedule:mapSched(av.dateSchedule),settings:oldSettings(J('cf_teacher_profile'),J('cf_msg_settings'),av)};}catch(e){return null;}}
+function importOld(src){let ns=0,nl=0,np=0;const now=new Date().toISOString(),sidMap={},def=DB.settings.defaultRate;
+ (src.students||[]).forEach(o=>{if(!o||o.id===''||o.id==null)return;const id='o'+o.id;const ex=DB.students.find(s=>s.id===id||(o.phone&&samePhone(s.phone,o.phone)));if(ex){sidMap[String(o.id)]=ex.id;return;}sidMap[String(o.id)]=id;
+  const ia=o.isActive??o.is_active;DB.students.push({id,name:clamp(o.name,80)||'ללא שם',phone:clamp(o.phone,30),email:clamp(o.email,120),lang:o.lang||o.language||'',level:o.level||'מתחיל',rate:+o.rate||def,bought:+(o.bought??o.lessons_bought)||0,notes:clamp(o.notes,2000),city:clamp(o.city,60),source:clamp(o.source,40),startDate:normDate(o.startDate||o.start_date),packageId:String(o.packageId||o.package_id||''),isActive:!(ia===false||ia==='false'),createdAt:o.createdAt||o.created_at||now});ns++;});
+ (src.lessons||[]).forEach(o=>{if(!o||o.id===''||o.id==null)return;const id='o'+o.id;if(DB.lessons.some(l=>l.id===id))return;const sid=sidMap[String(o.studentId??o.student_id)];if(!sid)return;
+  DB.lessons.push({id,studentId:sid,lang:o.lang||o.language||'',date:normDate(o.date),time:normTime(o.time),duration:+o.duration||+DB.settings.lessonDuration||60,price:+o.price||0,paid:o.paid===true||o.paid==='true',status:o.status==='cancelled'?'cancelled':'ok',rating:+o.rating||0,topics:clamp(o.topics,300),teacherNotes:clamp(o.teacherNotes||o.teacher_notes,2000),freeText:clamp(o.freeText||o.free_text,3000),effort:o.effort||'',homework:clamp(o.homework,1000),notes:clamp(o.notes||o.studentNotes,2000),createdAt:o.createdAt||o.created_at||now});nl++;});
+ (src.plans||[]).forEach(p=>{if(!p||!p.topic)return;const id=String(p.id||uid());if(DB.plans.some(x=>x.id===id))return;DB.plans.push({...p,id,vocab:Array.isArray(p.vocab)?p.vocab:[],notesLog:Array.isArray(p.notesLog)?p.notesLog:[]});np++;});
+ (src.packages||[]).forEach(p=>{if(!p||!p.name)return;const id=String(p.id);if(DB.packages.some(x=>x.id===id)){const x=DB.packages.find(y=>y.id===id);Object.assign(x,{name:p.name,lessons:+p.lessons||x.lessons,price:+p.price||x.price,color:safeColor(p.color||x.color)});return;}DB.packages.push({id,name:clamp(p.name,60),lessons:+p.lessons||1,price:+p.price||0,color:safeColor(p.color)});});
+ Object.entries(src.schedule||{}).forEach(([d,t])=>{if(!DB.schedule[d])DB.schedule[d]=t;});
+ const s=src.settings||{};['teacherName','bio','email','currency'].forEach(k=>{if(s[k])DB.settings[k]=s[k];});if(s.whatsapp&&!DB.settings.whatsapp)DB.settings.whatsapp=s.whatsapp;['lessonDuration','breakMinutes','defaultRate'].forEach(k=>{if(s[k]!=null&&!isNaN(s[k]))DB.settings[k]=+s[k];});if(s.msg)Object.assign(DB.settings.msg,s.msg);
+ return{ns,nl,np};}
+A.importLocal=()=>{const src=oldLocal();if(!src)return toast('לא נמצאו נתונים');const r=importOld(src);persist();render();toast(`✅ יובאו ${r.ns} תלמידים, ${r.nl} שיעורים, ${r.np} תכניות`);};
+A.importSheets=async(_,btn)=>{const url=val('im-url'),pass=val('im-pass');if(!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(url))return toast('כתובת Apps Script לא תקינה (צריכה להסתיים ב-/exec)');
+ btn.disabled=true;toast('⏳ מייבא מ-Google Sheets…');
+ try{const get=async sh=>{const r=await fetch(url+'?sheet='+encodeURIComponent(sh)+'&pass='+encodeURIComponent(pass)+'&t='+Date.now());const d=await r.json();if(d&&d.error)throw new Error(d.error==='unauthorized'?'סיסמה שגויה':d.error);return Array.isArray(d)?d:[];};
+  const objs=rows=>rows.length>1?rows.slice(1).filter(r=>r[0]!==''&&r[0]!=null).map(r=>Object.fromEntries(rows[0].map((h,i)=>[h,r[i]]))):[];
+  const [S,L,J]=await Promise.all([get('Students'),get('Lessons'),get('JsonStore').catch(()=>[])]);
+  const js={};objs(J).forEach(o=>{try{js[o.id]=JSON.parse(o.json);}catch(e){}});
+  const av=js.availability||{};
+  const r=importOld({students:objs(S),lessons:objs(L),plans:js.lessonPlans||[],packages:js.packages||[],schedule:mapSched(av.dateSchedule),settings:oldSettings(js.teacherProfile,js.msgSettings,av)});
+  persist();render();toast(`✅ יובאו ${r.ns} תלמידים, ${r.nl} שיעורים, ${r.np} תכניות`);}
+ catch(e){toast('⚠️ הייבוא נכשל: '+e.message);}finally{btn.disabled=false;}};
+
+/* ═══════════ GATE ACTIONS ═══════════ */
+let fails=0;
+A.unlock=async(_,btn)=>{const p=$('#g-pass').value;if(!p)return;btn.disabled=true;
+ let cfg;try{cfg=await openVault(p);}catch(e){fails++;await sleep(Math.min(fails,10)*500);const er=$('#g-err');if(er)er.textContent='סיסמה שגויה';btn.disabled=false;$('#g-pass').select();return;}
+ fails=0;await startSession(cfg);};
+A.setup=async(_,btn)=>{
+ const owner=val('g-owner'),dataRepo=val('g-data'),siteRepo=val('g-site'),token=val('g-token'),p1=$('#g-p1').value,p2=$('#g-p2').value;
+ const err=m=>{$('#g-err').textContent=m;btn.disabled=false;};
+ if(!/^[A-Za-z0-9-]{1,39}$/.test(owner))return err('שם משתמש GitHub לא תקין');
+ if(!/^[\w.-]{1,100}$/.test(dataRepo)||!/^[\w.-]{1,100}$/.test(siteRepo))return err('שם מאגר לא תקין');
+ if(dataRepo.toLowerCase()===siteRepo.toLowerCase())return err('מאגר הנתונים חייב להיות נפרד מהמאגר הציבורי');
+ if(token.length<20)return err('הדבק את הטוקן המלא');
+ if(p1.length<8)return err('סיסמה: לפחות 8 תווים');
+ if(p1!==p2)return err('הסיסמאות אינן תואמות');
+ btn.disabled=true;$('#g-err').textContent='בודק חיבור ל-GitHub…';
+ const cfg={owner,dataRepo,siteRepo,token};GH.cfg=cfg;
+ try{
+  const d=await GH.repo(dataRepo);
+  if(!d.private){GH.cfg=null;return err('⛔ המאגר "'+dataRepo+'" ציבורי! הפוך אותו לפרטי (Settings → Danger Zone → Change visibility) ונסה שוב');}
+  cfg.dataBranch=d.default_branch;
+  const s=await GH.repo(siteRepo);cfg.siteBranch=s.default_branch;
+  await sealVault(cfg,p1);
+  await startSession(cfg);
+ }catch(e){GH.cfg=null;err(e.message);}
+};
+A.toUnlock=()=>gate('unlock');
+A.forgetDevice=()=>{if(!confirm('לנתק את המכשיר הזה?\nהטוקן יימחק מהמכשיר (הנתונים נשארים ב-GitHub). תצטרך להזין טוקן וסיסמה מחדש.'))return;
+ localStorage.removeItem(VAULT);GH.cfg=null;DB=null;dirty=false;closeModal();$('#app').hidden=true;gate('setup');};
+A.lock=()=>lock(false);
+A.go=v=>go(v);
+A.syncNow=()=>{const el=$('#sync');if(dirty||el.classList.contains('error')){dirty=true;flush();}else toast('✅ הכל שמור ב-GitHub');};
+
+/* ═══════════ EVENTS ═══════════ */
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const fn=A[el.dataset.a];if(fn){e.preventDefault();fn(el.dataset.id,el,e);}});
+document.addEventListener('change',e=>{const el=e.target.closest('[data-c]');if(el&&C[el.dataset.c])C[el.dataset.c](el.dataset.id,el,e);});
+document.addEventListener('input',e=>{const el=e.target.closest('[data-i]');if(el&&I[el.dataset.i])I[el.dataset.i](el.dataset.id,el,e);});
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&$('#ovl').classList.contains('open'))closeModal();
+ if(e.key==='Enter'&&e.target.tagName==='INPUT'&&e.target.closest('#gate')){const b=$('#gate [data-a="unlock"],#gate [data-a="setup"]');if(b)b.click();}
+});
+$('#ovl').addEventListener('click',e=>{if(e.target.id==='ovl')closeModal();});
+let lastAct=Date.now();
+['pointerdown','keydown','scroll','touchstart'].forEach(ev=>addEventListener(ev,()=>{lastAct=Date.now();},{passive:true}));
+setInterval(()=>{if(GH.cfg&&DB&&document.visibilityState==='visible')syncInbox();},30000);
+setInterval(()=>{if(!GH.cfg||!DB)return;const min=+localStorage.getItem('cf_autolock')||20;if(Date.now()-lastAct>min*60000)lock(true);},20000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&dirty)flush();if(document.visibilityState==='visible'&&GH.cfg&&DB&&Date.now()-inboxAt>10000)syncInbox();});
+addEventListener('beforeunload',e=>{if(dirty||saving){e.preventDefault();e.returnValue='';}});
+
+/* ═══════════ BOOT ═══════════ */
+if(!window.crypto||!crypto.subtle){document.body.innerHTML='<p style="padding:2rem;text-align:center">יש לפתוח את הדף בכתובת https (GitHub Pages)</p>';}
+else gate(hasVault()?'unlock':'setup');
+</script>
+</body>
+</html>
