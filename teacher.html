@@ -137,18 +137,72 @@ table.tbl{width:100%;border-collapse:collapse}
 .kv{font-size:.86rem;color:var(--t2);padding:3px 0;word-break:break-all}
 
 /* profile */
-.prof{grid-template-columns:minmax(0,330px) minmax(0,1fr);align-items:start}
-.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.kpi{background:var(--s);border:1px solid var(--b);border-radius:14px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;gap:1px}
-.kpi b{font-size:1rem}
-.kpi span{font-size:.68rem;color:var(--m)}
-.info{display:flex;flex-direction:column;gap:5px;font-size:.88rem;color:var(--t2)}
-.ptabs{display:flex;border-bottom:1px solid var(--b);background:var(--s2)}
-.ptabs button{flex:1;border:none;background:none;padding:13px 8px;font-weight:700;color:var(--m);border-bottom:2px solid transparent;font-size:.88rem}
-.ptabs button.on{color:var(--blue);border-bottom-color:var(--blue);background:var(--s)}
-.pbox{border:1.5px solid var(--b);border-radius:14px;padding:16px;text-align:center;display:flex;flex-direction:column}
-.pbox b{font-size:1.45rem;color:var(--c)}
-.pbox span{font-size:.74rem;color:var(--m)}
+.ph{background:var(--s);border:1px solid var(--b);border-radius:24px;box-shadow:var(--sh);overflow:hidden;margin-bottom:16px}
+.ph-band{height:96px;position:relative;background:linear-gradient(120deg,var(--sc),var(--sc2));}
+.ph-band::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 12% 120%,rgba(255,255,255,.28),transparent 45%),radial-gradient(circle at 85% -20%,rgba(255,255,255,.22),transparent 40%)}
+.ph-back{position:absolute;top:12px;inset-inline-start:14px;z-index:1;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:99px;padding:5px 12px;font-size:.78rem;font-weight:700;backdrop-filter:blur(6px)}
+.ph-back:hover{background:rgba(255,255,255,.34)}
+.ph-body{display:flex;align-items:flex-end;gap:18px;padding:0 24px 18px;margin-top:-44px;position:relative;flex-wrap:wrap}
+.ph-av{width:96px;height:96px;border-radius:28px;display:grid;place-items:center;color:#fff;font-size:2rem;font-weight:900;border:5px solid var(--s);box-shadow:0 8px 24px rgba(26,35,50,.18);flex-shrink:0;background:linear-gradient(135deg,var(--sc),var(--sc2))}
+.ph-main{flex:1;min-width:220px;padding-top:50px}
+.ph-name{font-size:1.6rem;font-weight:900;letter-spacing:-.02em;line-height:1.15}
+.ph-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.ph-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:.84rem;color:var(--t2)}
+.ph-meta a{color:inherit;text-decoration:none}
+.ph-meta a:hover{color:var(--blue)}
+.ph-act{display:flex;gap:8px;flex-wrap:wrap;padding-bottom:4px}
+.ph-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--b);background:var(--s2)}
+.ph-stat{padding:14px 10px;text-align:center;border-inline-start:1px solid var(--b)}
+.ph-stat:first-child{border-inline-start:none}
+.ph-stat b{display:block;font-size:1.35rem;font-weight:900;letter-spacing:-.02em;color:var(--c,var(--t));line-height:1.2}
+.ph-stat span{font-size:.72rem;color:var(--m);font-weight:600}
+.pgrid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}
+.pgrid>*{min-width:0}
+.pside{display:flex;flex-direction:column;gap:14px}
+.seg{display:flex;gap:4px;background:var(--s3);border-radius:14px;padding:4px;margin-bottom:16px;width:fit-content;max-width:100%;overflow-x:auto}
+.seg button{border:none;background:none;padding:8px 16px;border-radius:10px;font-weight:700;font-size:.86rem;color:var(--m);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.seg button.on{background:var(--s);color:var(--t);box-shadow:0 1px 4px rgba(26,35,50,.1)}
+.seg .cnt{font-size:.68rem;background:var(--b);color:var(--t2);border-radius:99px;padding:0 7px;font-weight:800}
+.seg .cnt.warn{background:var(--amber);color:#fff}
+.tl-h{display:flex;align-items:center;gap:8px;font-size:.74rem;font-weight:800;color:var(--m);text-transform:uppercase;letter-spacing:.06em;margin:4px 0 10px}
+.tl-h::after{content:'';flex:1;height:1px;background:var(--b)}
+.tl{position:relative;display:flex;flex-direction:column;gap:12px;margin-bottom:22px}
+.tl::before{content:'';position:absolute;top:10px;bottom:10px;inset-inline-start:31px;width:2px;background:var(--b)}
+.le{display:flex;gap:14px;align-items:flex-start;position:relative}
+.le-date{width:64px;flex-shrink:0;border-radius:16px;text-align:center;padding:7px 4px;background:var(--s);border:2px solid var(--lc);position:relative;z-index:1}
+.le-date small{display:block;font-size:.66rem;font-weight:800;color:var(--lc)}
+.le-date b{display:block;font-size:1.45rem;font-weight:900;line-height:1.05}
+.le-date span{display:block;font-size:.66rem;color:var(--m);font-weight:700}
+.le-card{flex:1;min-width:0;background:var(--s);border:1px solid var(--b);border-radius:16px;padding:12px 14px;transition:.15s}
+.le-card:hover{box-shadow:var(--sh2)}
+.le.cx .le-card{opacity:.6}
+.le-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.le-time{font-weight:800;font-size:.95rem}
+.le-sp{flex:1}
+.le-body{margin-top:8px;display:flex;flex-direction:column;gap:5px;font-size:.84rem;color:var(--t2)}
+.le-foot{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--b)}
+.ibtn{width:32px;height:32px;border-radius:9px;border:1px solid var(--b);background:var(--s2);display:grid;place-items:center;font-size:.9rem;padding:0}
+.ibtn:hover{background:var(--s3)}
+.stars-s{color:var(--gold);letter-spacing:1px;font-size:.84rem}
+.nx{border-radius:20px;padding:18px;color:#fff;background:linear-gradient(135deg,#3B6FE0,#2B5BC8);box-shadow:0 8px 24px rgba(59,111,224,.3);position:relative;overflow:hidden}
+.nx::after{content:'';position:absolute;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.08);top:-60px;inset-inline-end:-50px}
+.nx .lbl{color:rgba(255,255,255,.75)}
+.nx-when{font-size:1.25rem;font-weight:900;margin-top:4px}
+.nx-sub{font-size:.84rem;opacity:.85;margin-top:2px}
+.nx .btn{background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.3)}
+.nx .btn:hover{background:rgba(255,255,255,.28)}
+.ring{--p:0;width:112px;height:112px;border-radius:50%;background:conic-gradient(var(--rc) calc(var(--p)*1%),var(--s3) 0);display:grid;place-items:center;flex-shrink:0}
+.ring>div{width:86px;height:86px;border-radius:50%;background:var(--s);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring b{font-size:1.6rem;font-weight:900;line-height:1;color:var(--rc)}
+.ring span{font-size:.68rem;color:var(--m);font-weight:700;margin-top:2px}
+.facts{display:flex;flex-direction:column}
+.fact{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--b);font-size:.85rem}
+.fact:last-child{border-bottom:none}
+.fact span{color:var(--m)}
+.fact b{font-weight:700;text-align:left}
+.pbox{border:1px solid var(--b);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:2px;background:var(--s2)}
+.pbox b{font-size:1.45rem;font-weight:900;color:var(--c);letter-spacing:-.02em}
+.pbox span{font-size:.74rem;color:var(--m);font-weight:600}
 .col-end{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
 
 /* calendar */
@@ -229,8 +283,9 @@ table.tbl{width:100%;border-collapse:collapse}
 @keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .fade{animation:up .25s ease}
 
-@media (max-width:980px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g-main,.g3,.prof{grid-template-columns:1fr}}
+@media (max-width:980px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g-main,.g3,.prof,.pgrid{grid-template-columns:1fr}.ph-stats{grid-template-columns:repeat(3,minmax(0,1fr))}.ph-stat:nth-child(4){border-inline-start:none}.ph-stat:nth-child(n+4){border-top:1px solid var(--b)}}
 @media (max-width:640px){
+ .ph-body{padding:0 16px 16px;gap:12px}.ph-av{width:80px;height:80px;font-size:1.6rem;border-radius:24px}.ph-main{padding-top:0;min-width:100%}.ph-name{font-size:1.35rem}.ph-act{width:100%}.ph-act .btn{flex:1}.le-date{width:54px}.tl::before{inset-inline-start:26px}.le{gap:10px}.seg{width:100%}.seg button{flex:1;justify-content:center;padding:8px 6px;font-size:.8rem}
  .g2{grid-template-columns:1fr}.main{padding:16px 12px 50px}.hdr-in{padding:9px 12px}
  .page-h h1{font-size:1.3rem}.sg{gap:4px}.sd{padding:6px 2px;min-height:74px}
  .cal .c{min-height:70px;padding:3px}.cp{font-size:.58rem;padding:1px 3px}.cal.wk .c{min-height:140px}
@@ -643,46 +698,66 @@ let pTab='history';
 A.profile=id=>{pTab='history';go('profile',id);};
 A.pTab=t=>{pTab=t;render();};
 R.profile=()=>{const s=stu(viewArg);if(!s)return emptyBox('🤷','התלמיד לא נמצא');
- const x=studentStats(s),pkg=DB.packages.find(p=>p.id===s.packageId);
- const kpi=(i,l,v,c)=>`<div class="kpi"><div>${i}</div><b style="color:${c}">${esc(v)}</b><span>${l}</span></div>`;
- return `<div class="row between wrap mb"><button class="btn ghost sm" data-a="go" data-id="students">→ חזרה לתלמידים</button>
-  <div class="row">${s.phone?`<a class="btn wa sm" href="https://wa.me/${esc(waNum(s.phone))}" target="_blank" rel="noopener">💬 וואטסאפ</a>`:''}<button class="btn pri sm" data-a="lessonModal" data-sid="${esc(s.id)}">＋ שיעור חדש</button></div></div>
- <div class="g prof">
-  <div class="g" style="align-content:start">
-   <div class="card"><div class="row" style="gap:14px">${avatar(s,58)}<div class="grow"><h2 style="font-size:1.25rem;margin-bottom:4px">${esc(s.name)}</h2><span class="pill ${s.isActive===false?'':'green'}">${s.isActive===false?'לא פעיל':'● פעיל'}</span></div></div>
-    <div class="info mt">${[['🌐',[s.lang,s.level].filter(Boolean).join(' · ')],['📱',s.phone],['✉️',s.email],['📍',s.city],['🧭',s.source],['📅',s.startDate?'התחיל ב-'+fmtD(s.startDate):'']].filter(r=>r[1]).map(([i,v])=>`<div>${i} ${esc(v)}</div>`).join('')}</div>
-    ${s.notes?`<div class="note mt">${esc(s.notes)}</div>`:''}</div>
-   <div class="kpis">${kpi('📚','שיעורים',x.count,'var(--blue)')}${kpi('💰','שולם',money(x.paid),'var(--green)')}${kpi('💳','חוב',x.debt?money(x.debt):'אין',x.debt?'var(--red)':'var(--green)')}${kpi('⭐','דירוג',x.avg,'var(--gold)')}${kpi('❌','ביטולים',x.cancelled,'var(--m)')}${kpi('⏰','איחורים',x.late,'var(--m)')}</div>
-   <div class="card"><div class="card-t mb">📦 חבילה וקרדיט</div>
-    <select class="sel" data-c="assignPkg" data-id="${esc(s.id)}"><option value="">ללא חבילה</option>${DB.packages.map(p=>opt(p.id,`${p.name} · ${p.lessons} שיעורים · ${money(p.price)}`,s.packageId)).join('')}</select>
-    ${s.bought?`<div class="row between sm-t mt"><span>${Math.min(x.count,s.bought)} מתוך ${s.bought} נוצלו</span><b style="color:${x.remaining<=1?'var(--red)':'var(--green)'}">${x.remaining} נותרו</b></div>
-    <div class="bar mt6" style="--c:${pkg?safeColor(pkg.color):'var(--blue)'}"><div style="width:${Math.min(100,Math.round(x.count/s.bought*100))}%"></div></div>
-    ${x.remaining===0?'<div class="alert red sm-t mt" style="margin-bottom:0">הקרדיט נגמר — זה הזמן להציע חבילה חדשה</div>':''}`:'<p class="xs-t muted mt">אין קרדיט שיעורים מראש</p>'}
-    <button class="btn ghost sm mt" data-a="addCredits" data-id="${esc(s.id)}">＋ הוסף שיעורים לקרדיט</button></div>
+ const x=studentStats(s),pkg=DB.packages.find(p=>p.id===s.packageId),tk=todayKey(),c=sColor(s);
+ const pastAll=x.all.filter(l=>l.date<=tk),att=pastAll.length?Math.round(pastAll.filter(l=>l.status!=='cancelled').length/pastAll.length*100)+'%':'—';
+ const unpaid=x.act.filter(l=>!l.paid).length;
+ const st=(v,l,col)=>`<div class="ph-stat" style="--c:${col}"><b>${esc(v)}</b><span>${l}</span></div>`;
+ const meta=[s.phone?`<a href="tel:${esc(s.phone.replace(/[^\d+]/g,''))}">📱 <span dir="ltr">${esc(s.phone)}</span></a>`:'',s.email?`<a href="mailto:${esc(s.email)}">✉️ ${esc(s.email)}</a>`:'',s.city?`<span>📍 ${esc(s.city)}</span>`:'',s.startDate?`<span>📅 מאז ${fmtD(s.startDate)}</span>`:''].filter(Boolean).join('');
+ return `<div class="ph" style="--sc:${c};--sc2:${c}b3">
+  <div class="ph-band"><button class="ph-back" data-a="go" data-id="students">→ כל התלמידים</button></div>
+  <div class="ph-body">
+   <div class="ph-av">${esc(initials(s.name))}</div>
+   <div class="ph-main"><div class="ph-name">${esc(s.name)}</div>
+    <div class="ph-chips"><span class="pill ${s.isActive===false?'':'green'}">${s.isActive===false?'⏸ לא פעיל':'● פעיל'}</span>${s.lang?`<span class="pill blue">${esc(s.lang)}</span>`:''}${s.level?`<span class="pill">${esc(s.level)}</span>`:''}${pkg?`<span class="pill" style="background:${safeColor(pkg.color)}1f;color:${safeColor(pkg.color)}">📦 ${esc(pkg.name)}</span>`:''}${x.debt>0?`<span class="pill red">חוב ${money(x.debt)}</span>`:''}</div>
+    ${meta?`<div class="ph-meta">${meta}</div>`:''}</div>
+   <div class="ph-act">${s.phone?`<a class="btn wa" href="https://wa.me/${esc(waNum(s.phone))}" target="_blank" rel="noopener">💬 וואטסאפ</a>`:''}<button class="btn pri" data-a="lessonModal" data-sid="${esc(s.id)}">＋ שיעור חדש</button></div>
   </div>
-  <div class="card" style="padding:0;overflow:hidden">
-   <div class="ptabs">${[['history','📚 היסטוריה'],['pay','💳 תשלומים'],['edit','✏️ פרטים']].map(([k,t])=>`<button class="${pTab===k?'on':''}" data-a="pTab" data-id="${k}">${t}</button>`).join('')}</div>
-   <div style="padding:18px">${pTab==='pay'?payTab(s,x):pTab==='edit'?editTab(s):histTab(s,x)}</div>
+  <div class="ph-stats">${st(x.count,'שיעורים','var(--blue)')}${st(money(x.paid),'שולם','var(--green)')}${st(x.debt?money(x.debt):'אין',x.debt?'חוב פתוח':'חוב',x.debt?'var(--red)':'var(--green)')}${st(x.avg==='—'?'—':'★ '+x.avg,'דירוג ממוצע','var(--gold)')}${st(att,'נוכחות','var(--violet)')}</div>
+ </div>
+ <div class="pgrid">
+  <div class="card" style="padding:16px 18px">
+   <div class="seg">${[['history','📚 שיעורים',x.all.length,false],['pay','💳 תשלומים',unpaid,unpaid>0],['edit','✏️ פרטים','',false]].map(([k,t,n,w])=>`<button class="${pTab===k?'on':''}" data-a="pTab" data-id="${k}">${t}${n!==''?`<span class="cnt ${w?'warn':''}">${n}</span>`:''}</button>`).join('')}</div>
+   ${pTab==='pay'?payTab(s,x):pTab==='edit'?editTab(s):histTab(s,x)}
   </div>
+  <div class="pside">${nextCard(s,x)}${creditCard(s,x,pkg)}${factsCard(s,x)}</div>
  </div>`;};
-function histTab(s,x){const list=[...x.all].sort(byDTdesc),tk=todayKey();
- if(!list.length)return emptyBox('📚','אין שיעורים עדיין');
- return `<div class="list">${list.map(l=>{const cx=l.status==='cancelled',fut=l.date>tk;
-  return `<div class="item" style="align-items:flex-start;border-inline-start:4px solid ${cx?'var(--b2)':l.paid?'var(--green)':fut?'var(--blue)':'var(--amber)'};${cx?'opacity:.6':''}">
-   <div class="ctr" style="min-width:62px"><b class="sm-t">${fmtDS(l.date)}</b><div class="xs-t muted">${esc(l.time)}</div></div>
-   <div class="grow"><div class="row wrap" style="gap:6px"><b class="sm-t">${esc(l.lang)}</b>${cx?'<span class="pill red">בוטל</span>':''}${fut&&!cx?'<span class="pill blue">עתידי</span>':''}${l.attendance==='late'?'<span class="pill amber">איחר</span>':''}${+l.rating?`<span style="color:var(--gold)">${'★'.repeat(+l.rating)}</span>`:''}${l.effort==='high'?'🔥':l.effort==='low'?'😴':''}</div>
-    ${l.topics?`<div class="xs-t" style="color:var(--blue);margin-top:3px">📌 ${esc(l.topics)}</div>`:''}
-    ${l.freeText?`<div class="note">${esc(l.freeText)}</div>`:''}
-    ${l.homework?`<div class="xs-t muted mt6">📝 שיעורי בית: ${esc(l.homework)}</div>`:''}
-    ${l.teacherNotes?`<div class="xs-t muted mt6">🔒 ${esc(l.teacherNotes)}</div>`:''}
-    ${l.notes?`<div class="xs-t muted mt6">💬 ${esc(l.notes)}</div>`:''}</div>
-   <div class="col-end">${cx?'':`<span class="pill ${l.paid?'green':'amber'}">${l.paid?'✓ ':''}${money(lessonPrice(l))}</span>`}
-    <div class="row" style="gap:4px">${!cx&&!l.paid?`<button class="btn sm ok" data-a="markPaid" data-id="${esc(l.id)}">שולם</button>`:''}<button class="btn sm ghost" data-a="report" data-id="${esc(l.id)}">📝</button><button class="btn sm ghost" data-a="lessonModal" data-id="${esc(l.id)}" title="עריכה">⚙️</button></div></div>
-  </div>`;}).join('')}</div>`;}
-function payTab(s,x){const unpaid=x.act.filter(l=>!l.paid).sort(byDT),tk=todayKey();
- return `<div class="g g2 mb"><div class="pbox" style="--c:var(--green)"><b>${money(x.paid)}</b><span>שולם</span></div><div class="pbox" style="--c:${x.debt?'var(--red)':'var(--green)'}"><b>${x.debt?money(x.debt):'✓'}</b><span>חוב על שיעורים שהתקיימו</span></div></div>
- ${unpaid.length?`<div class="row between wrap mb"><div class="lbl">לא שולמו (${unpaid.length})</div>${x.dueCount?`<button class="btn sm ok" data-a="payAll" data-id="${esc(s.id)}">סמן את כל החוב כשולם</button>`:''}</div>
- <div class="list">${unpaid.map(l=>`<div class="item"><div class="grow"><b class="sm-t">${fmtDS(l.date)} · ${esc(l.time)}</b><div class="xs-t muted">${esc(l.lang)}${l.date>tk?' · עתידי':''}</div></div><b style="color:var(--amber)">${money(lessonPrice(l))}</b><button class="btn sm ok" data-a="markPaid" data-id="${esc(l.id)}">שולם</button></div>`).join('')}</div>`:emptyBox('🎉','כל השיעורים שולמו')}`;}
+function nextCard(s,x){const tk=todayKey(),now=new Date(),nowT=m2t(now.getHours()*60+now.getMinutes());
+ const n=x.act.filter(l=>l.date>tk||(l.date===tk&&l.time>=nowT)).sort(byDT)[0];
+ if(!n)return `<div class="card ctr"><div style="font-size:1.8rem">🗓️</div><div class="b mt6">אין שיעור מתוכנן</div><p class="xs-t muted mb">זה הזמן לקבוע את הבא</p><button class="btn soft sm" data-a="lessonModal" data-sid="${esc(s.id)}">＋ קבע שיעור</button></div>`;
+ const days=Math.round((parseKey(n.date)-parseKey(tk))/864e5),rel=days===0?'היום':days===1?'מחר':`בעוד ${days} ימים`;
+ return `<div class="nx"><div class="lbl">השיעור הבא</div><div class="nx-when">${rel} · ${esc(n.time)}</div><div class="nx-sub">${fmtDS(n.date)} · ${esc(n.lang)} · ${+n.duration||60} דק׳</div>
+  <div class="row mt" style="position:relative;z-index:1"><button class="btn sm" data-a="report" data-id="${esc(n.id)}">📝 דיווח</button><button class="btn sm" data-a="lessonModal" data-id="${esc(n.id)}">⚙️ עריכה</button></div></div>`;}
+function creditCard(s,x,pkg){const b=+s.bought||0,used=Math.min(x.count,b),p=b?Math.round(used/b*100):0,rc=!b?'var(--m2)':x.remaining<=1?'var(--red)':pkg?safeColor(pkg.color):'var(--green)';
+ return `<div class="card"><div class="card-t mb">📦 חבילה וקרדיט</div>
+  <div class="row" style="gap:16px"><div class="ring" style="--p:${p};--rc:${rc}"><div><b>${b?x.remaining:'—'}</b><span>${b?'נותרו':'אין קרדיט'}</span></div></div>
+   <div class="grow sm-t">${b?`<div class="b">${used} מתוך ${b} נוצלו</div><div class="xs-t muted mt6">${x.remaining===0?'⚠️ הקרדיט נגמר — זה הזמן להציע חבילה חדשה':x.remaining===1?'נשאר שיעור אחד בקרדיט':'הקרדיט מתעדכן אוטומטית עם כל שיעור'}</div>`:'<div class="muted">לא נרכשו שיעורים מראש</div>'}</div></div>
+  <select class="sel mt" data-c="assignPkg" data-id="${esc(s.id)}"><option value="">${pkg?'ללא חבילה':'שייך חבילה…'}</option>${DB.packages.map(p=>opt(p.id,`${p.name} · ${p.lessons} שיעורים · ${money(p.price)}`,s.packageId)).join('')}</select>
+  <button class="btn ghost sm mt w100" data-a="addCredits" data-id="${esc(s.id)}">＋ הוסף שיעורים לקרדיט</button></div>`;}
+function factsCard(s,x){const rows=[['תעריף לשיעור',money(s.rate??DB.settings.defaultRate)],['מקור הגעה',s.source],['שיעור אחרון',x.last?fmtD(x.last.date):''],['ביטולים',x.cancelled],['איחורים',x.late]].filter(r=>r[1]!==''&&r[1]!=null);
+ return `<div class="card"><div class="card-t mb">ℹ️ פרטים</div><div class="facts">${rows.map(([k,v])=>`<div class="fact"><span>${k}</span><b>${esc(v)}</b></div>`).join('')}</div>
+  ${s.notes?`<div class="note mt">📌 ${esc(s.notes)}</div>`:''}</div>`;}
+function lessonEntry(l,tk){const cx=l.status==='cancelled',fut=l.date>tk,d=parseKey(l.date);
+ const lc=cx?'var(--m2)':fut?'var(--blue)':l.paid?'var(--green)':'var(--amber)';
+ const chips=[cx?'<span class="pill red">בוטל</span>':'',fut&&!cx?'<span class="pill blue">עתידי</span>':'',l.attendance==='late'?'<span class="pill amber">⏰ איחר</span>':'',l.effort==='high'?'<span class="pill">🔥 מאמץ גבוה</span>':l.effort==='low'?'<span class="pill">😴 מאמץ נמוך</span>':''].join('');
+ const body=[l.topics?`<div style="color:var(--blue);font-weight:600">📌 ${esc(l.topics)}</div>`:'',l.freeText?`<div class="note" style="margin:0">${esc(l.freeText)}</div>`:'',l.homework?`<div>📝 <b>שיעורי בית:</b> ${esc(l.homework)}</div>`:'',l.teacherNotes?`<div class="muted">🔒 ${esc(l.teacherNotes)}</div>`:'',l.notes?`<div class="muted">💬 ${esc(l.notes)}</div>`:''].join('');
+ return `<div class="le ${cx?'cx':''}" style="--lc:${lc}">
+  <div class="le-date"><small>${DAYS[d.getDay()]}</small><b>${d.getDate()}</b><span>${MONTHS[d.getMonth()].slice(0,3)}׳ ${String(d.getFullYear()).slice(2)}</span></div>
+  <div class="le-card"><div class="le-top"><span class="le-time">${esc(l.time)}</span><span class="muted sm-t">· ${esc(l.lang)} · ${+l.duration||60} דק׳</span>${chips}${+l.rating?`<span class="stars-s">${'★'.repeat(+l.rating)}</span>`:''}<span class="le-sp"></span>${cx?'':`<span class="pill ${l.paid?'green':fut?'':'amber'}">${l.paid?'✓ שולם · ':''}${money(lessonPrice(l))}</span>`}</div>
+   ${body?`<div class="le-body">${body}</div>`:''}
+   <div class="le-foot">${!cx&&!l.paid?`<button class="btn sm ok" data-a="markPaid" data-id="${esc(l.id)}">💳 סמן שולם</button>`:''}${(()=>{const need=!fut&&!cx&&!l.rating&&!l.freeText;return `<button class="btn sm ${need?'soft':'ghost'}" data-a="report" data-id="${esc(l.id)}">📝 ${need?'כתוב דיווח':'דיווח'}</button>`;})()}<span class="le-sp"></span><button class="ibtn" data-a="lessonModal" data-id="${esc(l.id)}" title="עריכת שיעור">⚙️</button></div>
+  </div></div>`;}
+function histTab(s,x){const tk=todayKey();if(!x.all.length)return emptyBox('📚','אין שיעורים עדיין')+`<div class="ctr"><button class="btn pri sm" data-a="lessonModal" data-sid="${esc(s.id)}">＋ קבע שיעור ראשון</button></div>`;
+ const up=x.all.filter(l=>l.date>tk).sort(byDT),past=x.all.filter(l=>l.date<=tk).sort(byDTdesc);
+ return `${up.length?`<div class="tl-h">🔜 קרובים · ${up.length}</div><div class="tl">${up.map(l=>lessonEntry(l,tk)).join('')}</div>`:''}
+  ${past.length?`<div class="tl-h">✔️ התקיימו · ${past.length}</div><div class="tl">${past.map(l=>lessonEntry(l,tk)).join('')}</div>`:''}`;}
+function payTab(s,x){const tk=todayKey(),unpaid=x.act.filter(l=>!l.paid).sort(byDT),due=unpaid.filter(l=>l.date<=tk),fut=unpaid.filter(l=>l.date>tk),paid=x.act.filter(l=>l.paid).sort(byDTdesc);
+ const futSum=fut.reduce((a,l)=>a+lessonPrice(l),0);
+ const row=l=>`<div class="item"><div class="tbox"><b>${parseKey(l.date).getDate()}/${parseKey(l.date).getMonth()+1}</b><span>${esc(l.time)}</span></div><div class="grow"><b class="sm-t">${fmtDS(l.date)}</b><div class="xs-t muted">${esc(l.lang)}</div></div><b style="color:${l.paid?'var(--green)':l.date>tk?'var(--t2)':'var(--amber)'}">${money(lessonPrice(l))}</b>${l.paid?'<span class="pill green">✓</span>':`<button class="btn sm ok" data-a="markPaid" data-id="${esc(l.id)}">שולם</button>`}</div>`;
+ return `<div class="g g3 mb"><div class="pbox" style="--c:var(--green)"><span>שולם עד היום</span><b>${money(x.paid)}</b></div><div class="pbox" style="--c:${x.debt?'var(--red)':'var(--green)'}"><span>חוב פתוח</span><b>${x.debt?money(x.debt):'✓ אין'}</b></div><div class="pbox" style="--c:var(--blue)"><span>שיעורים עתידיים</span><b>${money(futSum)}</b></div></div>
+ ${due.length?`<div class="row between wrap mb6"><div class="tl-h" style="flex:1;margin:0">⚠️ לתשלום · ${due.length}</div><button class="btn sm ok" data-a="payAll" data-id="${esc(s.id)}">סמן הכל כשולם</button></div><div class="list mb">${due.map(row).join('')}</div>`:''}
+ ${fut.length?`<div class="tl-h">🔜 עתידיים · ${fut.length}</div><div class="list mb">${fut.map(row).join('')}</div>`:''}
+ ${paid.length?`<div class="tl-h">🧾 תשלומים שהתקבלו · ${paid.length}</div><div class="list">${paid.slice(0,30).map(row).join('')}</div>`:''}
+ ${!unpaid.length&&!paid.length?emptyBox('💳','אין עדיין תשלומים'):''}`;}
 function editTab(s){return `${studentForm(s)}<div class="row wrap mt"><button class="btn pri" data-a="saveStudent" data-id="${esc(s.id)}">💾 שמור שינויים</button><button class="btn ghost" data-a="toggleActive" data-id="${esc(s.id)}">${s.isActive===false?'▶️ הפעל מחדש':'⏸ סמן כלא פעיל'}</button><button class="btn ghost" style="color:var(--red)" data-a="delStudent" data-id="${esc(s.id)}">🗑️ מחיקה</button></div>`;}
 C.assignPkg=(sid,el)=>{const s=stu(sid),p=DB.packages.find(x=>x.id===el.value);if(!s)return;
  if(!p){s.packageId='';persist();render();return;}
