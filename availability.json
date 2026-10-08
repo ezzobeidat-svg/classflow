@@ -12,7 +12,6 @@
  "lessonDuration": 60,
  "slots": {
   "2026-10-09": [
-   "09:00",
    "10:00",
    "11:00",
    "12:00",
@@ -27,5 +26,5 @@
   ]
  },
  "bookingUrl": "https://script.google.com/macros/s/AKfycbysPIyabIvKqTxHGrmF7dpgFQczV65EQzoTYlcGYIqsKqSiXeBXlcLUomW77TmbXF98/exec",
- "updatedAt": "2026-10-08T17:56:36.128Z"
+ "updatedAt": "2026-10-08T18:49:57.749Z"
 }
