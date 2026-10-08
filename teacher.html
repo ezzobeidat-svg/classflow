@@ -856,7 +856,7 @@ function lessonEntry(l,tk){const cx=l.status==='cancelled',fut=l.date>tk,d=parse
   <div class="le-date"><small>${DAYS[d.getDay()]}</small><b>${d.getDate()}</b><span>${MONTHS[d.getMonth()].slice(0,3)}׳ ${String(d.getFullYear()).slice(2)}</span></div>
   <div class="le-card"><div class="le-top"><span class="le-time">${esc(l.time)}</span><span class="muted sm-t">· ${esc(l.lang)} · ${+l.duration||60} דק׳</span>${chips}${+l.rating?`<span class="stars-s">${'★'.repeat(+l.rating)}</span>`:''}<span class="le-sp"></span>${cx?'':`<span class="pill ${l.paid?'green':fut?'':'amber'}">${l.paid?'✓ שולם · ':''}${money(lessonPrice(l))}</span>`}</div>
    ${body?`<div class="le-body">${body}</div>`:''}
-   <div class="le-foot">${!cx&&!l.paid?`<button class="btn sm ok" data-a="markPaid" data-id="${esc(l.id)}">💳 סמן שולם</button>`:''}${(()=>{const need=!fut&&!cx&&!l.rating&&!l.freeText;return `<button class="btn sm ${need?'soft':'ghost'}" data-a="report" data-id="${esc(l.id)}">📝 ${need?'כתוב דיווח':'דיווח'}</button>`;})()}<span class="le-sp"></span><button class="ibtn" data-a="lessonModal" data-id="${esc(l.id)}" title="עריכת שיעור">✏️</button><button class="ibtn" data-a="delLesson" data-id="${esc(l.id)}" title="מחיקת שיעור">🗑️</button></div>
+   <div class="le-foot">${!cx&&!l.paid?`<button class="btn sm ok" data-a="markPaid" data-id="${esc(l.id)}">💳 סמן שולם</button>`:''}${(()=>{const need=!fut&&!cx&&!l.rating&&!l.freeText;return `<button class="btn sm ${need?'soft':'ghost'}" data-a="report" data-id="${esc(l.id)}">📝 ${need?'כתוב דיווח':'דיווח'}</button>`;})()}<span class="le-sp"></span>${cx||l.date<tk?'':l.calEventId?'<span class="pill green" title="השיעור נמצא ביומן גוגל">📅 ביומן</span>':`<button class="ibtn" data-a="calAdd" data-id="${esc(l.id)}" title="הוסף ליומן גוגל">📅</button>`}<button class="ibtn" data-a="lessonModal" data-id="${esc(l.id)}" title="עריכת שיעור">✏️</button><button class="ibtn" data-a="delLesson" data-id="${esc(l.id)}" title="מחיקת שיעור">🗑️</button></div>
   </div></div>`;}
 function histTab(s,x){const tk=todayKey();if(!x.all.length)return emptyBox('📚','אין שיעורים עדיין')+`<div class="ctr"><button class="btn pri sm" data-a="lessonModal" data-sid="${esc(s.id)}">＋ קבע שיעור ראשון</button></div>`;
  const up=x.all.filter(l=>l.date>tk).sort(byDT),past=x.all.filter(l=>l.date<=tk).sort(byDTdesc);
@@ -882,7 +882,7 @@ A.addCredits=id=>{const s=stu(id);if(!s)return;const n=parseInt(prompt('כמה �
 A.toggleActive=id=>{const s=stu(id);if(!s)return;s.isActive=s.isActive===false;persist();render();toast(s.name+' — '+(s.isActive?'פעיל':'לא פעיל'));};
 A.delStudent=id=>{const s=stu(id);if(!s)return;const n=DB.lessons.filter(l=>l.studentId===id).length;
  ask('מחיקת '+s.name,`פעולה זו תמחק גם ${n} שיעורים של התלמיד מהדוחות.\nאם התלמיד רק הפסיק ללמוד — עדיף "סמן כלא פעיל".\n(הגרסה הקודמת תישאר בהיסטוריה של GitHub)`,'מחק לצמיתות',()=>{
-  DB.students=DB.students.filter(x=>x.id!==id);DB.lessons=DB.lessons.filter(l=>l.studentId!==id);persist();go('students');toast('נמחק');},{danger:true,icon:'🗑️'});};
+  const evs=DB.lessons.filter(l=>l.studentId===id&&l.calEventId);DB.students=DB.students.filter(x=>x.id!==id);DB.lessons=DB.lessons.filter(l=>l.studentId!==id);persist();go('students');toast('נמחק');evs.forEach(l=>calRemove(l,true));},{danger:true,icon:'🗑️'});};
 A.markPaid=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;l.paid=true;persist();render();toast('✅ סומן כשולם');};
 A.payAll=sid=>{const tk=todayKey();const ls=DB.lessons.filter(l=>l.studentId===sid&&!l.paid&&l.status!=='cancelled'&&l.date<=tk);
  ask('סימון תשלום',`לסמן ${ls.length} שיעורים (${money(ls.reduce((a,l)=>a+lessonPrice(l),0))}) כשולמו?`,'סמן כשולם',()=>{ls.forEach(l=>l.paid=true);persist();render();toast('✅ סומן');},{icon:'💳'});};
@@ -911,7 +911,9 @@ A.saveLesson=id=>{
  if(!isKey(d.date)||!/^\d{2}:\d{2}$/.test(d.time))return toast('בחר תאריך ושעה');
  const save=()=>{let l=id?DB.lessons.find(x=>x.id===id):null;const isNew=!l;
   if(isNew){l={id:uid(),createdAt:new Date().toISOString(),status:'ok'};DB.lessons.push(l);}
-  Object.assign(l,d);persist();closeModal();render();toast(isNew?'✅ השיעור נוסף':'✅ נשמר');};
+  const before=isNew?'':[l.date,l.time,l.duration,l.status,l.studentId,l.lang].join('|');
+  Object.assign(l,d);persist();closeModal();render();toast(isNew?'✅ השיעור נוסף':'✅ נשמר');
+  if(calOn()&&(l.calEventId||l.date>=todayKey())&&before!==[l.date,l.time,l.duration,l.status,l.studentId,l.lang].join('|'))calSync(l,false);};
  const c=d.status==='cancelled'?null:findClash(d.date,d.time,d.duration,id||null);
  if(c)return ask('התנגשות בלוח',`כבר יש שיעור עם ${sname(c.studentId)} ב-${c.time}. לשמור בכל זאת?`,'שמור בכל זאת',save,{icon:'⏰'});
  save();};
@@ -957,7 +959,7 @@ A.printStudent=id=>{const s=stu(id);if(!s)return;const x=studentStats(s),w=windo
  ${rs.length?`<h2>דוחות התקדמות</h2>${rs.map(r=>`<div class="r"><b>${esc(r.kind)}</b> <span class="m">· ${fmtD(r.date)}${+r.level?' · '+esc(LVL[+r.level]):''}</span>${r.text?`<p style="white-space:pre-line">${esc(r.text)}</p>`:''}${sec('💪 חוזקות:',r.strengths)}${sec('🎯 לשיפור:',r.weak)}${sec('➡️ מטרות:',r.goals)}</div>`).join('')}`:''}
  ${ls.length?`<h2>שיעורים</h2><table><tr><th>תאריך</th><th>נושאים</th><th>מה קרה בשיעור</th><th>שיעורי בית</th><th>דירוג</th></tr>${ls.map(l=>`<tr><td>${fmtD(l.date)}<br><span class="m">${esc(l.time)}${l.status==='cancelled'?' · בוטל':''}</span></td><td>${esc(l.topics)}</td><td>${esc(l.freeText)}</td><td>${esc(l.homework)}</td><td>${+l.rating?'★'.repeat(+l.rating):''}</td></tr>`).join('')}</table>`:''}
  </body></html>`);w.document.close();setTimeout(()=>w.print(),300);};
-A.delLesson=id=>ask('מחיקת שיעור','למחוק את השיעור? (אם השיעור בוטל — עדיף לסמן "בוטל" כדי לשמור היסטוריה)','מחק',()=>{DB.lessons=DB.lessons.filter(l=>l.id!==id);persist();render();toast('השיעור נמחק');},{danger:true,icon:'🗑️'});
+A.delLesson=id=>ask('מחיקת שיעור','למחוק את השיעור? (אם השיעור בוטל — עדיף לסמן "בוטל" כדי לשמור היסטוריה)'+(DB.lessons.find(l=>l.id===id&&l.calEventId)?'\nהשיעור יוסר גם מיומן גוגל.':''),'מחק',()=>{const l=DB.lessons.find(x=>x.id===id);DB.lessons=DB.lessons.filter(x=>x.id!==id);persist();render();toast('השיעור נמחק');if(l&&l.calEventId)calRemove(l,true);},{danger:true,icon:'🗑️'});
 
 let rp={};
 A.report=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;const s=stu(l.studentId);
@@ -979,7 +981,7 @@ A.rpStar=n=>{rp.rating=+n;$$('#modal .star').forEach((b,i)=>b.classList.toggle('
 A.rpTopic=t=>{const i=$('#rp-topics');const cur=i.value.trim();if(!cur.split(/[,،]\s*/).includes(t))i.value=cur?cur+', '+t:t;};
 A.saveReport=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;
  Object.assign(l,{attendance:rp.att,rating:rp.rating||0,effort:rp.effort,paid:!!rp.paid,topics:clamp(val('rp-topics'),300),freeText:clamp(val('rp-free'),3000),homework:clamp(val('rp-hw'),1000),teacherNotes:clamp(val('rp-notes'),2000)});
- l.status=rp.att==='absent'?'cancelled':'ok';
+ const wasCx=l.status==='cancelled';l.status=rp.att==='absent'?'cancelled':'ok';if(!wasCx&&l.status==='cancelled'&&l.calEventId)setTimeout(()=>calRemove(l,true),0);
  persist();closeModal();render();toast('✅ הדיווח נשמר');};
 
 /* ═══════════ CALENDAR ═══════════ */
@@ -1027,7 +1029,7 @@ R.requests=()=>{const pend=DB.requests.filter(r=>r.status==='pending').sort((a,b
  <div class="g g-main">
   <div class="card"><div class="card-h"><div class="card-t">⏳ ממתינות לאישור</div><span class="pill amber">${pend.length}</span></div>
    ${pend.length?`<div class="list">${pend.map(reqCard).join('')}</div>`:emptyBox('🎉','אין בקשות ממתינות')}
-   ${done.length?`<div class="lbl mt mb6">טופלו לאחרונה</div><div class="list" style="gap:4px">${done.map(r=>`<div class="row sm-t" style="padding:4px 0"><span>${r.status==='approved'?'✅':'✋'}</span><span class="grow">${esc(r.name)} · ${fmtDS(r.date)} ${esc(r.time)}</span></div>`).join('')}</div>`:''}</div>
+   ${done.length?`<div class="row between mt mb6"><div class="lbl">טופלו לאחרונה</div><button class="btn sm ghost" data-a="clearDone">🧹 נקה הכל</button></div><div class="list" style="gap:2px">${done.map(r=>`<div class="row sm-t" style="padding:4px 0"><span>${r.status==='approved'?'✅':'✋'}</span><span class="grow">${esc(r.name)} · ${fmtDS(r.date)} ${esc(r.time)}</span><button class="ibtn" data-a="delReq" data-id="${esc(r.id)}" title="מחק מהרשימה">🗑️</button></div>`).join('')}</div>`:''}</div>
   <div class="card"><div class="card-t mb">📥 הוספה ידנית</div><p class="xs-t muted mb6">קיבלת בקשה בוואטסאפ או בטלפון? הדבק את ההודעה או מלא ידנית.</p>
    <textarea class="inp" id="rq-paste" rows="4" placeholder="הדבק כאן הודעת וואטסאפ…"></textarea>
    <div class="row wrap mt"><button class="btn pri sm" data-a="parseReq">🔍 קרא את ההודעה</button><button class="btn ghost sm" data-a="blankReq">✍️ מילוי ידני</button></div>
@@ -1053,7 +1055,7 @@ function reqCheckHTML(d){const out=[],s=d.phone&&DB.students.find(x=>samePhone(x
 function reqCard(r){return `<div class="item" style="flex-direction:column;align-items:stretch;gap:8px">
  <div class="row"><div class="av" style="background:var(--amber)">${esc(initials(r.name))}</div><div class="grow"><b>${esc(r.name)}</b> ${r.source==='web'?'<span class="pill blue">🌐 מהאתר</span>':''}<div class="xs-t muted">${esc(r.lang)} · ${fmtDS(r.date)||'?'} · ${esc(r.time)}${r.phone?' · 📱 '+esc(r.phone):''}</div></div></div>
  ${r.notes?`<div class="note">💬 ${esc(r.notes)}</div>`:''}${reqCheckHTML(r)}
- <div class="row wrap"><button class="btn sm ok" data-a="approvePending" data-id="${esc(r.id)}">✅ אשר</button><button class="btn sm ghost" data-a="editPending" data-id="${esc(r.id)}">✏️</button><button class="btn sm ghost" style="color:var(--red)" data-a="rejectPending" data-id="${esc(r.id)}">✋ דחה</button>${r.phone?`<a class="btn sm wa" href="https://wa.me/${esc(waNum(r.phone))}" target="_blank" rel="noopener">💬</a>`:''}</div></div>`;}
+ <div class="row wrap"><button class="btn sm ok" data-a="approvePending" data-id="${esc(r.id)}">✅ אשר</button><button class="btn sm ghost" data-a="editPending" data-id="${esc(r.id)}">✏️</button><button class="btn sm ghost" style="color:var(--red)" data-a="rejectPending" data-id="${esc(r.id)}">✋ דחה</button><button class="btn sm ghost" data-a="delReq" data-id="${esc(r.id)}" title="מחק בלי לשלוח הודעה">🗑️</button>${r.phone?`<a class="btn sm wa" href="https://wa.me/${esc(waNum(r.phone))}" target="_blank" rel="noopener">💬</a>`:''}</div></div>`;}
 const readDraft=()=>({name:clamp(val('rq-name'),80),phone:clamp(val('rq-phone'),30),lang:val('rq-lang'),date:val('rq-date'),time:val('rq-time'),notes:clamp(val('rq-notes'),500),_id:reqDraft?reqDraft._id:undefined});
 I.rqCheck=()=>{const el=$('#rq-check');if(el)el.innerHTML=reqCheckHTML(readDraft());};
 A.parseReq=()=>{const t=$('#rq-paste').value;if(!t.trim())return toast('הדבק קודם את ההודעה');reqDraft=parseRequest(t);$('#rq-form').innerHTML=reqForm(reqDraft);};
@@ -1074,16 +1076,42 @@ function approveReq(d,reqId){
   let r=reqId?DB.requests.find(x=>x.id===reqId):null;if(!r){r={id:uid(),createdAt:now};DB.requests.push(r);}
   Object.assign(r,{name:d.name,phone:d.phone,lang:d.lang,date:d.date,time:d.time,notes:d.notes,status:'approved',handledAt:now,lessonId:l.id});trimRequests();
   if(DB.settings.msg.enabled&&d.phone)waOpen(d.phone,buildMsg('ok',d.name,d.date,d.time));
-  reqDraft=null;persist();render();toast('✅ אושר — השיעור נוסף ליומן'+(isNew?' · נוצר תלמיד חדש':''));};
+  reqDraft=null;persist();render();toast('✅ אושר — השיעור נוסף'+(isNew?' · נוצר תלמיד חדש':'')+(calOn()?' · מעדכן את יומן גוגל…':''));if(calOn())calSync(l,false);};
  const c=findClash(d.date,d.time,+DB.settings.lessonDuration,null);
  if(c)return ask('השעה תפוסה',`כבר קיים שיעור עם ${sname(c.studentId)} ב-${c.time}. לאשר בכל זאת?`,'אשר בכל זאת',doIt,{icon:'⏰'});
  doIt();}
+A.delReq=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;const go2=()=>{DB.requests=DB.requests.filter(x=>x.id!==id);persist();render();toast('הבקשה נמחקה');};
+ if(r.status==='pending')ask('מחיקת בקשה',`למחוק את הבקשה של ${r.name}?\nהתלמיד לא יקבל הודעה.`,'מחק',go2,{danger:true,icon:'🗑️'});else go2();};
+A.clearDone=()=>{const n=DB.requests.filter(r=>r.status!=='pending').length;ask('ניקוי היסטוריה',`למחוק ${n} בקשות שכבר טופלו?\nהשיעורים שנוצרו מהן נשארים.`,'נקה',()=>{DB.requests=DB.requests.filter(r=>r.status==='pending');persist();render();toast('🧹 נוקה');},{danger:true,icon:'🧹'});};
 A.approveDraft=()=>{const d=readDraft();approveReq(d,d._id);};
 A.approvePending=id=>{const r=DB.requests.find(x=>x.id===id);if(r)approveReq({name:r.name,phone:r.phone,lang:r.lang,date:r.date,time:r.time,notes:r.notes},id);};
 A.editPending=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;reqDraft={...r,_id:id};render();setTimeout(()=>{const f=$('#rq-form');if(f)f.scrollIntoView({behavior:'smooth',block:'center'});},60);};
 A.rejectPending=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;
  const done=()=>{r.status='rejected';r.handledAt=new Date().toISOString();trimRequests();persist();render();toast('הבקשה נדחתה');};
  ask('דחיית בקשה',`לדחות את הבקשה של ${r.name}?`,r.phone?'דחה ושלח הודעה':'דחה',()=>{if(r.phone)waOpen(r.phone,buildMsg('no',r.name,r.date,r.time));done();},{alt:r.phone?'דחה בלי הודעה':'',altCb:done,danger:true,icon:'✋'});};
+
+/* ═══════════ GOOGLE CALENDAR ═══════════ */
+const calOn=()=>DB.settings.calAuto&&BOOK_RE.test(DB.settings.bookingUrl||'')&&/^[A-Za-z0-9]{24,64}$/.test(DB.settings.calKey||'');
+function calPayload(l){const s=stu(l.studentId),dur=+l.duration||+DB.settings.lessonDuration||60,end=m2t(t2m(l.time)+dur);
+ const pl=l.planId&&DB.plans.find(p=>p.id===l.planId);
+ return{title:`שיעור ${l.lang||''} — ${s?s.name:''}`.trim(),start:`${l.date}T${l.time}`,end:`${l.date}T${end}`,
+  description:[s&&s.phone?'📱 '+s.phone:'',l.notes?'💬 '+l.notes:'',pl?'📖 תכנית: '+(pl.topic||''):'','— ClassFlow'].filter(Boolean).join('\n')};}
+async function calCall(body){const c=new AbortController(),t=setTimeout(()=>c.abort(),25000);
+ try{const r=await fetch(DB.settings.bookingUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'cal',key:DB.settings.calKey,...body}),signal:c.signal});return await r.json();}
+ catch(e){return null;}finally{clearTimeout(t);}}
+async function calSync(l,quiet){if(!calOn()||!l)return false;
+ if(l.status==='cancelled')return calRemove(l,quiet);
+ const res=await calCall({op:'upsert',lid:l.id,eventId:l.calEventId||'',...calPayload(l)});
+ if(res&&res.ok&&res.eventId){if(l.calEventId!==res.eventId){l.calEventId=res.eventId;persist();}l.calAt=new Date().toISOString();if(!quiet)toast('📅 עודכן ביומן גוגל');refreshCalMarks();return true;}
+ toast('⚠️ לא הצלחתי לעדכן את יומן גוגל'+(res&&res.error==='unauthorized'?' — המפתח לא תואם (הגדרות ← 📅)':''));return false;}
+async function calRemove(l,quiet){if(!calOn()||!l||!l.calEventId)return true;
+ const res=await calCall({op:'delete',lid:l.id,eventId:l.calEventId,start:`${l.date}T${l.time}`});
+ if(res&&res.ok){delete l.calEventId;persist();if(!quiet)toast('📅 הוסר מיומן גוגל');refreshCalMarks();return true;}
+ toast('⚠️ לא הצלחתי להסיר מיומן גוגל');return false;}
+function calLink(l){const s=stu(l.studentId),p=calPayload(l),f=x=>x.replace(/[-:]/g,'')+'00';
+ return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(p.title)+'&dates='+f(p.start)+'/'+f(p.end)+'&ctz=Asia/Jerusalem&details='+encodeURIComponent(p.description);}
+function refreshCalMarks(){if(view==='profile'||view==='calendar'||view==='home'){const y=scrollY;render();scrollTo(0,y);}}
+A.calAdd=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;if(calOn())return calSync(l);window.open(calLink(l),'_blank','noopener');};
 
 /* ═══════════ SCHEDULE (availability) ═══════════ */
 let schedSel=null;
@@ -1329,6 +1357,14 @@ R.settings=()=>{const st=DB.settings,m=st.msg,c=GH.cfg,lock=localStorage.getItem
    <div class="row wrap" style="align-items:flex-end"><div class="grow" style="min-width:260px">${fld('st-burl','כתובת ה-Web App של הסקריפט',st.bookingUrl,'url','dir="ltr" placeholder="https://script.google.com/macros/s/…/exec"')}</div>
    <button class="btn ghost" data-a="testBooking">🔍 בדוק</button><button class="btn pri" data-a="saveBooking">💾 שמור ופרסם</button>${st.bookingUrl?'<button class="btn ghost" style="color:var(--red)" data-a="clearBooking">נתק</button>':''}</div>
    ${inboxAt?`<p class="xs-t muted mt">בדיקה אחרונה של תיבת הבקשות: ${esc(new Date(inboxAt).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',second:'2-digit'}))}</p>`:''}</div>
+  <div class="card" style="grid-column:1/-1;border-top:4px solid ${calOn()?'var(--green)':'var(--b2)'}"><div class="card-h wrap"><div class="card-t">📅 יומן גוגל</div>${calOn()?'<span class="pill green">● סנכרון אוטומטי פעיל</span>':'<span class="pill">ידני — כפתור 📅 על כל שיעור</span>'}</div>
+   <p class="sm-t muted mb">כשמאשרים בקשה או מוסיפים שיעור — הוא נכנס ליומן גוגל שלך באותה שעה. שינוי שעה מעדכן, ביטול או מחיקה מסירים. עובד דרך אותו סקריפט Google (README שלב 7).</p>
+   ${BOOK_RE.test(st.bookingUrl||'')?`<div class="g g2" style="align-items:end">
+    <div class="f"><label>מפתח סודי ליומן</label><div class="row"><input class="inp" id="st-calkey" dir="ltr" readonly value="${esc(st.calKey||'')}" placeholder="לחץ על 'צור מפתח'" style="font-family:monospace;font-size:.82rem"><button class="btn ghost sm" data-a="calKeyNew">${st.calKey?'🔄':'🔑 צור מפתח'}</button>${st.calKey?'<button class="btn ghost sm" data-a="calKeyCopy">📋 העתק</button>':''}</div></div>
+    <label class="row sm-t" style="padding-bottom:10px"><input type="checkbox" id="st-calauto" data-c="calAuto" ${st.calAuto?'checked':''} ${st.calKey?'':'disabled'}> סנכרון אוטומטי ליומן גוגל</label></div>
+    <div class="row wrap mt"><button class="btn ghost sm" data-a="calTest" ${st.calKey?'':'disabled'}>🔍 בדוק חיבור ליומן</button><button class="btn ghost sm" data-a="calSyncAll" ${calOn()?'':'disabled'}>📅 הוסף ליומן את כל השיעורים העתידיים</button></div>
+    <p class="xs-t muted mt">את המפתח מדביקים ב-Script Properties של הסקריפט בשם <b dir="ltr">CAL_KEY</b>. בלי המפתח אף אחד אחר לא יכול לכתוב ליומן שלך.</p>`
+   :'<div class="alert amber sm-t" style="margin:0"><span>ℹ️</span><div class="grow">קודם חבר את הסקריפט (בכרטיס למעלה), ואז אפשר להפעיל סנכרון אוטומטי.</div></div>'}</div>
   <div class="card" style="grid-column:1/-1"><div class="card-h wrap"><div class="card-t">💬 הודעות וואטסאפ</div><label class="row sm-t"><input type="checkbox" id="st-men" ${m.enabled?'checked':''}> לפתוח הודעת אישור אוטומטית כשמאשרים בקשה</label></div>
    <div class="f mb" style="max-width:260px"><label for="st-mlang">שפת ההודעות</label><select class="sel" id="st-mlang">${[['both','עברית + ערבית'],['he','עברית'],['ar','ערבית']].map(([v,t])=>opt(v,t,m.lang)).join('')}</select></div>
    <div class="g g2">${area('st-mhe','✅ אישור — עברית',m.he,5)}${area('st-mar','✅ אישור — ערבית',m.ar,5)}${area('st-mdhe','✋ דחייה — עברית',m.declineHe,4)}${area('st-mdar','✋ דחייה — ערבית',m.declineAr,4)}</div>
@@ -1355,6 +1391,14 @@ A.testBooking=async(_,btn)=>{const u=val('st-burl');if(!BOOK_RE.test(u))return t
 A.saveBooking=async(_,btn)=>{const u=val('st-burl');if(!BOOK_RE.test(u))return toast('הכתובת צריכה להיראות כך: https://script.google.com/macros/s/…/exec');btn.disabled=true;const ok=await pingScript(u);btn.disabled=false;
  const save=()=>{DB.settings.bookingUrl=u;persist();render();toast('✅ נשמר — דף ההזמנה ישלח בקשות דרך הסקריפט (תוך כדקה)');};
  if(ok)save();else ask('הסקריפט לא ענה','לא התקבלה תשובה מהכתובת. לשמור בכל זאת? (אם הסקריפט לא יעבוד — התלמידים יקבלו אפשרות לשלוח בוואטסאפ)','שמור בכל זאת',save);};
+A.calKeyNew=()=>{const make=()=>{const a=new Uint8Array(32);crypto.getRandomValues(a);DB.settings.calKey=[...a].map(x=>'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789'[x%56]).join('');persist();render();toast('🔑 נוצר מפתח — העתק אותו ל-CAL_KEY בסקריפט');};
+ if(DB.settings.calKey)ask('מפתח חדש','המפתח הישן יפסיק לעבוד, וצריך להדביק את החדש בסקריפט. להמשיך?','צור מפתח חדש',make,{icon:'🔑'});else make();};
+A.calKeyCopy=()=>navigator.clipboard.writeText(DB.settings.calKey||'').then(()=>toast('📋 המפתח הועתק'),()=>{$('#st-calkey').select();toast('סמן והעתק ידנית');});
+C.calAuto=(_,el)=>{DB.settings.calAuto=el.checked;persist();render();toast(el.checked?'📅 סנכרון אוטומטי הופעל':'הסנכרון כבוי');};
+A.calTest=async(_,btn)=>{btn.disabled=true;const r=await calCall({op:'ping'});btn.disabled=false;
+ toast(r&&r.ok?'✅ החיבור ליומן תקין'+(r.calendar?' — '+r.calendar:''):r&&r.error==='unauthorized'?'⚠️ המפתח לא תואם ל-CAL_KEY בסקריפט':r&&r.error==='no_calendar_access'?'⚠️ הסקריפט צריך אישור ליומן — הרץ שוב testSetup':'⚠️ אין תשובה — ודא שעדכנת את הסקריפט (New version)');};
+A.calSyncAll=async(_,btn)=>{const tk=todayKey(),ls=DB.lessons.filter(l=>l.status!=='cancelled'&&l.date>=tk&&!l.calEventId);if(!ls.length)return toast('כל השיעורים העתידיים כבר ביומן');
+ btn.disabled=true;let ok=0;for(const l of ls){toast(`📅 ${ok+1}/${ls.length}…`);if(await calSync(l,true))ok++;}btn.disabled=false;toast(`✅ נוספו ${ok} שיעורים ליומן`);};
 A.clearBooking=()=>ask('ניתוק הסקריפט','דף ההזמנה יחזור לשליחת בקשות בוואטסאפ.','נתק',()=>{DB.settings.bookingUrl='';persist();render();},{icon:'📨'});
 A.saveProfile=()=>{const st=DB.settings,wa=val('st-wa');if(wa&&wa.replace(/\D/g,'').length<9)return toast('מספר וואטסאפ לא תקין');
  st.teacherName=clamp(val('st-name'),60);st.bio=clamp(val('st-bio'),120);st.whatsapp=clamp(wa,20);st.email=clamp(val('st-email'),120);persist();render();toast('✅ הפרופיל נשמר ויתפרסם בדף ההזמנה');};
