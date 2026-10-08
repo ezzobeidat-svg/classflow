@@ -666,7 +666,7 @@ function studentList(){
    <div class="row wrap xs-t muted" style="gap:8px;margin-top:3px">${s.lang?`<span class="pill blue">${esc(s.lang)}</span>`:''}${s.phone?`<span>📱 ${esc(s.phone)}</span>`:''}${s.city?`<span>📍 ${esc(s.city)}</span>`:''}${x.last?`<span>🕐 ${fmtD(x.last.date)}</span>`:''}</div></div>
   <div class="ctr hide-m" style="min-width:80px"><div class="b" style="color:var(--blue);font-size:1.15rem">${x.count}</div><div class="xs-t muted">שיעורים${s.bought?' · '+x.remaining+' נותרו':''}</div></div>
   <div>${x.debt>0?`<span class="pill red">חוב ${money(x.debt)}</span>`:x.paid?`<span class="pill green">✓ ${money(x.paid)}</span>`:'<span class="pill">ללא חוב</span>'}</div>
-  <button class="btn icon soft" data-a="lessonModal" data-sid="${esc(s.id)}" title="שיעור חדש">＋</button>
+  <button class="btn icon soft" data-a="lessonModal" data-sid="${esc(s.id)}" title="שיעור חדש">＋</button><button class="btn icon ghost" data-a="editStudent" data-id="${esc(s.id)}" title="עריכת פרטים">✏️</button><button class="btn icon ghost" data-a="delStudent" data-id="${esc(s.id)}" title="מחיקת תלמיד">🗑️</button>
  </div>`).join('')}</div>`;
 }
 function studentForm(s){return `<div class="g g2">
@@ -710,14 +710,14 @@ R.profile=()=>{const s=stu(viewArg);if(!s)return emptyBox('🤷','התלמיד �
    <div class="ph-main"><div class="ph-name">${esc(s.name)}</div>
     <div class="ph-chips"><span class="pill ${s.isActive===false?'':'green'}">${s.isActive===false?'⏸ לא פעיל':'● פעיל'}</span>${s.lang?`<span class="pill blue">${esc(s.lang)}</span>`:''}${s.level?`<span class="pill">${esc(s.level)}</span>`:''}${pkg?`<span class="pill" style="background:${safeColor(pkg.color)}1f;color:${safeColor(pkg.color)}">📦 ${esc(pkg.name)}</span>`:''}${x.debt>0?`<span class="pill red">חוב ${money(x.debt)}</span>`:''}</div>
     ${meta?`<div class="ph-meta">${meta}</div>`:''}</div>
-   <div class="ph-act">${s.phone?`<a class="btn wa" href="https://wa.me/${esc(waNum(s.phone))}" target="_blank" rel="noopener">💬 וואטסאפ</a>`:''}<button class="btn pri" data-a="lessonModal" data-sid="${esc(s.id)}">＋ שיעור חדש</button></div>
+   <div class="ph-act">${s.phone?`<a class="btn wa" href="https://wa.me/${esc(waNum(s.phone))}" target="_blank" rel="noopener">💬 וואטסאפ</a>`:''}<button class="btn pri" data-a="lessonModal" data-sid="${esc(s.id)}">＋ שיעור חדש</button><button class="btn ghost" data-a="pTab" data-id="edit" title="עריכת פרטים">✏️ עריכה</button><button class="btn ghost" style="color:var(--red)" data-a="delStudent" data-id="${esc(s.id)}" title="מחיקת תלמיד">🗑️</button></div>
   </div>
   <div class="ph-stats">${st(x.count,'שיעורים','var(--blue)')}${st(money(x.paid),'שולם','var(--green)')}${st(x.debt?money(x.debt):'אין',x.debt?'חוב פתוח':'חוב',x.debt?'var(--red)':'var(--green)')}${st(x.avg==='—'?'—':'★ '+x.avg,'דירוג ממוצע','var(--gold)')}${st(att,'נוכחות','var(--violet)')}</div>
  </div>
  <div class="pgrid">
   <div class="card" style="padding:16px 18px">
-   <div class="seg">${[['history','📚 שיעורים',x.all.length,false],['pay','💳 תשלומים',unpaid,unpaid>0],['edit','✏️ פרטים','',false]].map(([k,t,n,w])=>`<button class="${pTab===k?'on':''}" data-a="pTab" data-id="${k}">${t}${n!==''?`<span class="cnt ${w?'warn':''}">${n}</span>`:''}</button>`).join('')}</div>
-   ${pTab==='pay'?payTab(s,x):pTab==='edit'?editTab(s):histTab(s,x)}
+   <div class="seg">${[['history','📚 שיעורים',x.all.length,false],['reports','📋 דוחות',(s.reports||[]).length,false],['pay','💳 תשלומים',unpaid,unpaid>0],['edit','✏️ פרטים','',false]].map(([k,t,n,w])=>`<button class="${pTab===k?'on':''}" data-a="pTab" data-id="${k}">${t}${n!==''?`<span class="cnt ${w?'warn':''}">${n}</span>`:''}</button>`).join('')}</div>
+   ${pTab==='pay'?payTab(s,x):pTab==='edit'?editTab(s):pTab==='reports'?reportsTab(s,x):histTab(s,x)}
   </div>
   <div class="pside">${nextCard(s,x)}${creditCard(s,x,pkg)}${factsCard(s,x)}</div>
  </div>`;};
@@ -744,7 +744,7 @@ function lessonEntry(l,tk){const cx=l.status==='cancelled',fut=l.date>tk,d=parse
   <div class="le-date"><small>${DAYS[d.getDay()]}</small><b>${d.getDate()}</b><span>${MONTHS[d.getMonth()].slice(0,3)}׳ ${String(d.getFullYear()).slice(2)}</span></div>
   <div class="le-card"><div class="le-top"><span class="le-time">${esc(l.time)}</span><span class="muted sm-t">· ${esc(l.lang)} · ${+l.duration||60} דק׳</span>${chips}${+l.rating?`<span class="stars-s">${'★'.repeat(+l.rating)}</span>`:''}<span class="le-sp"></span>${cx?'':`<span class="pill ${l.paid?'green':fut?'':'amber'}">${l.paid?'✓ שולם · ':''}${money(lessonPrice(l))}</span>`}</div>
    ${body?`<div class="le-body">${body}</div>`:''}
-   <div class="le-foot">${!cx&&!l.paid?`<button class="btn sm ok" data-a="markPaid" data-id="${esc(l.id)}">💳 סמן שולם</button>`:''}${(()=>{const need=!fut&&!cx&&!l.rating&&!l.freeText;return `<button class="btn sm ${need?'soft':'ghost'}" data-a="report" data-id="${esc(l.id)}">📝 ${need?'כתוב דיווח':'דיווח'}</button>`;})()}<span class="le-sp"></span><button class="ibtn" data-a="lessonModal" data-id="${esc(l.id)}" title="עריכת שיעור">⚙️</button></div>
+   <div class="le-foot">${!cx&&!l.paid?`<button class="btn sm ok" data-a="markPaid" data-id="${esc(l.id)}">💳 סמן שולם</button>`:''}${(()=>{const need=!fut&&!cx&&!l.rating&&!l.freeText;return `<button class="btn sm ${need?'soft':'ghost'}" data-a="report" data-id="${esc(l.id)}">📝 ${need?'כתוב דיווח':'דיווח'}</button>`;})()}<span class="le-sp"></span><button class="ibtn" data-a="lessonModal" data-id="${esc(l.id)}" title="עריכת שיעור">✏️</button><button class="ibtn" data-a="delLesson" data-id="${esc(l.id)}" title="מחיקת שיעור">🗑️</button></div>
   </div></div>`;}
 function histTab(s,x){const tk=todayKey();if(!x.all.length)return emptyBox('📚','אין שיעורים עדיין')+`<div class="ctr"><button class="btn pri sm" data-a="lessonModal" data-sid="${esc(s.id)}">＋ קבע שיעור ראשון</button></div>`;
  const up=x.all.filter(l=>l.date>tk).sort(byDT),past=x.all.filter(l=>l.date<=tk).sort(byDTdesc);
@@ -803,6 +803,48 @@ A.saveLesson=id=>{
  const c=d.status==='cancelled'?null:findClash(d.date,d.time,d.duration,id||null);
  if(c)return ask('התנגשות בלוח',`כבר יש שיעור עם ${sname(c.studentId)} ב-${c.time}. לשמור בכל זאת?`,'שמור בכל זאת',save,{icon:'⏰'});
  save();};
+/* ── student reports ── */
+const RKINDS=['סיכום התקדמות','הערכה תקופתית','שיחה עם התלמיד','הערה כללית'];
+const LVL=['','מתקשה','מתקדם לאט','בקצב טוב','מתקדם מהר','מצוין'];
+A.editStudent=id=>{pTab='edit';go('profile',id);};
+function reportsTab(s,x){const rs=[...(s.reports||[])].sort((a,b)=>String(b.date).localeCompare(String(a.date))||String(b.createdAt).localeCompare(String(a.createdAt)));
+ return `<div class="row between wrap mb"><p class="sm-t muted">דוחות על התלמיד עצמו — התקדמות, חוזקות, קשיים ומטרות. (דיווח על שיעור בודד נכתב מתוך השיעור ב"📚 שיעורים")</p>
+  <div class="row"><button class="btn ghost sm" data-a="printStudent" data-id="${esc(s.id)}">🖨️ דוח מלא להדפסה</button><button class="btn pri sm" data-a="reportModal" data-sid="${esc(s.id)}">＋ דוח חדש</button></div></div>
+ ${rs.length?`<div class="list">${rs.map(r=>`<div class="le-card">
+   <div class="le-top"><b>${esc(r.kind||'דוח')}</b><span class="muted sm-t">· ${fmtD(r.date)}</span>${+r.level?`<span class="pill ${+r.level>=4?'green':+r.level<=2?'amber':'blue'}">${esc(LVL[+r.level])}</span>`:''}<span class="le-sp"></span>
+    <button class="ibtn" data-a="reportModal" data-sid="${esc(s.id)}" data-id="${esc(r.id)}" title="עריכה">✏️</button><button class="ibtn" data-a="delReport" data-sid="${esc(s.id)}" data-id="${esc(r.id)}" title="מחיקה">🗑️</button></div>
+   <div class="le-body">${r.text?`<div class="pre" style="margin:0">${esc(r.text)}</div>`:''}
+    ${r.strengths?`<div><b style="color:var(--green)">💪 חוזקות:</b> ${esc(r.strengths)}</div>`:''}
+    ${r.weak?`<div><b style="color:var(--amber)">🎯 לשיפור:</b> ${esc(r.weak)}</div>`:''}
+    ${r.goals?`<div><b style="color:var(--blue)">➡️ מטרות להמשך:</b> ${esc(r.goals)}</div>`:''}</div></div>`).join('')}</div>`
+ :emptyBox('📋','עדיין אין דוחות על התלמיד')+`<div class="ctr"><button class="btn soft sm" data-a="reportModal" data-sid="${esc(s.id)}">＋ כתוב דוח ראשון</button></div>`}`;}
+A.reportModal=(id,el)=>{const s=stu(el.dataset.sid);if(!s)return;const r=id?(s.reports||[]).find(x=>x.id===id):null;
+ openModal(`<div class="mh"><div><h3>${r?'✏️ עריכת דוח':'📋 דוח חדש'} — ${esc(s.name)}</h3><div class="xs-t muted">${x7(s)}</div></div><button class="x" data-a="close">✕</button></div>
+ <div class="mbody"><div class="g g2">${fld('rf-date','תאריך',r?r.date:todayKey(),'date')}<div class="f"><label for="rf-kind">סוג הדוח</label><select class="sel" id="rf-kind">${RKINDS.map(k=>opt(k,k,r?r.kind:RKINDS[0])).join('')}</select></div></div>
+  <div class="f"><label for="rf-level">קצב התקדמות</label><select class="sel" id="rf-level">${LVL.map((t,i)=>opt(i,i?t:'— לא לציין —',r?r.level:0)).join('')}</select></div>
+  ${area('rf-text','📝 סיכום',r?r.text:'',4,'מה השתנה מאז הדוח הקודם? איך התלמיד מתקדם?','maxlength="5000"')}
+  <div class="g g2">${area('rf-str','💪 חוזקות',r?r.strengths:'',2,'','maxlength="1500"')}${area('rf-weak','🎯 נקודות לשיפור',r?r.weak:'',2,'','maxlength="1500"')}</div>
+  ${area('rf-goals','➡️ מטרות להמשך',r?r.goals:'',2,'','maxlength="1500"')}</div>
+ <div class="mf">${r?`<button class="btn ghost" style="color:var(--red);margin-inline-end:auto" data-a="delReport" data-sid="${esc(s.id)}" data-id="${esc(r.id)}">🗑️ מחיקה</button>`:''}<button class="btn ghost" data-a="close">ביטול</button><button class="btn pri" data-a="saveStuReport" data-sid="${esc(s.id)}" data-id="${r?esc(r.id):''}">💾 שמור דוח</button></div>`,true);};
+function x7(s){const x=studentStats(s);return `${x.count} שיעורים · דירוג ממוצע ${x.avg}`;}
+A.saveStuReport=(id,el)=>{const s=stu(el.dataset.sid);if(!s)return;
+ const d={date:isKey(val('rf-date'))?val('rf-date'):todayKey(),kind:RKINDS.includes(val('rf-kind'))?val('rf-kind'):RKINDS[0],level:Math.max(0,Math.min(5,+val('rf-level')||0)),text:clamp(val('rf-text'),5000),strengths:clamp(val('rf-str'),1500),weak:clamp(val('rf-weak'),1500),goals:clamp(val('rf-goals'),1500)};
+ if(!d.text&&!d.strengths&&!d.weak&&!d.goals)return toast('כתוב משהו בדוח');
+ s.reports=s.reports||[];let r=id?s.reports.find(x=>x.id===id):null;
+ if(!r){r={id:uid(),createdAt:new Date().toISOString()};s.reports.push(r);}
+ Object.assign(r,d,{updatedAt:new Date().toISOString()});pTab='reports';persist();closeModal();render();toast('✅ הדוח נשמר');};
+A.delReport=(id,el)=>{const s=stu(el.dataset.sid);if(!s)return;ask('מחיקת דוח','למחוק את הדוח? (הגרסה הקודמת תישאר בהיסטוריה של GitHub)','מחק',()=>{s.reports=(s.reports||[]).filter(r=>r.id!==id);pTab='reports';persist();render();toast('הדוח נמחק');},{danger:true,icon:'📋'});};
+A.clearReport=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;ask('מחיקת דיווח','למחוק את הדיווח על השיעור? (השיעור עצמו נשאר)','מחק דיווח',()=>{['rating','topics','freeText','homework','teacherNotes','effort','attendance'].forEach(k=>delete l[k]);persist();render();toast('הדיווח נמחק');},{danger:true,icon:'📝'});};
+A.printStudent=id=>{const s=stu(id);if(!s)return;const x=studentStats(s),w=window.open('','_blank');if(!w)return toast('אפשר חלונות קופצים בדפדפן');
+ const ls=[...x.all].sort(byDT),rs=[...(s.reports||[])].sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+ const sec=(t,v)=>v?`<p><b>${t}</b> ${esc(v)}</p>`:'';
+ w.document.write(`<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8"><title>דוח — ${esc(s.name)}</title><style>body{font-family:Heebo,Arial,sans-serif;max-width:800px;margin:0 auto;padding:2rem;color:#1A2332;line-height:1.6}h1{margin:0}h2{font-size:1.05rem;border-bottom:2px solid #DEE7F2;padding-bottom:4px;margin-top:28px}.m{color:#7C8696;font-size:.9rem}.k{display:flex;gap:24px;flex-wrap:wrap;margin:14px 0}.k div{background:#F4F7FC;border-radius:10px;padding:8px 14px}.k b{display:block;font-size:1.2rem}table{width:100%;border-collapse:collapse;font-size:.85rem}td,th{border:1px solid #DEE7F2;padding:6px 8px;text-align:right;vertical-align:top}th{background:#F4F7FC}.r{border:1px solid #DEE7F2;border-radius:10px;padding:10px 14px;margin:10px 0}.r p{margin:4px 0}</style></head><body>
+ <h1>${esc(s.name)}</h1><div class="m">${esc([s.lang,s.level].filter(Boolean).join(' · '))}${s.startDate?' · לומד מאז '+fmtD(s.startDate):''} · הופק ${fmtD(todayKey())}</div>
+ <div class="k"><div><b>${x.count}</b>שיעורים</div><div><b>${x.avg}</b>דירוג ממוצע</div><div><b>${x.cancelled}</b>ביטולים</div><div><b>${x.late}</b>איחורים</div></div>
+ ${s.notes?`<p><b>הערות:</b> ${esc(s.notes)}</p>`:''}
+ ${rs.length?`<h2>דוחות התקדמות</h2>${rs.map(r=>`<div class="r"><b>${esc(r.kind)}</b> <span class="m">· ${fmtD(r.date)}${+r.level?' · '+esc(LVL[+r.level]):''}</span>${r.text?`<p style="white-space:pre-line">${esc(r.text)}</p>`:''}${sec('💪 חוזקות:',r.strengths)}${sec('🎯 לשיפור:',r.weak)}${sec('➡️ מטרות:',r.goals)}</div>`).join('')}`:''}
+ ${ls.length?`<h2>שיעורים</h2><table><tr><th>תאריך</th><th>נושאים</th><th>מה קרה בשיעור</th><th>שיעורי בית</th><th>דירוג</th></tr>${ls.map(l=>`<tr><td>${fmtD(l.date)}<br><span class="m">${esc(l.time)}${l.status==='cancelled'?' · בוטל':''}</span></td><td>${esc(l.topics)}</td><td>${esc(l.freeText)}</td><td>${esc(l.homework)}</td><td>${+l.rating?'★'.repeat(+l.rating):''}</td></tr>`).join('')}</table>`:''}
+ </body></html>`);w.document.close();setTimeout(()=>w.print(),300);};
 A.delLesson=id=>ask('מחיקת שיעור','למחוק את השיעור? (אם השיעור בוטל — עדיף לסמן "בוטל" כדי לשמור היסטוריה)','מחק',()=>{DB.lessons=DB.lessons.filter(l=>l.id!==id);persist();render();toast('השיעור נמחק');},{danger:true,icon:'🗑️'});
 
 let rp={};
@@ -819,7 +861,7 @@ A.report=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;const s=stu(l.s
   <div class="g g2">${area('rp-hw','📝 שיעורי בית',l.homework,2,'','maxlength="1000"')}${area('rp-notes','🔒 הערות פרטיות',l.teacherNotes,2,'','maxlength="2000"')}</div>
   <div><div class="lbl mb6">תשלום</div>${chips('paid',[['0','💳 לא שולם'],['1','✅ שולם']],rp.paid?'1':'0')}</div>
  </div>
- <div class="mf"><button class="btn ghost" data-a="close">ביטול</button><button class="btn pri" data-a="saveReport" data-id="${esc(l.id)}">💾 שמור דיווח</button></div>`);};
+ <div class="mf">${l.rating||l.freeText||l.topics||l.homework||l.teacherNotes?`<button class="btn ghost" style="color:var(--red);margin-inline-end:auto" data-a="clearReport" data-id="${esc(l.id)}">🗑️ מחק דיווח</button>`:''}<button class="btn ghost" data-a="lessonModal" data-id="${esc(l.id)}">✏️ פרטי השיעור</button><button class="btn ghost" data-a="close">ביטול</button><button class="btn pri" data-a="saveReport" data-id="${esc(l.id)}">💾 שמור דיווח</button></div>`);};
 A.rpSet=(v,el)=>{const k=el.dataset.k;rp[k]=k==='paid'?v==='1':v;el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===el));};
 A.rpStar=n=>{rp.rating=+n;$$('#modal .star').forEach((b,i)=>b.classList.toggle('on',i<rp.rating));$('#rp-rl').textContent=RATE_L[rp.rating]||'';};
 A.rpTopic=t=>{const i=$('#rp-topics');const cur=i.value.trim();if(!cur.split(/[,،]\s*/).includes(t))i.value=cur?cur+', '+t:t;};

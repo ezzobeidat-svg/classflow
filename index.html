@@ -250,16 +250,22 @@ function modal(html){$('#modal').innerHTML=html;$('#ovl').classList.add('open');
 function closeModal(){$('#ovl').classList.remove('open');document.body.style.overflow='';}
 const summary=d=>`<div class="summary">👤 ${esc(d.name)}<br>📚 ${esc(d.lang)}<br>📅 ${esc(dayLabel(d.date))}<br>🕐 ${esc(d.time)}</div>`;
 
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let lastKey='',lastRid='';
+function ridFor(d){const k=[d.name,d.phone,d.lang,d.date,d.time].join('|');if(k!==lastKey){lastKey=k;const a=new Uint8Array(12);crypto.getRandomValues(a);lastRid=[...a].map(x=>(x%36).toString(36)).join('');}return lastRid;}
+async function verify(api,rid){for(let i=0;i<4;i++){await sleep(i?2500:1200);try{const r=await fetch(api+'?check='+rid,{cache:'no-store'});const j=await r.json();if(j&&j.received)return true;}catch(e){}}return false;}
 async function send(){
  if(sending)return;const d=collect();if(!d)return;
  const api=scriptUrl();
  if(!api){window.open(waUrl(d),'_blank','noopener');return modal(`<div class="modal-icon">💬</div><h3>ההודעה מוכנה בוואטסאפ</h3><p>לחץ "שלח" בוואטסאפ כדי להעביר את הבקשה למורה.</p>${summary(d)}<a class="modal-btn wa" href="${esc(waUrl(d))}" target="_blank" rel="noopener">💬 פתח שוב את וואטסאפ</a><button class="modal-btn ghost" data-act="close">סגור</button>`);}
- const btn=$('#send');sending=true;btn.disabled=true;btn.innerHTML='<span class="spinner"></span> שולח...';
- const c=new AbortController(),timer=setTimeout(()=>c.abort(),20000);
+ const btn=$('#send'),lbl=btn.textContent;sending=true;btn.disabled=true;btn.innerHTML='<span class="spinner"></span> שולח...';
+ const c=new AbortController(),timer=setTimeout(()=>c.abort(),30000);
  let res=null;
- try{const r=await fetch(api,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...d,website:$('#s-web').value}),signal:c.signal});res=await r.json();}
+ try{const r=await fetch(api,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...d,rid:ridFor(d),website:$('#s-web').value}),signal:c.signal});res=await r.json();}
  catch(e){res=null;}
  finally{clearTimeout(timer);sending=false;btn.disabled=false;btn.textContent='📩 שלח בקשה לשיעור';}
+ if(!res||res.error==='server'){sending=true;btn.disabled=true;btn.innerHTML='<span class="spinner"></span> בודק…';const ok=await verify(api,ridFor(d));sending=false;btn.disabled=false;btn.textContent=lbl;if(ok)res={ok:true};}
+ if(res&&res.ok)lastKey='';
  if(res&&res.ok){
   if(AV.slots&&AV.slots[d.date])AV.slots[d.date]=AV.slots[d.date].filter(t=>t!==d.time);
   renderForm(true);$('#s-notes').value='';
@@ -268,7 +274,7 @@ async function send(){
  if(res&&(res.error==='slot_unavailable'||res.error==='slot_pending')){toast(ERR[res.error]);return load(true);}
  if(res&&ERR[res.error])return toast(ERR[res.error]);
  const wa=waNumber();
- modal(`<div class="modal-icon">⚠️</div><h3>השליחה לא הצליחה</h3><p>ייתכן שיש תקלה זמנית.${wa?' אפשר לשלוח את אותה בקשה בוואטסאפ:':' נסה שוב בעוד רגע.'}</p>${summary(d)}
+ modal(`<div class="modal-icon">⚠️</div><h3>השליחה לא הצליחה</h3><p style="font-size:.72rem;opacity:.55;margin-top:0">(${esc(res&&res.error?res.error:'no-response')})</p><p>ייתכן שיש תקלה זמנית.${wa?' אפשר לשלוח את אותה בקשה בוואטסאפ:':' נסה שוב בעוד רגע.'}</p>${summary(d)}
   ${wa?`<a class="modal-btn wa" href="${esc(waUrl(d))}" target="_blank" rel="noopener">💬 שלח בוואטסאפ</a>`:''}<button class="modal-btn ghost" data-act="retry">🔄 נסה שוב</button><button class="modal-btn ghost" data-act="close">סגור</button>`);
 }
 async function refresh(){const b=$('#refresh');if(!b||b.classList.contains('busy'))return;b.classList.add('busy');b.lastChild.textContent=' מרענן...';
