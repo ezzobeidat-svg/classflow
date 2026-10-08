@@ -5,109 +5,162 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#4B7FCC">
 <title>הזמנת שיעור</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#FFFFFF;--soft:#F5F6F8;--line:#E6E8EC;--text:#16181D;--sub:#5F6672;--mute:#9AA0AA;--acc:#2F5BD8;--acc-bg:#EEF3FF;--ok:#1F8A5B}
-body{font-family:'Rubik',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.5}
-button,input,textarea{font-family:inherit;color:inherit}
-button{cursor:pointer;background:none;border:none}
+:root{
+ --blue:#4B7FCC;--blue-dark:#3A6AB8;--blue-dim:rgba(75,127,204,.1);
+ --green:#3A9B6F;--green-bg:#DFF5E8;--green-line:#A8E0C4;
+ --red:#C0504A;--amber:#D4924A;
+ --bg:#F2F5F9;--white:#FFF;--border:#E2E8F0;
+ --text:#1A2332;--muted:#7A8BA0;--shadow:0 2px 16px rgba(0,0,0,.07);
+}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit;color:inherit}
+button{cursor:pointer}
 [hidden]{display:none!important}
-:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:8px}
-.page{max-width:480px;margin:0 auto;padding:40px 20px 48px}
-.top{text-align:center;margin-bottom:34px}
-.av{width:64px;height:64px;border-radius:50%;background:var(--acc-bg);color:var(--acc);display:grid;place-items:center;font-weight:700;font-size:1.5rem;margin:0 auto 12px}
-.top h1{font-size:1.6rem;font-weight:700;letter-spacing:-.01em}
-.top p{color:var(--sub);font-size:.95rem;margin-top:2px}
-.sec{margin-bottom:28px}
-.sec h2{font-size:.95rem;font-weight:600;margin-bottom:10px;display:flex;justify-content:space-between;align-items:baseline}
-.sec h2 small{font-weight:400;color:var(--mute);font-size:.82rem}
-.seg{display:flex;background:var(--soft);border-radius:12px;padding:4px;gap:4px}
-.seg button{flex:1;padding:10px 6px;border-radius:9px;font-size:.9rem;font-weight:500;color:var(--sub);transition:.15s}
-.seg button.on{background:#fff;color:var(--text);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-.row{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;scroll-snap-type:x mandatory;scrollbar-width:none}
-.row::-webkit-scrollbar{display:none}
-.date{flex:0 0 64px;scroll-snap-align:start;border:1.5px solid var(--line);border-radius:14px;padding:8px 0;text-align:center;transition:.15s}
-.date .wd{display:block;font-size:.72rem;color:var(--mute)}
-.date .dn{display:block;font-size:1.3rem;font-weight:700;line-height:1.2}
-.date .mo{display:block;font-size:.7rem;color:var(--sub)}
-.date .fr{display:none}
-.date.on{border-color:var(--acc);background:var(--acc);color:#fff}
-.date.on .wd,.date.on .mo{color:rgba(255,255,255,.8)}
-.times{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.tgroup h3{display:none}
-.tgroup+.tgroup{margin-top:8px}
-.time{border:1.5px solid var(--line);border-radius:10px;padding:9px 0;font-weight:500;font-variant-numeric:tabular-nums;transition:.15s}
-.time.on{border-color:var(--acc);background:var(--acc-bg);color:var(--acc);font-weight:600}
-.placeholder{color:var(--mute);font-size:.88rem}
-.inp{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font-size:1rem;outline:none;background:#fff;transition:border-color .15s}
-.inp:focus{border-color:var(--acc)}
-.inp::placeholder{color:var(--mute)}
-textarea.inp{resize:none}
-.stack{display:flex;flex-direction:column;gap:10px}
-.hp{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;opacity:0;pointer-events:none}
-.sum{text-align:center;font-size:.88rem;color:var(--sub);margin-bottom:10px;min-height:1.3em}
-.sum b{color:var(--text);font-weight:600}
-.send{width:100%;background:var(--acc);color:#fff;border-radius:14px;padding:15px;font-size:1rem;font-weight:600;transition:.15s;display:flex;justify-content:center;align-items:center;gap:8px}
-.send:hover{background:#2248B8}
-.send.wa{background:#1FA855}
-.send[disabled]{opacity:.6;pointer-events:none}
-.foot{text-align:center;color:var(--mute);font-size:.8rem;margin-top:16px}
-.empty{text-align:center;padding:30px 10px;color:var(--sub);line-height:1.7}
-.empty .big{font-weight:600;color:var(--text);font-size:1.05rem}
-.spin{width:24px;height:24px;border:2.5px solid var(--line);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px}
-.spin.sm{width:16px;height:16px;border-width:2px;border-color:rgba(255,255,255,.4);border-top-color:#fff;margin:0;display:inline-block}
-.ovl{position:fixed;inset:0;background:rgba(22,24,29,.45);z-index:100;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
-.ovl.open{opacity:1;pointer-events:auto}
-.modal{background:#fff;border-radius:22px 22px 0 0;padding:26px 22px 22px;width:100%;max-width:480px;text-align:center;max-height:90vh;overflow:auto;transform:translateY(30px);transition:transform .25s}
-.ovl.open .modal{transform:none}
-@media (min-width:560px){.ovl{align-items:center}.modal{border-radius:22px}}
-.badge{width:56px;height:56px;border-radius:50%;margin:0 auto 10px;display:grid;place-items:center;font-size:1.5rem}
-.badge.ok{background:#E8F5EE;color:var(--ok)}
-.badge.ok svg{width:30px;height:30px}
-.badge.err{background:#FDECEC}
-.modal h3{font-size:1.25rem;font-weight:700}
-.modal p{color:var(--sub);font-size:.9rem;margin-top:4px}
-.ticket{background:var(--soft);border-radius:12px;padding:12px 14px;margin:16px 0 4px;text-align:right;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:.9rem}
-.ticket dt{color:var(--mute)}
-.ticket dd{font-weight:500}
-.mbtn{display:block;width:100%;border-radius:12px;padding:13px;font-size:.95rem;font-weight:600;margin-top:8px;text-decoration:none;border:1.5px solid var(--line);background:#fff;text-align:center}
-.mbtn.pri{background:var(--text);border-color:var(--text);color:#fff}
-.mbtn.wa{background:#1FA855;border-color:#1FA855;color:#fff}
-#toast{position:fixed;top:14px;left:50%;transform:translate(-50%,-16px);background:var(--text);color:#fff;padding:10px 18px;border-radius:12px;font-size:.88rem;z-index:999;opacity:0;transition:.25s;pointer-events:none;max-width:92vw;text-align:center}
-#toast.show{opacity:1;transform:translate(-50%,0)}
+:focus-visible{outline:3px solid rgba(75,127,204,.45);outline-offset:2px}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.85)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
 @keyframes spin{to{transform:rotate(360deg)}}
+.fade{animation:up .4s ease both}
+.page{max-width:580px;margin:0 auto;padding:2rem 1rem 4rem}
+
+/* hero */
+.hero{text-align:center;padding:2rem 1rem 1.25rem}
+.avatar{width:88px;height:88px;border-radius:50%;background:var(--blue);color:#fff;font-size:2.2rem;font-weight:800;display:grid;place-items:center;margin:0 auto .9rem;box-shadow:0 6px 24px rgba(75,127,204,.4)}
+.hero h1{font-size:1.85rem;font-weight:800}
+.hero p{color:var(--muted);font-size:.95rem;margin-top:.2rem}
+.tags{display:flex;gap:7px;justify-content:center;margin-top:.8rem;flex-wrap:wrap}
+.tag{background:var(--blue-dim);color:var(--blue);border-radius:99px;font-size:.8rem;font-weight:700;padding:4px 13px}
+
+/* tabs */
+.tabs{display:flex;background:var(--white);border-radius:16px;padding:4px;gap:4px;margin:.4rem 0 .9rem;box-shadow:var(--shadow)}
+.tab{flex:1;padding:11px;text-align:center;border-radius:12px;font-size:.92rem;font-weight:700;border:none;background:none;color:var(--muted);transition:.2s}
+.tab.active{background:var(--blue);color:#fff;box-shadow:0 3px 10px rgba(75,127,204,.35)}
+
+/* cards */
+.card{background:var(--white);border-radius:20px;padding:1.3rem 1.4rem;box-shadow:var(--shadow);margin-bottom:.85rem}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:.95rem}
+.card-title{font-size:.86rem;font-weight:700;color:var(--muted);letter-spacing:.03em}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.field label{display:block;font-size:.84rem;font-weight:700;color:var(--muted);margin-bottom:6px}
+.inp{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;font-size:.98rem;outline:none;transition:border-color .2s,background .2s;appearance:none;-webkit-appearance:none}
+.inp:focus{border-color:var(--blue);background:#fff}
+.inp::placeholder{color:#9AA8BA}
+select.inp{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%237A8BA0' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;padding-left:36px}
+textarea.inp{resize:none;line-height:1.6}
+.hp{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);opacity:0;pointer-events:none}
+.refresh{display:inline-flex;align-items:center;gap:6px;background:var(--blue-dim);color:var(--blue);border:none;border-radius:99px;padding:6px 14px;font-size:.84rem;font-weight:700;white-space:nowrap}
+.refresh.busy .ic{animation:spin .8s linear infinite;display:inline-block}
+
+/* dates */
+.date-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.date-btn{background:var(--bg);border:1.5px solid var(--border);border-radius:14px;padding:10px 4px;text-align:center;transition:.18s}
+.date-btn .d{display:block;font-size:.72rem;color:var(--muted);font-weight:700;margin-bottom:2px}
+.date-btn .n{display:block;font-size:1.05rem;font-weight:800}
+.date-btn .spots{display:block;font-size:.68rem;margin-top:3px;font-weight:600;white-space:nowrap}
+.date-btn.available{background:var(--green-bg);border-color:var(--green-line)}
+.date-btn.available .spots{color:var(--green)}
+.date-btn.available:hover{border-color:var(--green);transform:translateY(-1px)}
+.date-btn.sel{background:var(--blue-dim);border-color:var(--blue);color:var(--blue)}
+.date-btn.sel .d,.date-btn.sel .spots{color:var(--blue)}
+.date-btn.full{opacity:.5;cursor:default}
+.date-btn.full .spots{color:var(--red)}
+
+/* times */
+.time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.time-btn{background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:11px 4px;text-align:center;font-size:.95rem;font-weight:700;transition:.18s}
+.time-btn:hover{border-color:var(--blue)}
+.time-btn.sel{background:var(--blue);border-color:var(--blue);color:#fff}
+
+/* submit */
+.submit-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:16px;padding:16px;font-size:1.05rem;font-weight:800;box-shadow:0 6px 18px rgba(75,127,204,.38);transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:.3rem;text-decoration:none}
+.submit-btn:hover{background:var(--blue-dark);transform:translateY(-1px)}
+.submit-btn.wa{background:#25D366;box-shadow:0 6px 18px rgba(37,211,102,.35)}
+.submit-btn:disabled{opacity:.65;pointer-events:none}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+.empty-state{text-align:center;padding:1.6rem 1rem;color:var(--muted);font-size:.92rem;line-height:1.7}
+.empty-state b{display:block;color:var(--text);font-size:1rem}
+.big-spin{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px}
+
+/* contact tab */
+.how{display:flex;flex-direction:column;gap:14px}
+.how-step{display:flex;gap:12px;align-items:flex-start}
+.how-num{width:30px;height:30px;border-radius:50%;background:var(--blue-dim);color:var(--blue);font-weight:800;display:grid;place-items:center;flex-shrink:0}
+.how-step b{display:block;font-size:.95rem}
+.how-step span{font-size:.86rem;color:var(--muted)}
+
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:22px;padding:2rem 1.5rem 1.5rem;width:100%;max-width:390px;text-align:center;transform:scale(.94);transition:transform .2s;box-shadow:0 20px 60px rgba(0,0,0,.2);max-height:92vh;overflow:auto}
+.overlay.open .modal{transform:scale(1)}
+.modal-icon{font-size:2.9rem;margin-bottom:.5rem;animation:pop .4s ease}
+.modal h3{font-size:1.3rem;font-weight:800;margin-bottom:.35rem}
+.modal p{color:var(--muted);font-size:.92rem;line-height:1.6}
+.summary{background:var(--bg);border-radius:14px;padding:12px 14px;margin:1rem 0 .3rem;text-align:right;font-size:.9rem;line-height:1.9}
+.modal-btn{display:block;width:100%;margin-top:.7rem;background:var(--blue);color:#fff;border:none;border-radius:13px;padding:13px;font-size:.95rem;font-weight:700;text-decoration:none;text-align:center}
+.modal-btn.ghost{background:var(--bg);color:var(--text);border:1.5px solid var(--border)}
+.modal-btn.wa{background:#25D366}
+#toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#1A2332;color:#fff;padding:11px 20px;border-radius:99px;font-size:.88rem;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;max-width:92vw;text-align:center}
+#toast.show{opacity:1}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:420px){.row2{grid-template-columns:1fr}.time-grid{grid-template-columns:repeat(3,1fr)}.card{padding:1.15rem 1.1rem}}
 </style>
 </head>
 <body>
 <div id="toast" role="status" aria-live="polite"></div>
-<main class="page">
- <div class="top"><div class="av" id="t-av">·</div><h1 id="t-name">הזמנת שיעור</h1><p id="t-bio">שיעורים פרטיים בערבית ובעברית</p></div>
- <div id="content"><div class="empty"><div class="spin"></div>טוען שעות פנויות…</div></div>
- <p class="foot">האישור הסופי יגיע אליך בוואטסאפ</p>
-</main>
-<div class="ovl" id="ovl"><div class="modal" id="modal" role="dialog" aria-modal="true"></div></div>
+<div class="page">
+ <div class="hero fade">
+  <div class="avatar" id="t-av">·</div>
+  <h1 id="t-name">הזמנת שיעור</h1>
+  <p id="t-bio">מורה לערבית ועברית · שיעורים פרטיים</p>
+  <div class="tags"><span class="tag">ערבית מדוברת</span><span class="tag">ערבית ספרותית</span><span class="tag">עברית</span></div>
+ </div>
+
+ <div class="tabs fade">
+  <button class="tab active" data-tab="book">📅 הזמנת שיעור</button>
+  <button class="tab" data-tab="contact">💬 איך זה עובד</button>
+ </div>
+
+ <div id="tab-book"><div class="card"><div class="empty-state"><div class="big-spin"></div>טוען שעות פנויות…</div></div></div>
+
+ <div id="tab-contact" hidden>
+  <div class="card fade">
+   <div class="card-title" style="margin-bottom:1rem">איך קובעים שיעור</div>
+   <div class="how">
+    <div class="how-step"><span class="how-num">1</span><div><b>בוחרים יום ושעה</b><span>הימים הירוקים פתוחים להזמנה</span></div></div>
+    <div class="how-step"><span class="how-num">2</span><div><b>שולחים בקשה</b><span>הבקשה מגיעה ישירות למורה</span></div></div>
+    <div class="how-step"><span class="how-num">3</span><div><b>מקבלים אישור בוואטסאפ</b><span>המורה מאשר את השיעור בהודעה למספר שלך</span></div></div>
+   </div>
+  </div>
+  <div class="card fade" id="contact-card">
+   <div class="card-title" style="margin-bottom:.6rem">רוצה לשנות או לבטל שיעור?</div>
+   <p style="color:var(--muted);font-size:.9rem;line-height:1.6;margin-bottom:.9rem">שלח הודעה למורה בוואטסאפ, וכדאי לעשות זאת לפחות 24 שעות לפני השיעור.</p>
+   <a class="submit-btn wa" id="wa-direct" href="#" target="_blank" rel="noopener">💬 כתוב למורה בוואטסאפ</a>
+  </div>
+ </div>
+</div>
+
+<div class="overlay" id="ovl"><div class="modal" id="modal" role="dialog" aria-modal="true"></div></div>
 
 <script>
 'use strict';
-const LANGS=[
- {name:'ערבית מדוברת',code:'a',sample:'كيفك؟',cls:'ar'},
- {name:'ערבית ספרותית',code:'f',sample:'كيف حالك؟',cls:'ar'},
- {name:'עברית',code:'h',sample:'מה שלומך?',cls:'he'}];
-const LANG_CODE=Object.fromEntries(LANGS.map(l=>[l.name,l.code]));
+const LANGS=['ערבית מדוברת','ערבית ספרותית','עברית'];
+const LANG_CODE={'ערבית מדוברת':'a','ערבית ספרותית':'f','עברית':'h'};
 const DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
-const MONTHS=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+const DSHORT=['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ש׳'];
 const BOOK_RE=/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/;
 const ERR={
  rate_limited:'נשלחו כבר כמה בקשות מהמספר הזה בשעה האחרונה. אפשר לנסות שוב מאוחר יותר.',
- slot_unavailable:'השעה הזאת כבר לא פנויה. בחר שעה אחרת.',
- slot_pending:'מישהו אחר ביקש את השעה הזאת ממש עכשיו. בחר שעה אחרת.',
- bad_name:'נא להזין שם מלא',bad_phone:'נא להזין מספר טלפון תקין',bad_lang:'נא לבחור שפה',bad_slot:'נא לבחור תאריך ושעה'
+ slot_unavailable:'השעה הזאת כבר לא פנויה — בחר שעה אחרת',
+ slot_pending:'מישהו אחר ביקש את השעה הזאת ממש עכשיו — בחר שעה אחרת',
+ bad_name:'נא להכניס שם מלא',bad_phone:'נא להכניס מספר טלפון תקין',bad_lang:'נא לבחור שפה',bad_slot:'נא לבחור תאריך ושעה'
 };
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"'`]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'}[c]));
@@ -117,13 +170,13 @@ const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;};
 const parseKey=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d,12);};
 const fmtD=k=>{const d=parseKey(k);return d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();};
 const dayLabel=k=>{const x=parseKey(k);return `יום ${DAYS[x.getDay()]} ${fmtD(k)}`;};
-let _t;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(_t);_t=setTimeout(()=>t.classList.remove('show'),3400);}
+let _t;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(_t);_t=setTimeout(()=>t.classList.remove('show'),3000);}
 
 let AV=null,selLang='',selDate='',selTime='',sending=false;
 
 async function load(keepForm){
  try{const r=await fetch('availability.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error();AV=await r.json();}
- catch(e){if(!keepForm)$('#content').innerHTML='<div class="empty"><div class="big">לא הצלחנו לטעון את השעות</div>רענן את הדף בעוד רגע.</div>';return;}
+ catch(e){if(!keepForm)$('#tab-book').innerHTML='<div class="card"><div class="empty-state"><b>לא ניתן לטעון את השעות כרגע</b>נסה לרענן את הדף בעוד רגע.</div></div>';else toast('הרענון נכשל — נסה שוב');return;}
  renderHero();renderForm(keepForm);
 }
 const teacher=()=>(AV&&AV.teacher)||{};
@@ -132,101 +185,109 @@ const scriptUrl=()=>{const u=String((AV&&AV.bookingUrl)||'');return BOOK_RE.test
 function renderHero(){const t=teacher(),name=String(t.name||'').slice(0,60);
  $('#t-name').textContent=name||'הזמנת שיעור';$('#t-av').textContent=name.trim()[0]||'·';
  if(t.bio)$('#t-bio').textContent=String(t.bio).slice(0,120);
- if(name)document.title='הזמנת שיעור · '+name;}
-function freeDays(){const from=dkey(addDays(new Date(),1)),s=(AV&&AV.slots)||{},out=[];
- Object.keys(s).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)&&d>=from).sort().slice(0,24).forEach(d=>{const ts=(Array.isArray(s[d])?s[d]:[]).filter(t=>/^\d{2}:\d{2}$/.test(t)).sort();if(ts.length)out.push([d,ts]);});return out;}
-
+ if(name)document.title='הזמנת שיעור | '+name;
+ const wa=waNumber(),a=$('#wa-direct');if(wa)a.href='https://wa.me/'+wa;else $('#contact-card').hidden=true;}
+function slotsFor(d){const s=(AV&&AV.slots&&AV.slots[d]);return (Array.isArray(s)?s:[]).filter(t=>/^\d{2}:\d{2}$/.test(t)).sort();}
+function dayCells(){
+ const keys=Object.keys((AV&&AV.slots)||{}).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)&&slotsFor(k).length).sort();
+ const last=keys.length?keys[keys.length-1]:'';const out=[];
+ for(let i=1;i<=28;i++){const k=dkey(addDays(new Date(),i));if(i>16&&(!last||k>last))break;out.push(k);}
+ const rem=out.length%4;if(rem)for(let i=out.length+1;out.length%4;i++)out.push(dkey(addDays(new Date(),i)));
+ return out;
+}
 function renderForm(keepForm){
- const days=freeDays(),wa=waNumber(),api=scriptUrl();
- if(!api&&!wa){$('#content').innerHTML='<div class="empty"><div class="big">ההזמנה המקוונת סגורה כרגע</div>אפשר לפנות למורה ישירות.</div>';return;}
+ const wa=waNumber(),api=scriptUrl();
+ if(!api&&!wa){$('#tab-book').innerHTML='<div class="card"><div class="empty-state"><b>ההזמנה המקוונת אינה זמינה כרגע</b>אנא פנה למורה ישירות.</div></div>';return;}
  let me={};
  if(keepForm)me={name:$('#s-name')?.value,phone:$('#s-phone')?.value,lang:selLang,notes:$('#s-notes')?.value};
  else{try{me=JSON.parse(localStorage.getItem('cf_me')||'{}')||{};}catch(e){}}
  selDate='';selTime='';
- if(!days.length){$('#content').innerHTML=`<div class="empty"><div class="big">אין כרגע שעות פנויות</div>${wa?'אפשר לכתוב למורה ישירות.':'שעות חדשות נפתחות מדי שבוע.'}</div>${wa?`<a class="mbtn wa" href="https://wa.me/${wa}" target="_blank" rel="noopener">כתוב בוואטסאפ</a>`:''}`;return;}
- $('#content').innerHTML=`
-  <section class="sec" id="st-lang"><h2>שפה</h2><div class="seg" id="s-lang">${LANGS.map(l=>`<button data-lang="${esc(l.name)}" aria-pressed="false">${esc(l.name)}</button>`).join('')}</div></section>
-  <section class="sec" id="st-date"><h2>יום <small>${+AV.lessonDuration||60} דקות לשיעור</small></h2><div class="row">${days.map(([d])=>{const x=parseKey(d);return `<button class="date" data-date="${d}" aria-pressed="false"><span class="wd">${DAYS[x.getDay()]}</span><span class="dn">${x.getDate()}</span><span class="mo">${MONTHS[x.getMonth()].slice(0,3)}׳</span></button>`;}).join('')}</div></section>
-  <section class="sec" id="st-time"><h2>שעה <small id="time-hint"></small></h2><div id="times"><p class="placeholder">בחר יום כדי לראות שעות</p></div></section>
-  <section class="sec" id="st-me"><h2>הפרטים שלך</h2><div class="stack">
-   <input class="inp" id="s-name" maxlength="60" autocomplete="name" value="${esc(me.name)}" placeholder="שם מלא" aria-label="שם מלא">
-   <input class="inp" id="s-phone" type="tel" maxlength="20" autocomplete="tel" dir="ltr" style="text-align:right" value="${esc(me.phone)}" placeholder="טלפון לוואטסאפ" aria-label="טלפון לוואטסאפ">
-   <textarea class="inp" id="s-notes" rows="2" maxlength="300" placeholder="הערה למורה (לא חובה)" aria-label="הערה למורה">${esc(me.notes||'')}</textarea>
-  </div><input class="hp" id="s-web" tabindex="-1" autocomplete="off" aria-hidden="true"></section>
-  <div class="sum" id="bar-txt"></div>
-  <button class="send ${api?'':'wa'}" id="send">${api?'שלח בקשה':'שלח בוואטסאפ'}</button>`;
- if(me.lang&&LANG_CODE[me.lang])pickLang(me.lang);
- ['s-name','s-phone'].forEach(id=>$('#'+id).addEventListener('input',updateBar));
- updateBar();
+ const cells=dayCells(),any=cells.some(k=>slotsFor(k).length);
+ $('#tab-book').innerHTML=`
+ <div class="card fade">
+  <div class="card-title" style="margin-bottom:.9rem">פרטים אישיים</div>
+  <div class="row2">
+   <div class="field"><label for="s-name">שם מלא *</label><input class="inp" id="s-name" maxlength="60" autocomplete="name" placeholder="הכנס שמך" value="${esc(me.name)}"></div>
+   <div class="field"><label for="s-phone">טלפון *</label><input class="inp" id="s-phone" type="tel" maxlength="20" autocomplete="tel" dir="ltr" style="text-align:right" placeholder="05X-XXXXXXX" value="${esc(me.phone)}"></div>
+  </div>
+  <div class="field"><label for="s-lang">שפה *</label><select class="inp" id="s-lang"><option value="">בחר שפה...</option>${LANGS.map(l=>`<option ${me.lang===l?'selected':''}>${esc(l)}</option>`).join('')}</select></div>
+  <input class="hp" id="s-web" tabindex="-1" autocomplete="off" aria-hidden="true">
+ </div>
+ <div class="card fade">
+  <div class="card-head"><div class="card-title">בחר תאריך — ${+AV.lessonDuration||60} דקות לשיעור</div><button class="refresh" id="refresh"><span class="ic">🔄</span> רענון</button></div>
+  ${any?`<div class="date-grid">${cells.map(k=>{const x=parseKey(k),n=slotsFor(k).length;
+   return n?`<button class="date-btn available" data-date="${k}"><span class="d">${DSHORT[x.getDay()]}</span><span class="n">${x.getDate()}/${x.getMonth()+1}</span><span class="spots">${n===1?'שעה אחת':n+' שעות'}</span></button>`
+    :`<div class="date-btn full" aria-disabled="true"><span class="d">${DSHORT[x.getDay()]}</span><span class="n">${x.getDate()}/${x.getMonth()+1}</span><span class="spots">חסום</span></div>`;}).join('')}</div>`
+  :`<div class="empty-state"><b>אין כרגע שעות פנויות</b>שעות חדשות נפתחות מדי שבוע${wa?' — אפשר גם לכתוב למורה ישירות':''}.</div>${wa?`<a class="submit-btn wa" href="https://wa.me/${wa}" target="_blank" rel="noopener">💬 כתוב למורה בוואטסאפ</a>`:''}`}
+ </div>
+ <div class="card fade" id="time-card" hidden><div class="card-title" id="time-title" style="margin-bottom:.9rem">בחר שעה</div><div class="time-grid" id="times"></div></div>
+ <div class="card fade"><div class="card-title" style="margin-bottom:.9rem">הערות למורה (אופציונלי)</div><textarea class="inp" id="s-notes" rows="3" maxlength="300" placeholder="נושא ספציפי? שאלות? ציפיות...">${esc(me.notes||'')}</textarea></div>
+ ${any?`<button class="submit-btn ${api?'':'wa'}" id="send">${api?'📩 שלח בקשה לשיעור':'💬 שלח בקשה בוואטסאפ'}</button>`:''}`;
+ selLang=$('#s-lang').value;
 }
-function mark(id,done){const el=$('#'+id);if(el)el.classList.toggle('done',!!done);}
-function updateBar(){
- const n=($('#s-name')?.value||'').trim().length>=2,p=($('#s-phone')?.value||'').replace(/\D/g,'').length>=9;
- mark('st-lang',selLang);mark('st-date',selDate);mark('st-time',selTime);mark('st-me',n&&p);
- const el=$('#bar-txt');if(!el)return;
- if(selDate&&selTime){const x=parseKey(selDate);el.innerHTML=`<b>${esc(selLang||'')}${selLang?' · ':''}יום ${DAYS[x.getDay()]} ${x.getDate()}/${x.getMonth()+1}, ${esc(selTime)}</b>`;}
- else el.textContent='';
-}
-function pickLang(l){selLang=l;document.querySelectorAll('[data-lang]').forEach(c=>{const on=c.dataset.lang===l;c.classList.toggle('on',on);c.setAttribute('aria-pressed',on);});updateBar();}
-function pickDate(d){selDate=d;selTime='';document.querySelectorAll('[data-date]').forEach(b=>{const on=b.dataset.date===d;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});
- const ts=(freeDays().find(x=>x[0]===d)||[,[]])[1],x=parseKey(d);
- $('#time-hint').textContent=`${ts.length} פנויות`;
- const groups=[['בוקר',t=>t<'12:00'],['צהריים',t=>t>='12:00'&&t<'16:00'],['אחר הצהריים וערב',t=>t>='16:00']].map(([h,f])=>[h,ts.filter(f)]).filter(g=>g[1].length);
- $('#times').innerHTML=`<div class="times">${ts.map(t=>`<button class="time" data-time="${t}" aria-pressed="false">${t}</button>`).join('')}</div>`;
- updateBar();
- }
-function pickTime(t){selTime=t;document.querySelectorAll('[data-time]').forEach(b=>{const on=b.dataset.time===t;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});updateBar();
- const n=$('#s-name');if(window.innerWidth<700&&n&&!n.value)$('#st-me').scrollIntoView({behavior:'smooth',block:'start'});}
+function pickDate(d){selDate=d;selTime='';document.querySelectorAll('.date-btn[data-date]').forEach(b=>b.classList.toggle('sel',b.dataset.date===d));
+ const ts=slotsFor(d),x=parseKey(d);
+ $('#time-title').textContent=`שעות פנויות — יום ${DAYS[x.getDay()]} ${x.getDate()}/${x.getMonth()+1}`;
+ $('#times').innerHTML=ts.map(t=>`<button class="time-btn" data-time="${t}">${t}</button>`).join('');
+ const c=$('#time-card');c.hidden=false;c.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function pickTime(t){selTime=t;document.querySelectorAll('.time-btn').forEach(b=>b.classList.toggle('sel',b.dataset.time===t));}
 
 function collect(){
  const clean=s=>String(s||'').replace(/\s+/g,' ').replace(/CF:/gi,'CF ').trim();
+ selLang=$('#s-lang').value;
  const d={name:clean($('#s-name').value).slice(0,60),phone:$('#s-phone').value.trim().slice(0,20),notes:clean($('#s-notes').value).slice(0,300),lang:selLang,date:selDate,time:selTime};
- const fail=(m,id)=>{toast(m);const el=$('#'+id);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});const f=el.querySelector('input,button')||el;if(f.focus)setTimeout(()=>f.focus({preventScroll:true}),300);}};
- if(!d.lang)return fail(ERR.bad_lang,'st-lang');
- if(!d.date)return fail('נא לבחור יום','st-date');
- if(!d.time)return fail('נא לבחור שעה','st-time');
- if(d.name.length<2)return fail(ERR.bad_name,'s-name');
- if(d.phone.replace(/\D/g,'').length<9)return fail(ERR.bad_phone,'s-phone');
+ if(d.name.length<2)return toast(ERR.bad_name);
+ if(d.phone.replace(/\D/g,'').length<9)return toast(ERR.bad_phone);
+ if(!LANG_CODE[d.lang])return toast(ERR.bad_lang);
+ if(!d.date)return toast('נא לבחור תאריך');
+ if(!d.time)return toast('נא לבחור שעה');
  try{localStorage.setItem('cf_me',JSON.stringify({name:d.name,phone:d.phone,lang:d.lang}));}catch(e){}
  return d;
 }
 function waMessage(d){const t=teacher();return [`שלום${t.name?' '+String(t.name).slice(0,60):''}! אני רוצה לקבוע שיעור 🙂`,`שם: ${d.name}`,`טלפון: ${d.phone}`,`שפה: ${d.lang}`,`תאריך: ${dayLabel(d.date)}`,`שעה: ${d.time}`,...(d.notes?[`הערות: ${d.notes}`]:[]),'',`קוד: CF:${d.date}T${d.time}:${LANG_CODE[d.lang]}`].join('\n');}
 const waUrl=d=>'https://wa.me/'+waNumber()+'?text='+encodeURIComponent(waMessage(d));
-function modal(html){$('#modal').innerHTML=html;$('#ovl').classList.add('open');setTimeout(()=>{const b=$('#modal .mbtn');if(b)b.focus();},250);}
-const ticket=d=>`<dl class="ticket"><dt>שם</dt><dd>${esc(d.name)}</dd><dt>שפה</dt><dd>${esc(d.lang)}</dd><dt>מתי</dt><dd>${esc(dayLabel(d.date))}, ${esc(d.time)}</dd></dl>`;
-const CHECK='<svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function modal(html){$('#modal').innerHTML=html;$('#ovl').classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(){$('#ovl').classList.remove('open');document.body.style.overflow='';}
+const summary=d=>`<div class="summary">👤 ${esc(d.name)}<br>📚 ${esc(d.lang)}<br>📅 ${esc(dayLabel(d.date))}<br>🕐 ${esc(d.time)}</div>`;
 
 async function send(){
  if(sending)return;const d=collect();if(!d)return;
  const api=scriptUrl();
- if(!api){window.open(waUrl(d),'_blank','noopener');return modal(`<div class="badge ok">💬</div><h3>ההודעה מוכנה בוואטסאפ</h3><p>לחץ "שלח" בוואטסאפ כדי להעביר את הבקשה למורה.</p>${ticket(d)}<a class="mbtn wa" href="${esc(waUrl(d))}" target="_blank" rel="noopener">פתח שוב את וואטסאפ</a><button class="mbtn" data-act="close">סגור</button>`);}
- const btn=$('#send');sending=true;btn.disabled=true;btn.innerHTML='<span class="spin sm"></span> שולח…';
+ if(!api){window.open(waUrl(d),'_blank','noopener');return modal(`<div class="modal-icon">💬</div><h3>ההודעה מוכנה בוואטסאפ</h3><p>לחץ "שלח" בוואטסאפ כדי להעביר את הבקשה למורה.</p>${summary(d)}<a class="modal-btn wa" href="${esc(waUrl(d))}" target="_blank" rel="noopener">💬 פתח שוב את וואטסאפ</a><button class="modal-btn ghost" data-act="close">סגור</button>`);}
+ const btn=$('#send');sending=true;btn.disabled=true;btn.innerHTML='<span class="spinner"></span> שולח...';
  const c=new AbortController(),timer=setTimeout(()=>c.abort(),20000);
  let res=null;
  try{const r=await fetch(api,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...d,website:$('#s-web').value}),signal:c.signal});res=await r.json();}
  catch(e){res=null;}
- finally{clearTimeout(timer);sending=false;btn.disabled=false;btn.textContent='שלח בקשה';}
+ finally{clearTimeout(timer);sending=false;btn.disabled=false;btn.textContent='📩 שלח בקשה לשיעור';}
  if(res&&res.ok){
   if(AV.slots&&AV.slots[d.date])AV.slots[d.date]=AV.slots[d.date].filter(t=>t!==d.time);
   renderForm(true);$('#s-notes').value='';
-  return modal(`<div class="badge ok">${CHECK}</div><h3>הבקשה נשלחה</h3><p>המורה יאשר את השיעור בהודעת וואטסאפ למספר ${esc(d.phone)}.</p>${ticket(d)}<button class="mbtn pri" data-act="close">סגור</button>`);
+  return modal(`<div class="modal-icon">✅</div><h3>הבקשה נשלחה!</h3><p>${esc(d.name)}, קיבלנו את בקשתך לשיעור ${esc(d.lang)}.<br>המורה יאשר את השיעור בהודעת וואטסאפ.</p>${summary(d)}<button class="modal-btn" data-act="close">הבנתי, תודה!</button>`);
  }
  if(res&&(res.error==='slot_unavailable'||res.error==='slot_pending')){toast(ERR[res.error]);return load(true);}
  if(res&&ERR[res.error])return toast(ERR[res.error]);
  const wa=waNumber();
- modal(`<div class="badge err">⚠️</div><h3>השליחה לא הצליחה</h3><p>החיבור נכשל.${wa?' אפשר לשלוח את אותה בקשה בוואטסאפ, או לנסות שוב.':' נסה שוב בעוד רגע.'}</p>${ticket(d)}
-  ${wa?`<a class="mbtn wa" href="${esc(waUrl(d))}" target="_blank" rel="noopener">שלח בוואטסאפ</a>`:''}<button class="mbtn" data-act="retry">נסה שוב</button><button class="mbtn" data-act="close">סגור</button>`);
+ modal(`<div class="modal-icon">⚠️</div><h3>השליחה לא הצליחה</h3><p>ייתכן שיש תקלה זמנית.${wa?' אפשר לשלוח את אותה בקשה בוואטסאפ:':' נסה שוב בעוד רגע.'}</p>${summary(d)}
+  ${wa?`<a class="modal-btn wa" href="${esc(waUrl(d))}" target="_blank" rel="noopener">💬 שלח בוואטסאפ</a>`:''}<button class="modal-btn ghost" data-act="retry">🔄 נסה שוב</button><button class="modal-btn ghost" data-act="close">סגור</button>`);
 }
+async function refresh(){const b=$('#refresh');if(!b||b.classList.contains('busy'))return;b.classList.add('busy');b.lastChild.textContent=' מרענן...';
+ const keepD=selDate,keepT=selTime;await load(true);
+ if(keepD&&slotsFor(keepD).length){pickDate(keepD);if(keepT&&slotsFor(keepD).includes(keepT))pickTime(keepT);}
+ toast('✅ השעות עודכנו');}
+function showTab(t){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));$('#tab-book').hidden=t!=='book';$('#tab-contact').hidden=t!=='contact';}
 document.addEventListener('click',e=>{
- const l=e.target.closest('[data-lang]');if(l)return pickLang(l.dataset.lang);
+ const tb=e.target.closest('[data-tab]');if(tb)return showTab(tb.dataset.tab);
  const d=e.target.closest('[data-date]');if(d)return pickDate(d.dataset.date);
  const t=e.target.closest('[data-time]');if(t)return pickTime(t.dataset.time);
+ if(e.target.closest('#refresh'))return refresh();
  if(e.target.closest('#send'))return send();
  const a=e.target.closest('[data-act]');
- if(a&&a.dataset.act==='retry'){$('#ovl').classList.remove('open');return send();}
- if((a&&a.dataset.act==='close')||e.target.id==='ovl')$('#ovl').classList.remove('open');
+ if(a&&a.dataset.act==='retry'){closeModal();return send();}
+ if((a&&a.dataset.act==='close')||e.target.id==='ovl')closeModal();
 });
-document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#ovl').classList.remove('open');});
+document.addEventListener('change',e=>{if(e.target.id==='s-lang')selLang=e.target.value;});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 load();
 </script>
 </body>
