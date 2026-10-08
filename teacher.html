@@ -241,6 +241,117 @@ table.tbl{width:100%;border-collapse:collapse}
 .psec{margin-bottom:12px}
 .pre{white-space:pre-line;font-size:.86rem;color:var(--t2);margin-top:3px}
 .vrow{display:grid;grid-template-columns:1fr 1fr 1.4fr auto;gap:8px;align-items:center}
+.pw{display:grid;grid-template-columns:320px minmax(0,1fr);gap:16px;align-items:start}
+.pw-list{background:var(--s);border:1px solid var(--b);border-radius:20px;box-shadow:var(--sh);position:sticky;top:112px;max-height:calc(100vh - 128px);display:flex;flex-direction:column;overflow:hidden}
+.pl-head{padding:14px 14px 10px;border-bottom:1px solid var(--b);display:flex;flex-direction:column;gap:9px}
+.pl-search{position:relative}
+.pl-search input{padding-inline-start:34px}
+.pl-search::before{content:'🔍';position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);font-size:.85rem;opacity:.55}
+.pl-search kbd{position:absolute;inset-inline-end:10px;top:50%;transform:translateY(-50%);font:600 .66rem/1 var(--sans,inherit);color:var(--m);border:1px solid var(--b);border-radius:5px;padding:3px 5px;background:var(--s2)}
+.fchips{display:flex;gap:5px;flex-wrap:wrap}
+.fchip{border:1px solid var(--b);background:var(--s);border-radius:99px;padding:3px 10px;font-size:.74rem;font-weight:600;color:var(--t2)}
+.fchip.on{background:var(--t);border-color:var(--t);color:#fff}
+.pl-items{overflow-y:auto;padding:8px;flex:1}
+.pl-group{font-size:.7rem;font-weight:800;color:var(--m);padding:10px 8px 4px}
+.pli{display:block;width:100%;text-align:start;border:1px solid transparent;border-radius:14px;padding:10px 12px;margin-bottom:3px;background:none;transition:background .12s}
+.pli:hover{background:var(--s2)}
+.pli.on{background:var(--blue-dim);border-color:rgba(59,111,224,.25)}
+.pli-t{font-weight:700;font-size:.92rem;display:flex;align-items:center;gap:6px;line-height:1.3}
+.pli-t .tt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pli-m{display:flex;gap:6px;align-items:center;margin-top:4px;font-size:.72rem;color:var(--m);flex-wrap:wrap}
+.ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--c)}
+.st-pill{font-size:.66rem;font-weight:700;border-radius:99px;padding:1px 8px}
+.st-draft{background:var(--s3);color:var(--t2)}.st-ready{background:var(--blue-dim);color:var(--blue)}.st-taught{background:var(--green-dim);color:var(--green)}
+.pl-new{padding:10px;border-top:1px solid var(--b);display:flex;gap:6px}
+.pw-ed{min-width:0}
+.ed{background:var(--s);border:1px solid var(--b);border-radius:22px;box-shadow:var(--sh);overflow:hidden}
+.ed-top{padding:20px 24px 14px;border-bottom:1px solid var(--b);position:relative}
+.ed-top::before{content:'';position:absolute;inset:0 0 auto 0;height:4px;background:var(--lc,var(--blue))}
+.ed-bar{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.ed-bar .grow{min-width:0}
+.saved{font-size:.74rem;color:var(--m);display:flex;align-items:center;gap:5px}
+.saved::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green)}
+.saved.dirty::before{background:var(--amber)}
+.ed-title{width:100%;border:none;outline:none;background:none;font-family:inherit;font-weight:800;font-size:1.65rem;line-height:1.25;color:var(--t);padding:4px 0;letter-spacing:-.01em}
+.ed-title::placeholder{color:var(--m2)}
+.ed-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.ed-meta select{width:auto;padding:6px 30px 6px 10px;font-size:.84rem;border-radius:10px}
+.seg-st{display:flex;background:var(--s2);border:1px solid var(--b);border-radius:11px;padding:3px;gap:2px}
+.seg-st button{border:none;background:none;border-radius:8px;padding:5px 10px;font-size:.78rem;font-weight:700;color:var(--m)}
+.seg-st button.on[data-id="draft"]{background:var(--s);color:var(--t);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.seg-st button.on[data-id="ready"]{background:var(--blue);color:#fff}
+.seg-st button.on[data-id="taught"]{background:var(--green);color:#fff}
+.star-btn{font-size:1.15rem;filter:grayscale(1);opacity:.45;background:none;border:none;padding:2px 4px}
+.star-btn.on{filter:none;opacity:1}
+.ed-nav{display:flex;gap:4px;padding:8px 18px;border-bottom:1px solid var(--b);background:var(--s2);overflow-x:auto;position:sticky;top:0;z-index:3;scrollbar-width:none}
+.ed-nav::-webkit-scrollbar{display:none}
+.ed-nav a{font-size:.8rem;font-weight:700;color:var(--t2);text-decoration:none;padding:6px 11px;border-radius:9px;white-space:nowrap}
+.ed-nav a:hover{background:var(--s3)}
+.ed-nav .cnt{font-size:.66rem;color:var(--m);margin-inline-start:3px}
+.ed-sec{padding:22px 24px;border-bottom:1px solid var(--b);scroll-margin-top:60px}
+.ed-sec:last-child{border-bottom:none}
+.ed-sec h3{font-size:1.02rem;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.ed-sec .hint{font-size:.8rem;color:var(--m);margin-bottom:14px}
+.fl{display:flex;flex-direction:column;gap:5px}
+.fl label{font-size:.78rem;font-weight:700;color:var(--t2)}
+.ta{width:100%;border:1.5px solid var(--b);border-radius:12px;background:var(--s2);padding:10px 12px;font-size:.92rem;line-height:1.65;outline:none;resize:vertical;min-height:64px;color:var(--t);transition:border-color .15s,background .15s}
+.ta:focus{border-color:var(--blue);background:#fff}
+.flow-bar{display:flex;height:30px;border-radius:10px;overflow:hidden;background:var(--s3);margin-bottom:6px}
+.flow-bar span{display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;min-width:0;transition:flex .2s}
+.flow-sum{display:flex;justify-content:space-between;font-size:.8rem;color:var(--t2);margin-bottom:14px}
+.flow-sum b.over{color:var(--red)}.flow-sum b.ok{color:var(--green)}
+.stage{display:grid;grid-template-columns:auto minmax(0,1fr) 84px auto;gap:10px;align-items:start;padding:10px;border:1px solid var(--b);border-radius:14px;margin-bottom:8px;background:var(--s);border-inline-start:4px solid var(--c)}
+.stage .sn{width:26px;height:26px;border-radius:50%;background:var(--c);color:#fff;font-weight:800;font-size:.78rem;display:grid;place-items:center;margin-top:6px}
+.stage input.inp,.stage .ta{background:var(--s2)}
+.stage .min{position:relative}
+.stage .min input{text-align:center;padding:9px 6px}
+.stage .min span{position:absolute;bottom:-15px;inset-inline:0;text-align:center;font-size:.64rem;color:var(--m)}
+.stage-act{display:flex;flex-direction:column;gap:3px}
+.stage-act button{width:28px;height:24px;border-radius:7px;border:1px solid var(--b);background:var(--s2);font-size:.7rem;padding:0}
+.stage-act button:hover{background:var(--s3)}
+.vt{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--b);border-radius:14px;overflow:hidden}
+.vt th{background:var(--s2);font-size:.72rem;color:var(--m);font-weight:800;text-align:start;padding:8px 10px;border-bottom:1px solid var(--b)}
+.vt td{border-bottom:1px solid var(--b);padding:0}
+.vt tr:last-child td{border-bottom:none}
+.vt input{width:100%;border:none;background:none;padding:10px;font-size:.92rem;outline:none;color:var(--t)}
+.vt input:focus{background:var(--blue-dim)}
+.vt input.w{font-weight:700;font-size:1.02rem}
+.vt td.vx{width:34px;text-align:center}
+.vt td.vx button{border:none;background:none;opacity:.35;font-size:.85rem}
+.vt tr:hover td.vx button{opacity:1}
+.vt .num{width:30px;text-align:center;font-size:.72rem;color:var(--m)}
+.links{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.lnk{display:inline-flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--b);border-radius:99px;padding:4px 6px 4px 10px;font-size:.78rem;font-weight:600}
+.lnk button{border:none;background:var(--s3);border-radius:50%;width:18px;height:18px;font-size:.7rem;line-height:1;padding:0}
+.tpl-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}
+.tpl{border:1.5px solid var(--b);background:var(--s);border-radius:16px;padding:16px 12px;text-align:center;transition:.15s}
+.tpl:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--sh2)}
+.tpl .ic{font-size:1.6rem}
+.tpl b{display:block;margin-top:6px;font-size:.9rem}
+.tpl span{display:block;font-size:.72rem;color:var(--m);margin-top:2px}
+.welcome{padding:48px 28px;text-align:center}
+.welcome h2{font-size:1.4rem;font-weight:800}
+.welcome p{color:var(--m);margin-top:6px}
+.nlog{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.nlog .it{background:var(--s2);border-radius:12px;padding:10px 12px;font-size:.88rem;position:relative}
+.nlog .it small{display:block;color:var(--m);font-size:.72rem;margin-bottom:2px}
+.nlog .it button{position:absolute;top:8px;inset-inline-end:8px;border:none;background:none;opacity:.4}
+.pl-back{display:none}
+@media (max-width:980px){
+ .pw{grid-template-columns:1fr}
+ .pw-list{position:static;max-height:none}
+ .pw.editing .pw-list{display:none}
+ .pw:not(.editing) .pw-ed{display:none}
+ .pl-back{display:inline-flex}
+ .tpl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+ .ed-top,.ed-sec{padding-inline:16px}
+ .ed-title{font-size:1.35rem}
+ .stage{grid-template-columns:auto minmax(0,1fr) 70px;}
+ .stage-act{grid-column:1/-1;flex-direction:row;justify-content:flex-end}
+ .vt .tr-h,.vt td.ex{display:none}
+}
 
 /* chart */
 .chart{display:flex;align-items:flex-end;gap:8px;height:190px}
@@ -568,6 +679,7 @@ function render(){
  renderNav();
  $('#hdr-name').textContent=DB.settings.teacherName||'';
  $('#main').innerHTML=`<div class="fade">${(R[view]||R.home)()}</div>`;
+ if(view==='plans')requestAnimationFrame(()=>autosize());
 }
 
 /* ═══════════ DATA HELPERS ═══════════ */
@@ -738,7 +850,7 @@ function factsCard(s,x){const rows=[['תעריף לשיעור',money(s.rate??DB.
   ${s.notes?`<div class="note mt">📌 ${esc(s.notes)}</div>`:''}</div>`;}
 function lessonEntry(l,tk){const cx=l.status==='cancelled',fut=l.date>tk,d=parseKey(l.date);
  const lc=cx?'var(--m2)':fut?'var(--blue)':l.paid?'var(--green)':'var(--amber)';
- const chips=[cx?'<span class="pill red">בוטל</span>':'',fut&&!cx?'<span class="pill blue">עתידי</span>':'',l.attendance==='late'?'<span class="pill amber">⏰ איחר</span>':'',l.effort==='high'?'<span class="pill">🔥 מאמץ גבוה</span>':l.effort==='low'?'<span class="pill">😴 מאמץ נמוך</span>':''].join('');
+ const chips=[cx?'<span class="pill red">בוטל</span>':'',fut&&!cx?'<span class="pill blue">עתידי</span>':'',l.attendance==='late'?'<span class="pill amber">⏰ איחר</span>':'',l.effort==='high'?'<span class="pill">🔥 מאמץ גבוה</span>':l.effort==='low'?'<span class="pill">😴 מאמץ נמוך</span>':'',(()=>{const pl=l.planId&&DB.plans.find(p=>p.id===l.planId);return pl?`<button class="pill blue" style="border:none" data-a="openPlan" data-id="${esc(pl.id)}" title="פתח את תכנית השיעור">📖 ${esc(pl.topic||'תכנית')}</button>`:'';})()].join('');
  const body=[l.topics?`<div style="color:var(--blue);font-weight:600">📌 ${esc(l.topics)}</div>`:'',l.freeText?`<div class="note" style="margin:0">${esc(l.freeText)}</div>`:'',l.homework?`<div>📝 <b>שיעורי בית:</b> ${esc(l.homework)}</div>`:'',l.teacherNotes?`<div class="muted">🔒 ${esc(l.teacherNotes)}</div>`:'',l.notes?`<div class="muted">💬 ${esc(l.notes)}</div>`:''].join('');
  return `<div class="le ${cx?'cx':''}" style="--lc:${lc}">
   <div class="le-date"><small>${DAYS[d.getDay()]}</small><b>${d.getDate()}</b><span>${MONTHS[d.getMonth()].slice(0,3)}׳ ${String(d.getFullYear()).slice(2)}</span></div>
@@ -851,7 +963,7 @@ let rp={};
 A.report=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;const s=stu(l.studentId);
  rp={rating:+l.rating||0,att:l.attendance||(l.status==='cancelled'?'absent':'present'),effort:l.effort||'',paid:!!l.paid};
  const chips=(k,opts,cur)=>`<div class="chips">${opts.map(([v,t])=>`<button class="chip ${String(cur)===String(v)?'on':''}" data-a="rpSet" data-k="${k}" data-id="${v}">${t}</button>`).join('')}</div>`;
- openModal(`<div class="mh"><div><h3>📝 דיווח שיעור — ${esc(s?s.name:'')}</h3><div class="xs-t muted">${esc(l.lang)} · ${fmtDS(l.date)} · ${esc(l.time)}</div></div><button class="x" data-a="close">✕</button></div>
+ openModal(`<div class="mh"><div><h3>📝 דיווח שיעור — ${esc(s?s.name:'')}</h3><div class="xs-t muted">${esc(l.lang)} · ${fmtDS(l.date)} · ${esc(l.time)}${(()=>{const pl=l.planId&&DB.plans.find(p=>p.id===l.planId);return pl?` · <a href="#" data-a="openPlan" data-id="${esc(pl.id)}">📖 ${esc(pl.topic||"תכנית")}</a>`:"";})()}</div></div><button class="x" data-a="close">✕</button></div>
  <div class="mbody">
   <div><div class="lbl mb6">נוכחות</div>${chips('att',[['present','✅ הגיע'],['late','⏰ איחר'],['absent','❌ לא הגיע / בוטל']],rp.att)}</div>
   <div><div class="lbl mb6">הערכת השיעור</div><div class="stars">${[1,2,3,4,5].map(n=>`<button class="star ${n<=rp.rating?'on':''}" data-a="rpStar" data-id="${n}">⭐</button>`).join('')}<span class="sm-t muted" id="rp-rl" style="margin-inline-start:6px">${RATE_L[rp.rating]||''}</span></div></div>
@@ -1002,72 +1114,172 @@ C.setDur=(_,el)=>{DB.settings.lessonDuration=+el.value||60;persist();render();};
 C.setBreak=(_,el)=>{DB.settings.breakMinutes=Math.max(0,Math.min(120,Math.round(+el.value||0)));persist();render();};
 
 /* ═══════════ LESSON PLANS ═══════════ */
-let planQ='',planL='',planOpen=null,pd=null;
-R.plans=()=>`<div class="page-h"><div><h1>📖 תכניות שיעור</h1><p>תכנן, תעד מילים ושיטות, וצבור הערות ורפלקציה</p></div><button class="btn pri" data-a="planModal">＋ תכנית חדשה</button></div>
- <div class="card mb" style="padding:12px"><div class="row wrap"><input class="inp grow" id="pl-q" placeholder="🔍 חיפוש לפי נושא, חומר או מילה…" value="${esc(planQ)}" data-i="planFilter" style="min-width:200px"><select class="sel" style="width:auto" id="pl-l" data-c="planFilter">${opt('','כל השפות',planL)}${LANGS.map(l=>opt(l,l,planL)).join('')}</select></div></div>
- <div id="plan-list">${planList()}</div>`;
-I.planFilter=C.planFilter=()=>{planQ=val('pl-q');planL=$('#pl-l').value;$('#plan-list').innerHTML=planList();};
-function planList(){const q=planQ.toLowerCase();
- const ps=DB.plans.filter(p=>{if(planL&&p.lang!==planL)return false;if(!q)return true;return [p.topic,p.focus,p.materials,p.goals,...(p.vocab||[]).flatMap(v=>[v.word,v.meaning])].join(' ').toLowerCase().includes(q);})
-  .sort((a,b)=>(+a.importance||3)-(+b.importance||3)||String(b.updatedAt).localeCompare(String(a.updatedAt)));
- if(!ps.length)return emptyBox('📖',DB.plans.length?'לא נמצאו תכניות':'עדיין אין תכניות — צור את הראשונה');
- return `<div class="list">${ps.map(p=>{const open=planOpen===p.id,tr=+p.teacherRating||0,sr=+p.studentRating||0,imp=IMP.find(x=>x[0]===(+p.importance||3));
-  return `<div class="card" style="padding:0;overflow:hidden"><div class="row" style="padding:13px 16px;cursor:pointer" data-a="planToggle" data-id="${esc(p.id)}">
-   <div class="grow"><div class="b">${esc(p.topic)}</div><div class="row wrap xs-t muted" style="gap:8px;margin-top:3px"><span class="pill blue">${esc(p.lang)}</span><span>${esc(p.level)}</span><span>⏱ ${esc(p.duration)} דק׳</span>${(p.vocab||[]).length?`<span>📚 ${p.vocab.length} מילים</span>`:''}${(p.notesLog||[]).length?`<span>📝 ${p.notesLog.length}</span>`:''}</div></div>
-   ${tr||sr?`<span class="hide-m" style="color:var(--gold);font-weight:700">★ ${((tr&&sr)?(tr+sr)/2:(tr||sr)).toFixed(1)}</span>`:''}<span class="pill">${imp?imp[1]:''}</span><span class="muted">${open?'▲':'▼'}</span></div>
-   ${open?planBody(p):''}</div>`;}).join('')}</div>`;}
-function planBody(p){const sec=(t,v,c)=>v?`<div class="psec"><div class="lbl" style="color:${c||'var(--blue)'}">${t}</div><div class="pre">${esc(v)}</div></div>`:'';
- return `<div style="padding:4px 16px 16px;border-top:1px solid var(--b)"><div class="g g3 mt">
-  <div>${sec('🎯 נקודות דגש',p.focus)}${sec('🏆 מטרות',p.goals,'var(--green)')}${sec('📚 חומרים',p.materials,'var(--m)')}</div>
-  <div>${(p.vocab||[]).length?`<div class="psec"><div class="lbl">📚 מילים</div>${p.vocab.map(v=>`<div class="sm-t"><b>${esc(v.word)}</b>${v.meaning?' — '+esc(v.meaning):''}</div>`).join('')}</div>`:''}${sec('🧠 שיטת הסבר',p.teachMethod,'var(--violet)')}${sec('🏋️ תרגילים',p.exercises,'var(--amber)')}</div>
-  <div>${sec('✅ מה עבד',p.reflectGood,'var(--green)')}${sec('❌ מה היה קשה',p.reflectHard,'var(--red)')}${sec('➡️ לשיעור הבא',p.reflectNext,'var(--blue)')}${(p.notesLog||[]).length?sec('📝 הערה אחרונה',p.notesLog[0].text,'var(--m)'):''}</div>
- </div><div class="row wrap mt"><button class="btn sm pri" data-a="planModal" data-id="${esc(p.id)}">✏️ עריכה</button><button class="btn sm ghost" data-a="planPrint" data-id="${esc(p.id)}">🖨️ הדפסה / PDF</button><button class="btn sm ghost" style="color:var(--red)" data-a="planDel" data-id="${esc(p.id)}">🗑️ מחיקה</button></div></div>`;}
-A.planToggle=id=>{planOpen=planOpen===id?null:id;$('#plan-list').innerHTML=planList();};
-const starRow=(k,v)=>`<div class="stars">${[1,2,3,4,5].map(n=>`<button class="star ${n<=v?'on':''}" data-a="pStar" data-k="${k}" data-id="${n}">⭐</button>`).join('')}</div>`;
-A.planModal=id=>{const p=id?DB.plans.find(x=>x.id===id):null;
- pd=p?JSON.parse(JSON.stringify(p)):{id:'',topic:'',lang:LANGS[0],level:LEVELS[0],duration:60,vocab:[],notesLog:[],importance:3,teacherRating:0,studentRating:0};
- pd.vocab=pd.vocab||[];pd.notesLog=pd.notesLog||[];
- openModal(`<div class="mh"><h3>${p?'✏️ '+esc(p.topic):'📝 תכנית שיעור חדשה'}</h3><button class="x" data-a="close">✕</button></div>
- <div style="padding:12px 20px 0"><div class="tabs">${[['info','📋 פרטים'],['vocab','📚 מילים ושיטה'],['notes','📝 הערות'],['reflect','🔍 רפלקציה']].map(([k,t],i)=>`<button class="${i?'':'on'}" data-a="pmTab" data-id="${k}">${t}</button>`).join('')}</div></div>
- <div class="mbody">
-  <div data-pane="info" class="g">${fld('pm-topic','נושא השיעור *',pd.topic,'text','maxlength="150"')}
-   <div class="g g3"><div class="f"><label for="pm-lang">שפה</label><select class="sel" id="pm-lang">${LANGS.map(x=>opt(x,x,pd.lang)).join('')}</select></div><div class="f"><label for="pm-level">רמה</label><select class="sel" id="pm-level">${[...LEVELS,'כל הרמות'].map(x=>opt(x,x,pd.level)).join('')}</select></div><div class="f"><label for="pm-dur">דקות</label><select class="sel" id="pm-dur">${[45,60,90,120].map(x=>opt(x,x,pd.duration)).join('')}</select></div></div>
-   ${area('pm-focus','🎯 נקודות דגש — מה חשוב שהתלמיד יצא איתו',pd.focus,2)}${area('pm-goals','🏆 מטרות השיעור',pd.goals,2)}${area('pm-mat','📚 חומרים (שורה לכל פריט)',pd.materials,3)}
-   <div class="g g2">${area('pm-extra','🌱 חומר להעשרה',pd.extra,2)}${area('pm-ex','✨ דוגמאות ותרגולים שעבדו',pd.examples,2)}</div></div>
-  <div data-pane="vocab" class="g" hidden>
-   <div class="vrow"><input class="inp" id="pv-w" placeholder="מילה" maxlength="80"><input class="inp" id="pv-m" placeholder="משמעות" maxlength="120"><input class="inp" id="pv-e" placeholder="דוגמה במשפט" maxlength="200"><button class="btn pri sm" data-a="vAdd">＋ הוסף</button></div>
-   <div id="pm-vlist">${vocabList()}</div>
-   ${area('pm-vn','✏️ מילים וביטויים נוספים',pd.vocabNotes,2)}${area('pm-method','🧠 שיטת ההסבר וההוראה',pd.teachMethod,3)}${area('pm-exer','🏋️ תרגילים ותרגול',pd.exercises,3)}</div>
-  <div data-pane="notes" class="g" hidden>${area('pm-note','הערה חדשה','',3,'מה קרה? מה עבד? מה היה קשה?')}<div><button class="btn pri sm" data-a="nAdd">＋ הוסף הערה</button></div><div id="pm-nlist">${notesList()}</div></div>
-  <div data-pane="reflect" class="g" hidden>${area('pm-rg','✅ מה עבד טוב?',pd.reflectGood,2)}${area('pm-rh','❌ מה היה קשה או לא עבד?',pd.reflectHard,2)}${area('pm-rc','🔄 מה אשנה בפעם הבאה?',pd.reflectChange,2)}${area('pm-rn','➡️ המלצות לשיעור הבא',pd.reflectNext,3)}
-   <div class="g g3"><div><div class="lbl mb6">⭐ הערכת המורה</div>${starRow('teacherRating',+pd.teacherRating||0)}</div><div><div class="lbl mb6">⭐ הערכת התלמידים</div>${starRow('studentRating',+pd.studentRating||0)}</div><div class="f"><label for="pm-imp">חשיבות</label><select class="sel" id="pm-imp">${IMP.map(([v,t])=>opt(v,t,pd.importance||3)).join('')}</select></div></div></div>
+const PST={draft:'טיוטה',ready:'מוכן',taught:'הועבר'};
+const STAGE_C=['#3B6FE0','#0E9F6E','#D9821A','#7C3AED','#B54A86','#1F8A8A','#8B6C2E'];
+const PTPL={
+ conv:{ic:'💬',name:'שיחה',sub:'דיבור ותקשורת',stages:[['חימום ושיחת פתיחה',5],['הצגת הנושא והביטויים',10],['תרגול מודרך / משחק תפקידים',15],['שיחה חופשית',20],['סיכום ומשוב',10]]},
+ gram:{ic:'🧩',name:'דקדוק',sub:'כלל, דוגמאות, תרגול',stages:[['חזרה על השיעור הקודם',5],['הסבר הכלל עם דוגמאות',15],['תרגול כתוב',15],['תרגול בעל פה',15],['סיכום ושיעורי בית',10]]},
+ vocab:{ic:'📚',name:'אוצר מילים',sub:'מילים חדשות בהקשר',stages:[['חימום',5],['הצגת המילים החדשות',15],['משחק / תרגול',15],['שימוש במילים בהקשר',15],['סיכום',10]]},
+ blank:{ic:'📄',name:'דף ריק',sub:'מתחילים מאפס',stages:[]}
+};
+let planSel=null,planQ='',planL='',planS='',planEditing=false,_savedT=null;
+const curPlan=()=>DB.plans.find(p=>p.id===planSel);
+function normPlan(p){p.vocab=Array.isArray(p.vocab)?p.vocab:[];p.notesLog=Array.isArray(p.notesLog)?p.notesLog:[];p.stages=Array.isArray(p.stages)?p.stages:[];if(!PST[p.status])p.status='draft';p.vocab.forEach(v=>{if(!v.id)v.id=uid();});p.stages.forEach(s=>{if(!s.id)s.id=uid();});return p;}
+function relTime(iso){if(!iso)return '';const d=new Date(iso);if(isNaN(d))return '';const days=Math.floor((parseKey(todayKey())-parseKey(dkey(d)))/864e5);return days<=0?'היום':days===1?'אתמול':days<7?`לפני ${days} ימים`:fmtD(dkey(d));}
+const planTotal=p=>p.stages.reduce((a,s)=>a+(+s.min||0),0);
+
+/* ── page ── */
+R.plans=()=>{DB.plans.forEach(normPlan);if(planSel&&!curPlan())planSel=null;
+ return `<div class="page-h"><div><h1>📖 תכניות שיעור</h1><p>${DB.plans.length} תכניות · כל שינוי נשמר אוטומטית</p></div><button class="btn pri" data-a="planNew">＋ תכנית חדשה</button></div>
+ <div class="pw ${planEditing?'editing':''}">
+  <aside class="pw-list" id="pl-pane">${planListPane()}</aside>
+  <section class="pw-ed" id="plan-ed">${planSel?planEditor(curPlan()):planWelcome()}</section>
+ </div>`;};
+function planListPane(){
+ const chip=(a,v,cur,t)=>`<button class="fchip ${cur===v?'on':''}" data-a="${a}" data-id="${esc(v)}">${t}</button>`;
+ return `<div class="pl-head">
+  <div class="pl-search"><input class="inp" id="pl-q" data-i="planQ" placeholder="חיפוש: נושא, מילה, שלב…" value="${esc(planQ)}"><kbd>Ctrl K</kbd></div>
+  <div class="fchips">${chip('planL','',planL,'כל השפות')}${LANGS.map(l=>chip('planL',l,planL,`<span class="ldot" style="--c:${LANG_COLOR[l]};display:inline-block;margin-inline-end:4px"></span>${esc(l)}`)).join('')}</div>
+  <div class="fchips">${chip('planS','',planS,'הכל')}${chip('planS','pin',planS,'⭐ מועדפים')}${Object.entries(PST).map(([k,t])=>chip('planS',k,planS,t)).join('')}</div>
+ </div><div class="pl-items" id="pl-items">${planItems()}</div>`;}
+function planItems(){
+ const q=planQ.toLowerCase();
+ const ps=DB.plans.filter(p=>{
+  if(planL&&p.lang!==planL)return false;
+  if(planS==='pin'?!p.pinned:planS&&p.status!==planS)return false;
+  if(!q)return true;
+  return [p.topic,p.focus,p.goals,p.materials,p.homework,...p.stages.map(s=>s.name+' '+s.desc),...p.vocab.flatMap(v=>[v.word,v.translit,v.meaning])].join(' ').toLowerCase().includes(q);
+ }).sort((a,b)=>(!!b.pinned-!!a.pinned)||String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')));
+ if(!ps.length)return `<div class="empty" style="padding:24px 8px">${DB.plans.length?'לא נמצאו תכניות':'עדיין אין תכניות'}</div>`;
+ const pins=ps.filter(p=>p.pinned),rest=ps.filter(p=>!p.pinned);
+ const item=p=>`<button class="pli ${p.id===planSel?'on':''}" data-a="planOpen" data-id="${esc(p.id)}">
+  <div class="pli-t"><span class="ldot" style="--c:${LANG_COLOR[p.lang]||'var(--m)'}"></span><span class="tt">${esc(p.topic||'ללא שם')}</span>${p.pinned?'<span>⭐</span>':''}</div>
+  <div class="pli-m"><span class="st-pill st-${p.status}">${PST[p.status]}</span><span>${esc(p.level||'')}</span><span>⏱ ${+p.duration||60}′</span>${p.vocab.length?`<span>📚 ${p.vocab.length}</span>`:''}<span style="margin-inline-start:auto">${relTime(p.updatedAt)}</span></div></button>`;
+ return (pins.length&&!planS?`<div class="pl-group">⭐ מועדפים</div>`:'')+pins.map(item).join('')+(pins.length&&rest.length&&!planS?`<div class="pl-group">כל התכניות</div>`:'')+rest.map(item).join('');}
+function planWelcome(){const has=DB.plans.length;
+ return `<div class="ed welcome">${has?'<button class="btn ghost sm pl-back" data-a="planBack" style="margin-bottom:12px">→ לרשימה</button>':''}
+  <div style="font-size:2.4rem">📖</div><h2>${has?'בחר תכנית מהרשימה, או התחל חדשה':'בוא נבנה את התכנית הראשונה'}</h2>
+  <p>בחר תבנית — המבנה והזמנים כבר מוכנים, נשאר רק למלא את התוכן.</p>
+  <div class="tpl-grid">${Object.entries(PTPL).map(([k,t])=>`<button class="tpl" data-a="planTpl" data-id="${k}"><div class="ic">${t.ic}</div><b>${t.name}</b><span>${t.sub}</span></button>`).join('')}</div></div>`;}
+
+/* ── editor ── */
+function planEditor(p){const id=esc(p.id),lc=LANG_COLOR[p.lang]||'var(--blue)',tk=todayKey();
+ const linked=DB.lessons.filter(l=>l.planId===p.id).sort(byDT);
+ const cand=DB.lessons.filter(l=>l.status!=='cancelled'&&l.planId!==p.id&&l.date>=dkey(addDays(new Date(),-14))).sort(byDT).slice(0,40);
+ const ta=(k,label,ph,rows=3)=>`<div class="fl"><label for="pf-${k}">${label}</label><textarea class="ta" id="pf-${k}" rows="${rows}" data-i="pf" data-k="${k}" placeholder="${esc(ph)}">${esc(p[k]||'')}</textarea></div>`;
+ const nav=[['ps-goals','🎯 מטרות'],['ps-flow','⏱️ מהלך',p.stages.length],['ps-vocab','📚 מילים',p.vocab.length],['ps-method','🧠 שיטה'],['ps-mat','📦 חומרים'],['ps-after','🔍 אחרי השיעור',p.notesLog.length]];
+ return `<div class="ed" style="--lc:${lc}">
+ <div class="ed-top">
+  <div class="ed-bar"><button class="btn ghost sm pl-back" data-a="planBack">→ לרשימה</button><span class="saved" id="pl-saved">נשמר</span><span class="grow"></span>
+   <button class="star-btn ${p.pinned?'on':''}" data-a="planPin" title="${p.pinned?'הסר ממועדפים':'הוסף למועדפים'}">⭐</button>
+   <button class="btn ghost sm" data-a="planDup" title="שכפול">📄 שכפול</button><button class="btn ghost sm" data-a="planPrint" data-id="${id}" title="הדפסה / PDF">🖨️</button><button class="btn ghost sm" style="color:var(--red)" data-a="planDel" data-id="${id}" title="מחיקה">🗑️</button></div>
+  <input class="ed-title" id="pf-topic" data-i="pf" data-k="topic" maxlength="150" placeholder="על מה השיעור?" value="${esc(p.topic||'')}">
+  <div class="ed-meta">
+   <select class="sel" data-c="pfc" data-k="lang" aria-label="שפה">${LANGS.map(x=>opt(x,x,p.lang)).join('')}</select>
+   <select class="sel" data-c="pfc" data-k="level" aria-label="רמה">${[...LEVELS,'כל הרמות'].map(x=>opt(x,x,p.level)).join('')}</select>
+   <select class="sel" data-c="pfc" data-k="duration" aria-label="משך">${[30,45,60,75,90,120].map(x=>opt(x,x+' דקות',p.duration||60)).join('')}</select>
+   <div class="seg-st">${Object.entries(PST).map(([k,t])=>`<button class="${p.status===k?'on':''}" data-a="planStatus" data-id="${k}">${t}</button>`).join('')}</div>
+  </div>
+  <div class="links mt"><span class="xs-t muted">📅</span>${linked.length?linked.map(l=>`<span class="lnk">${esc(sname(l.studentId))} · ${fmtDS(l.date)} ${esc(l.time)}${l.date<tk?' ✓':''}<button data-a="planUnlink" data-id="${esc(l.id)}" title="ביטול השיוך">×</button></span>`).join(''):'<span class="xs-t muted">עוד לא שויך לשיעור</span>'}
+   ${cand.length?`<select class="sel" style="width:auto;padding:4px 28px 4px 10px;font-size:.78rem;border-radius:99px" data-c="planLink" aria-label="שיוך לשיעור"><option value="">＋ שייך לשיעור…</option>${cand.map(l=>opt(l.id,`${fmtDS(l.date)} ${l.time} · ${sname(l.studentId)}`,'')).join('')}</select>`:''}</div>
  </div>
- <div class="mf"><button class="btn ghost" data-a="close">סגור</button><button class="btn pri" data-a="planSave">💾 שמור תכנית</button></div>`,true);};
-A.pmTab=k=>{$$('#modal [data-pane]').forEach(p=>p.hidden=p.dataset.pane!==k);$$('#modal .tabs button').forEach(b=>b.classList.toggle('on',b.dataset.id===k));};
-function vocabList(){if(!pd.vocab.length)return '<div class="muted sm-t ctr" style="padding:8px">עדיין לא נוספו מילים</div>';
- return `<div class="list" style="gap:6px">${pd.vocab.map(v=>`<div class="vrow" style="background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:7px 10px"><b class="sm-t">${esc(v.word)}</b><span class="sm-t">${esc(v.meaning||'—')}</span><span class="xs-t muted">${esc(v.example||'')}</span><button class="btn icon ghost" data-a="vDel" data-id="${esc(v.id)}">×</button></div>`).join('')}</div>`;}
-function notesList(){if(!pd.notesLog.length)return '<div class="muted sm-t ctr" style="padding:8px">עדיין אין הערות</div>';
- return `<div class="list" style="gap:6px">${pd.notesLog.map(n=>`<div class="item" style="align-items:flex-start"><div class="grow"><div class="xs-t muted">🕐 ${esc(new Date(n.date).toLocaleString('he-IL',{dateStyle:'short',timeStyle:'short'}))}</div><div class="pre">${esc(n.text)}</div></div><button class="btn icon ghost" data-a="nDel" data-id="${esc(n.id)}">×</button></div>`).join('')}</div>`;}
-A.vAdd=()=>{const w=val('pv-w');if(!w)return toast('כתוב מילה');pd.vocab.push({id:uid(),word:clamp(w,80),meaning:clamp(val('pv-m'),120),example:clamp(val('pv-e'),200)});['pv-w','pv-m','pv-e'].forEach(i=>$('#'+i).value='');$('#pm-vlist').innerHTML=vocabList();$('#pv-w').focus();};
-A.vDel=id=>{pd.vocab=pd.vocab.filter(v=>v.id!==id);$('#pm-vlist').innerHTML=vocabList();};
-A.nAdd=()=>{const t=val('pm-note');if(!t)return toast('כתוב הערה');pd.notesLog.unshift({id:uid(),text:clamp(t,3000),date:new Date().toISOString()});$('#pm-note').value='';$('#pm-nlist').innerHTML=notesList();toast('הערה נוספה — לחץ "שמור תכנית"');};
-A.nDel=id=>{pd.notesLog=pd.notesLog.filter(n=>n.id!==id);$('#pm-nlist').innerHTML=notesList();};
-A.pStar=(n,el)=>{pd[el.dataset.k]=+n;el.parentElement.querySelectorAll('.star').forEach((b,i)=>b.classList.toggle('on',i<+n));};
-A.planSave=()=>{const topic=clamp(val('pm-topic'),150);if(!topic){A.pmTab('info');return toast('נא להזין נושא');}
- const L=n=>clamp(val(n),5000);
- Object.assign(pd,{topic,lang:val('pm-lang'),level:val('pm-level'),duration:+val('pm-dur')||60,focus:L('pm-focus'),goals:L('pm-goals'),materials:L('pm-mat'),extra:L('pm-extra'),examples:L('pm-ex'),vocabNotes:L('pm-vn'),teachMethod:L('pm-method'),exercises:L('pm-exer'),reflectGood:L('pm-rg'),reflectHard:L('pm-rh'),reflectChange:L('pm-rc'),reflectNext:L('pm-rn'),importance:+val('pm-imp')||3,updatedAt:new Date().toISOString()});
- if(!pd.id){pd.id=uid();pd.createdAt=pd.updatedAt;DB.plans.unshift(pd);}else{const i=DB.plans.findIndex(x=>x.id===pd.id);if(i>=0)DB.plans[i]=pd;else DB.plans.unshift(pd);}
- planOpen=pd.id;persist();closeModal();render();toast('✅ "'+topic+'" נשמר');};
-A.planDel=id=>{const p=DB.plans.find(x=>x.id===id);if(!p)return;ask('מחיקת תכנית',`למחוק את "${p.topic}"?`,'מחק',()=>{DB.plans=DB.plans.filter(x=>x.id!==id);persist();render();toast('נמחק');},{danger:true,icon:'📖'});};
-A.planPrint=id=>{const p=DB.plans.find(x=>x.id===id);if(!p)return;const w=window.open('','_blank');if(!w)return toast('אפשר חלונות קופצים בדפדפן');
+ <nav class="ed-nav">${nav.map(([h,t,n])=>`<a href="#${h}" data-a="planJump" data-id="${h}">${t}${n?`<span class="cnt">${n}</span>`:''}</a>`).join('')}</nav>
+
+ <div class="ed-sec" id="ps-goals"><h3>🎯 מטרות ודגשים</h3><p class="hint">מה התלמיד יודע לעשות בסוף השיעור שלא ידע בתחילתו?</p>
+  <div class="g g2">${ta('goals','מטרות השיעור','למשל: להציג את עצמו בערבית מדוברת',3)}${ta('focus','נקודות דגש','מה הכי חשוב שיישאר…',3)}</div></div>
+
+ <div class="ed-sec" id="ps-flow"><h3>⏱️ מהלך השיעור</h3><p class="hint">חלק את השיעור לשלבים — הפס מראה איך הזמן מתחלק.</p>
+  <div class="flow-bar" id="flow-bar">${flowBar(p)}</div><div class="flow-sum" id="flow-sum">${flowSum(p)}</div>
+  <div id="stages">${p.stages.map((s,i)=>stageRow(s,i,p.stages.length)).join('')}</div>
+  <div class="row wrap"><button class="btn soft sm" data-a="stAdd">＋ שלב</button>${p.stages.length?'':`<select class="sel" style="width:auto;font-size:.82rem;padding:6px 30px 6px 10px" data-c="planStagesTpl"><option value="">או בחר מבנה מוכן…</option>${Object.entries(PTPL).filter(([k])=>k!=='blank').map(([k,t])=>opt(k,t.ic+' '+t.name,'')).join('')}</select>`}</div></div>
+
+ <div class="ed-sec" id="ps-vocab"><h3>📚 אוצר מילים <span class="pill">${p.vocab.length}</span></h3><p class="hint">Enter עובר לשורה הבאה. בשורה האחרונה — Enter מוסיף מילה חדשה.</p>
+  ${p.vocab.length?`<table class="vt"><tr class="tr-h"><th class="num">#</th><th>מילה</th><th>תעתיק / הגייה</th><th>משמעות</th><th class="ex">דוגמה במשפט</th><th></th></tr>
+   ${p.vocab.map((v,i)=>`<tr><td class="num">${i+1}</td><td><input class="w" dir="auto" data-i="vf" data-k="word" data-id="${esc(v.id)}" value="${esc(v.word)}" placeholder="מילה" maxlength="80"></td><td><input dir="auto" data-i="vf" data-k="translit" data-id="${esc(v.id)}" value="${esc(v.translit||'')}" placeholder="תעתיק" maxlength="80"></td><td><input dir="auto" data-i="vf" data-k="meaning" data-id="${esc(v.id)}" value="${esc(v.meaning)}" placeholder="משמעות" maxlength="120"></td><td class="ex"><input dir="auto" data-i="vf" data-k="example" data-id="${esc(v.id)}" value="${esc(v.example||'')}" placeholder="משפט לדוגמה" maxlength="200"></td><td class="vx"><button data-a="vDel" data-id="${esc(v.id)}" title="מחיקה">✕</button></td></tr>`).join('')}</table>`:''}
+  <div class="row mt"><button class="btn soft sm" data-a="vAdd">＋ מילה</button></div>
+  <div class="mt">${ta('vocabNotes','ביטויים והערות נוספות','ביטויים, ניבים, הבדלים בין ספרותית למדוברת…',2)}</div></div>
+
+ <div class="ed-sec" id="ps-method"><h3>🧠 שיטה ותרגול</h3><p class="hint">איך מסבירים, ובמה מתרגלים.</p>
+  <div class="g">${ta('teachMethod','שיטת ההסבר','דוגמה מהחיים, השוואה לעברית, תמונה…',3)}<div class="g g2">${ta('exercises','תרגילים','',3)}${ta('examples','דוגמאות שעבדו טוב','',3)}</div></div></div>
+
+ <div class="ed-sec" id="ps-mat"><h3>📦 חומרים ושיעורי בית</h3>
+  <div class="g g2" style="margin-top:12px">${ta('materials','חומרים (שורה לכל פריט)','דף עבודה, קישור לסרטון, כרטיסיות…',3)}${ta('homework','שיעורי בית','',3)}</div><div class="mt">${ta('extra','העשרה (לתלמידים מתקדמים)','',2)}</div></div>
+
+ <div class="ed-sec" id="ps-after"><h3>🔍 אחרי השיעור</h3><p class="hint">מה למדת מהשיעור הזה — כדי שהפעם הבאה תהיה טובה יותר.</p>
+  <div class="g g2">${ta('reflectGood','✅ מה עבד','',2)}${ta('reflectHard','❌ מה היה קשה','',2)}${ta('reflectChange','🔄 מה לשנות','',2)}${ta('reflectNext','➡️ לשיעור הבא','',2)}</div>
+  <div class="row wrap mt" style="gap:24px"><div><div class="lbl mb6">הערכה שלי</div>${planStars('teacherRating',+p.teacherRating||0)}</div><div><div class="lbl mb6">איך התלמידים הגיבו</div>${planStars('studentRating',+p.studentRating||0)}</div></div>
+  <div class="fl mt"><label for="pl-note">יומן הערות</label><div class="row" style="align-items:stretch"><textarea class="ta" id="pl-note" rows="1" placeholder="הערה קצרה אחרי שיעור… (Ctrl+Enter להוספה)" style="min-height:44px"></textarea><button class="btn pri" data-a="nAdd">הוסף</button></div></div>
+  ${p.notesLog.length?`<div class="nlog">${p.notesLog.map(n=>`<div class="it"><small>${esc(new Date(n.date).toLocaleString('he-IL',{dateStyle:'short',timeStyle:'short'}))}</small>${esc(n.text)}<button data-a="nDel" data-id="${esc(n.id)}" title="מחיקה">✕</button></div>`).join('')}</div>`:''}</div>
+ </div>`;}
+const planStars=(k,v)=>`<div class="stars">${[1,2,3,4,5].map(n=>`<button class="star ${n<=v?'on':''}" data-a="pStar" data-k="${k}" data-id="${n}" aria-label="${n}">⭐</button>`).join('')}</div>`;
+function stageRow(s,i,n){const c=STAGE_C[i%STAGE_C.length],sid=esc(s.id);
+ return `<div class="stage" style="--c:${c}"><span class="sn">${i+1}</span>
+  <div class="g" style="gap:6px"><input class="inp" data-i="st" data-k="name" data-id="${sid}" value="${esc(s.name)}" placeholder="שם השלב" maxlength="80"><textarea class="ta" rows="1" data-i="st" data-k="desc" data-id="${sid}" placeholder="מה עושים בשלב הזה? פעילות, שאלות, חומר…" style="min-height:42px">${esc(s.desc||'')}</textarea></div>
+  <div class="min"><input class="inp" type="number" min="0" max="240" step="5" data-i="st" data-k="min" data-id="${sid}" value="${+s.min||0}" aria-label="דקות"><span>דקות</span></div>
+  <div class="stage-act"><button data-a="stMove" data-k="-1" data-id="${sid}" title="למעלה" ${i?'':'disabled'}>▲</button><button data-a="stMove" data-k="1" data-id="${sid}" title="למטה" ${i<n-1?'':'disabled'}>▼</button><button data-a="stDel" data-id="${sid}" title="מחיקה">✕</button></div></div>`;}
+function flowBar(p){const dur=+p.duration||60,tot=planTotal(p);if(!p.stages.length)return '';
+ return p.stages.map((s,i)=>(+s.min||0)>0?`<span style="flex:${+s.min};background:${STAGE_C[i%STAGE_C.length]}" title="${esc(s.name)} · ${+s.min} דק׳">${(+s.min)/Math.max(dur,tot)>.12?esc(s.name||'')+' '+(+s.min)+'′':''}</span>`:'').join('')+(tot<dur?`<span style="flex:${dur-tot};background:transparent;color:var(--m)">${(dur-tot)/dur>.12?'פנוי '+(dur-tot)+'′':''}</span>`:'');}
+function flowSum(p){const dur=+p.duration||60,tot=planTotal(p);if(!p.stages.length)return '<span class="muted">עדיין אין שלבים</span>';
+ return `<span>${p.stages.length} שלבים</span><span>סה״כ <b class="${tot>dur?'over':tot===dur?'ok':''}">${tot}</b> מתוך ${dur} דקות${tot>dur?` · חריגה של ${tot-dur} דק׳`:tot<dur?` · נשארו ${dur-tot} דק׳`:' ✓'}</span>`;}
+function refreshFlow(){const p=curPlan();if(!p)return;const b=$('#flow-bar'),s=$('#flow-sum');if(b)b.innerHTML=flowBar(p);if(s)s.innerHTML=flowSum(p);}
+function autosize(root){(root||document).querySelectorAll('#plan-ed .ta').forEach(t=>{t.style.height='auto';t.style.height=(t.scrollHeight+2)+'px';});}
+function touchPlan(p){p.updatedAt=new Date().toISOString();persist();const el=$('#pl-saved');if(el){el.classList.add('dirty');el.textContent='שומר…';clearTimeout(_savedT);_savedT=setTimeout(()=>{el.classList.remove('dirty');el.textContent='נשמר';},1600);}
+ const li=[...document.querySelectorAll('.pli')].find(x=>x.dataset.id===p.id),it=li&&li.querySelector('.tt');if(it)it.textContent=p.topic||'ללא שם';}
+function redrawEd(focus){const p=curPlan(),box=$('#plan-ed');if(!box)return;const y=window.scrollY;box.innerHTML=p?planEditor(p):planWelcome();window.scrollTo(0,y);autosize();if(focus){const f=$(focus);if(f){f.focus({preventScroll:false});}}}
+function redrawList(){const el=$('#pl-pane');if(el)el.innerHTML=planListPane();}
+function redrawAll(){const y=window.scrollY;render();window.scrollTo(0,y);autosize();}
+
+/* ── bindings ── */
+I.planQ=()=>{planQ=val('pl-q');$('#pl-items').innerHTML=planItems();};
+A.planL=v=>{planL=v||'';redrawList();};
+A.planS=v=>{planS=v||'';redrawList();};
+I.pf=(_,el)=>{const p=curPlan();if(!p)return;const k=el.dataset.k;p[k]=clamp(el.value,k==='topic'?150:6000);if(el.tagName==='TEXTAREA'){el.style.height='auto';el.style.height=(el.scrollHeight+2)+'px';}touchPlan(p);};
+C.pfc=(_,el)=>{const p=curPlan();if(!p)return;const k=el.dataset.k;p[k]=k==='duration'?(+el.value||60):el.value;touchPlan(p);if(k==='lang'){const e=$('#plan-ed .ed');if(e)e.style.setProperty('--lc',LANG_COLOR[p.lang]||'var(--blue)');}refreshFlow();redrawList();};
+I.st=(_,el)=>{const p=curPlan();if(!p)return;const s=p.stages.find(x=>x.id===el.dataset.id);if(!s)return;const k=el.dataset.k;s[k]=k==='min'?Math.max(0,Math.min(240,Math.round(+el.value||0))):clamp(el.value,k==='desc'?2000:80);if(el.tagName==='TEXTAREA'){el.style.height='auto';el.style.height=(el.scrollHeight+2)+'px';}touchPlan(p);if(k!=='desc')refreshFlow();};
+I.vf=(_,el)=>{const p=curPlan();if(!p)return;const v=p.vocab.find(x=>x.id===el.dataset.id);if(!v)return;v[el.dataset.k]=clamp(el.value,el.dataset.k==='example'?200:120);touchPlan(p);};
+function newPlan(tplKey){const t=PTPL[tplKey]||PTPL.blank,now=new Date().toISOString();
+ const p={id:uid(),topic:'',lang:planL||LANGS[0],level:LEVELS[0],duration:60,status:'draft',pinned:false,stages:t.stages.map(([n,m])=>({id:uid(),name:n,min:m,desc:''})),vocab:[],notesLog:[],createdAt:now,updatedAt:now};
+ DB.plans.unshift(p);return p;}
+A.planNew=()=>{planSel=null;planEditing=true;redrawAll();window.scrollTo(0,0);};
+A.planTpl=k=>{const p=newPlan(k);planSel=p.id;planEditing=true;persist();render();window.scrollTo(0,0);autosize();const t=$('#pf-topic');if(t)t.focus();toast('✨ תכנית חדשה — התחל מהנושא');};
+A.planOpen=id=>{planSel=id;planEditing=true;render();window.scrollTo(0,0);autosize();};
+A.openPlan=id=>{if(!DB.plans.some(p=>p.id===id))return toast('התכנית לא נמצאה');planSel=id;planEditing=true;closeModal();go('plans');autosize();};
+A.planBack=()=>{planEditing=false;redrawAll();};
+A.planJump=(h,el,e)=>{const t=document.getElementById(h);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});};
+A.planStatus=k=>{const p=curPlan();if(!p||!PST[k])return;p.status=k;touchPlan(p);redrawAll();};
+A.planPin=()=>{const p=curPlan();if(!p)return;p.pinned=!p.pinned;touchPlan(p);redrawAll();};
+A.planDup=()=>{const p=curPlan();if(!p)return;const c=JSON.parse(JSON.stringify(p)),now=new Date().toISOString();
+ Object.assign(c,{id:uid(),topic:(p.topic||'ללא שם')+' (עותק)',status:'draft',pinned:false,notesLog:[],teacherRating:0,studentRating:0,reflectGood:'',reflectHard:'',reflectChange:'',reflectNext:'',createdAt:now,updatedAt:now});
+ c.stages.forEach(s=>s.id=uid());c.vocab.forEach(v=>v.id=uid());DB.plans.unshift(c);planSel=c.id;persist();redrawAll();toast('📄 נוצר עותק');};
+A.planDel=id=>{const p=DB.plans.find(x=>x.id===id);if(!p)return;ask('מחיקת תכנית',`למחוק את "${p.topic||'ללא שם'}"?\n(הגרסה הקודמת תישאר בהיסטוריה של GitHub)`,'מחק',()=>{DB.plans=DB.plans.filter(x=>x.id!==id);DB.lessons.forEach(l=>{if(l.planId===id)delete l.planId;});planSel=null;planEditing=false;persist();render();toast('התכנית נמחקה');},{danger:true,icon:'📖'});};
+C.planLink=(_,el)=>{const p=curPlan(),l=DB.lessons.find(x=>x.id===el.value);if(!p||!l)return;l.planId=p.id;if(p.status==='draft')p.status='ready';touchPlan(p);redrawAll();toast('📅 שויך לשיעור עם '+sname(l.studentId));};
+A.planUnlink=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;delete l.planId;persist();redrawEd();};
+C.planStagesTpl=(_,el)=>{const p=curPlan(),t=PTPL[el.value];if(!p||!t)return;p.stages=t.stages.map(([n,m])=>({id:uid(),name:n,min:m,desc:''}));touchPlan(p);redrawEd();};
+A.stAdd=()=>{const p=curPlan();if(!p)return;const s={id:uid(),name:'',min:10,desc:''};p.stages.push(s);touchPlan(p);redrawEd(`[data-i="st"][data-k="name"][data-id="${s.id}"]`);};
+A.stMove=(id,el)=>{const p=curPlan();if(!p)return;const i=p.stages.findIndex(s=>s.id===id),j=i+(+el.dataset.k);if(i<0||j<0||j>=p.stages.length)return;[p.stages[i],p.stages[j]]=[p.stages[j],p.stages[i]];touchPlan(p);redrawEd();};
+A.stDel=id=>{const p=curPlan();if(!p)return;const s=p.stages.find(x=>x.id===id);if(!s)return;const go2=()=>{p.stages=p.stages.filter(x=>x.id!==id);touchPlan(p);redrawEd();};if(s.name||s.desc)ask('מחיקת שלב',`למחוק את השלב "${s.name||'ללא שם'}"?`,'מחק',go2,{danger:true,icon:'⏱️'});else go2();};
+A.vAdd=()=>{const p=curPlan();if(!p)return;const v={id:uid(),word:'',translit:'',meaning:'',example:''};p.vocab.push(v);touchPlan(p);redrawEd(`[data-i="vf"][data-k="word"][data-id="${v.id}"]`);};
+A.vDel=id=>{const p=curPlan();if(!p)return;p.vocab=p.vocab.filter(v=>v.id!==id);touchPlan(p);redrawEd();};
+A.nAdd=()=>{const p=curPlan(),t=val('pl-note');if(!p)return;if(!t)return toast('כתוב הערה');p.notesLog.unshift({id:uid(),text:clamp(t,3000),date:new Date().toISOString()});touchPlan(p);redrawEd('#pl-note');};
+A.nDel=id=>{const p=curPlan();if(!p)return;p.notesLog=p.notesLog.filter(n=>n.id!==id);touchPlan(p);redrawEd();};
+A.pStar=(n,el)=>{const p=curPlan();if(!p)return;p[el.dataset.k]=+n;el.parentElement.querySelectorAll('.star').forEach((b,i)=>b.classList.toggle('on',i<+n));touchPlan(p);};
+document.addEventListener('keydown',e=>{
+ if(view!=='plans'||!DB)return;
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){const q=$('#pl-q');if(q){e.preventDefault();if(planEditing&&window.innerWidth<=980){planEditing=false;redrawAll();}$('#pl-q').focus();}return;}
+ const t=e.target;
+ if(t.id==='pl-note'&&e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();A.nAdd();return;}
+ if(t.dataset&&t.dataset.i==='vf'&&e.key==='Enter'){e.preventDefault();const p=curPlan();if(!p)return;const i=p.vocab.findIndex(v=>v.id===t.dataset.id);
+  if(i===p.vocab.length-1){if(p.vocab[i].word)A.vAdd();}else{const n=$(`[data-i="vf"][data-k="${t.dataset.k}"][data-id="${p.vocab[i+1].id}"]`);if(n)n.focus();}}
+});
+A.planPrint=id=>{const p=DB.plans.find(x=>x.id===id);if(!p)return;normPlan(p);const w=window.open('','_blank');if(!w)return toast('אפשר חלונות קופצים בדפדפן');
  const sec=(t,v)=>v?`<h3>${t}</h3><div class="p">${esc(v)}</div>`:'';
- w.document.write(`<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8"><title>${esc(p.topic)}</title><style>body{font-family:Heebo,Arial,sans-serif;max-width:760px;margin:0 auto;padding:2rem;color:#1A2332}h1{font-size:1.4rem;margin-bottom:4px}h3{font-size:.8rem;color:#46505F;margin:18px 0 4px;text-transform:uppercase;letter-spacing:.05em}.p{white-space:pre-line;font-size:.92rem;line-height:1.7}.m{color:#7C8696;font-size:.85rem}table{width:100%;border-collapse:collapse;font-size:.86rem}td,th{border:1px solid #DEE7F2;padding:5px 8px;text-align:right}</style></head><body>
- <h1>${esc(p.topic)}</h1><div class="m">${esc(p.lang)} · ${esc(p.level)} · ${esc(p.duration)} דקות</div>
- ${sec('🎯 נקודות דגש',p.focus)}${sec('🏆 מטרות',p.goals)}${sec('📚 חומרים',p.materials)}
- ${(p.vocab||[]).length?`<h3>📚 מילים</h3><table><tr><th>מילה</th><th>משמעות</th><th>דוגמה</th></tr>${p.vocab.map(v=>`<tr><td><b>${esc(v.word)}</b></td><td>${esc(v.meaning)}</td><td>${esc(v.example)}</td></tr>`).join('')}</table>`:''}
- ${sec('✏️ מילים נוספות',p.vocabNotes)}${sec('🧠 שיטת הסבר',p.teachMethod)}${sec('🏋️ תרגילים',p.exercises)}${sec('✨ דוגמאות שעבדו',p.examples)}${sec('🌱 העשרה',p.extra)}
+ w.document.write(`<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8"><title>${esc(p.topic||'תכנית שיעור')}</title><style>body{font-family:Heebo,Arial,sans-serif;max-width:780px;margin:0 auto;padding:2rem;color:#1A2332}h1{font-size:1.5rem;margin:0 0 4px}h3{font-size:.85rem;color:#46505F;margin:22px 0 6px;border-bottom:1px solid #DEE7F2;padding-bottom:3px}.p{white-space:pre-line;font-size:.92rem;line-height:1.7}.m{color:#7C8696;font-size:.85rem}table{width:100%;border-collapse:collapse;font-size:.88rem}td,th{border:1px solid #DEE7F2;padding:6px 8px;text-align:right;vertical-align:top}th{background:#F4F7FC}.st{display:flex;gap:10px;margin:6px 0}.st b{min-width:52px;color:#3B6FE0}</style></head><body>
+ <h1>${esc(p.topic||'תכנית שיעור')}</h1><div class="m">${esc(p.lang)} · ${esc(p.level)} · ${+p.duration||60} דקות</div>
+ ${sec('🎯 מטרות',p.goals)}${sec('נקודות דגש',p.focus)}
+ ${p.stages.length?`<h3>⏱️ מהלך השיעור (${planTotal(p)} דק׳)</h3>${p.stages.map((s,i)=>`<div class="st"><b>${+s.min||0} דק׳</b><div><strong>${i+1}. ${esc(s.name)}</strong>${s.desc?`<div class="p">${esc(s.desc)}</div>`:''}</div></div>`).join('')}`:''}
+ ${p.vocab.length?`<h3>📚 אוצר מילים</h3><table><tr><th>מילה</th><th>תעתיק</th><th>משמעות</th><th>דוגמה</th></tr>${p.vocab.map(v=>`<tr><td><b>${esc(v.word)}</b></td><td>${esc(v.translit||'')}</td><td>${esc(v.meaning)}</td><td>${esc(v.example||'')}</td></tr>`).join('')}</table>`:''}
+ ${sec('ביטויים נוספים',p.vocabNotes)}${sec('🧠 שיטת הסבר',p.teachMethod)}${sec('תרגילים',p.exercises)}${sec('דוגמאות שעבדו',p.examples)}${sec('📦 חומרים',p.materials)}${sec('שיעורי בית',p.homework)}${sec('העשרה',p.extra)}
  ${sec('✅ מה עבד',p.reflectGood)}${sec('❌ מה היה קשה',p.reflectHard)}${sec('🔄 מה לשנות',p.reflectChange)}${sec('➡️ לשיעור הבא',p.reflectNext)}
- ${(p.notesLog||[]).length?`<h3>📝 הערות</h3>${p.notesLog.map(n=>`<div class="p">• ${esc(n.text)} <span class="m">(${esc(new Date(n.date).toLocaleDateString('he-IL'))})</span></div>`).join('')}`:''}
  </body></html>`);w.document.close();setTimeout(()=>w.print(),300);};
 
 /* ═══════════ INCOME ═══════════ */
