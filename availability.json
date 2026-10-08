@@ -17,6 +17,7 @@
    "12:00",
    "13:00",
    "14:00",
+   "15:00",
    "16:00",
    "17:00",
    "18:00",
@@ -25,5 +26,5 @@
   ]
  },
  "bookingUrl": "https://script.google.com/macros/s/AKfycbysPIyabIvKqTxHGrmF7dpgFQczV65EQzoTYlcGYIqsKqSiXeBXlcLUomW77TmbXF98/exec",
- "updatedAt": "2026-10-08T17:39:29.040Z"
+ "updatedAt": "2026-10-08T17:40:10.407Z"
 }
