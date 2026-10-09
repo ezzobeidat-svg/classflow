@@ -7,6 +7,14 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://api.github.com https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'; object-src 'none'">
 <title>ClassFlow · ניהול מורה</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#3B6FE0">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ClassFlow">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -72,6 +80,15 @@ h1,h2,h3{letter-spacing:-.01em;line-height:1.25}
 .muted{color:var(--m)}.sm-t{font-size:.84rem}.xs-t{font-size:.74rem}.b{font-weight:700}
 .mt{margin-top:14px}.mt6{margin-top:6px}.mb{margin-bottom:14px}.mb6{margin-bottom:6px}
 
+/* portal + hw */
+.hwprev{background:var(--amber-dim);border:1px solid rgba(224,138,30,.25);border-radius:14px;padding:12px}
+.portal.on{border-top:4px solid var(--green)}
+/* pay */
+.paygrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.paybtn{border:1.5px solid var(--b);background:var(--s);border-radius:14px;padding:14px 6px;font-weight:700;font-size:.9rem;display:flex;flex-direction:column;align-items:center;gap:4px;transition:.15s}
+.paybtn span{font-size:1.5rem}
+.paybtn:hover{border-color:var(--green);background:var(--green-dim)}
+.paybtn.on{border-color:var(--green);box-shadow:0 0 0 3px rgba(14,159,110,.15)}
 /* stats */
 .g>*{min-width:0}
 .stat{background:var(--s);border:1px solid var(--b);border-radius:var(--r2);padding:16px 18px;box-shadow:var(--sh);position:relative;overflow:hidden}
@@ -239,7 +256,7 @@ table.tbl{width:100%;border-collapse:collapse}
 .slot button:hover{opacity:1}
 
 /* stats */
-.learn{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.learn{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .ln{background:var(--s2);border-radius:16px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:2px}
 .ln .ic{font-size:1.4rem}.ln b{font-size:2rem;font-weight:900;letter-spacing:-.02em;line-height:1.1}.ln span:last-child{font-size:.8rem;color:var(--t2);font-weight:600}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.76rem;color:var(--t2);margin-bottom:10px}
@@ -276,7 +293,7 @@ table.tbl{width:100%;border-collapse:collapse}
 .li-row input:focus{background:var(--blue-dim)}
 .li-row input.w{font-weight:700}
 .li-row button{border:none;background:none;opacity:.35}.li-row:hover button{opacity:1}
-@media (max-width:640px){.vchart{gap:3px}.vstack{width:84%}.vcol:nth-child(even) .vlbl{visibility:hidden}.vval{font-size:.6rem}.learn{grid-template-columns:1fr 1fr 1fr;gap:6px}.ln{padding:10px 4px}.ln b{font-size:1.4rem}.hb{grid-template-columns:86px minmax(0,1fr) 64px}}
+@media (max-width:640px){.learn{grid-template-columns:1fr 1fr!important}.vchart{gap:3px}.vstack{width:84%}.vcol:nth-child(even) .vlbl{visibility:hidden}.vval{font-size:.6rem}.learn{grid-template-columns:1fr 1fr 1fr;gap:6px}.ln{padding:10px 4px}.ln b{font-size:1.4rem}.hb{grid-template-columns:86px minmax(0,1fr) 64px}}
 
 /* plans */
 .psec{margin-bottom:12px}
@@ -479,6 +496,8 @@ const MONTHS=['ינואר','פברואר','מרץ','אפריל','מאי','יונ
 const COLORS=['#3B6FE0','#D9821A','#0E9F6E','#B54A86','#1F8A8A','#8B6C2E','#7C3AED'];
 const RATE_L=['','חלש','דורש שיפור','טוב','טוב מאוד','מצוין!'];
 const TOPICS=['דקדוק','שיחה חופשית','אוצר מילים','קריאה','כתיבה','הגייה','האזנה'];
+const PAYM=[['cash','💵','מזומן'],['bank','🏦','העברה בנקאית'],['bit','📱','Bit'],['paybox','📲','PayBox'],['card','💳','אשראי'],['other','🧾','אחר']];
+const payLbl=k=>{const m=PAYM.find(x=>x[0]===k);return m?m[1]+' '+m[2]:'';};
 const IMP=[[1,'🔴 דחוף'],[2,'🟠 גבוהה'],[3,'🔵 רגילה'],[4,'🟢 נמוכה'],[5,'⚫ ארכיון']];
 const VIEWS=[['home','🏠','בית'],['students','👥','תלמידים'],['calendar','📅','יומן'],['requests','🔔','בקשות'],['schedule','🕐','זמינות'],['plans','📖','תכניות'],['income','💰','הכנסות'],['stats','📊','סטטיסטיקות'],['settings','⚙️','הגדרות']];
 const TPL={morning:['🌅 בוקר 9–13',540,780],noon:['☀️ צהריים 13–17',780,1020],evening:['🌙 ערב 16–21',960,1260],full:['📆 יום מלא 9–21',540,1260]};
@@ -580,6 +599,7 @@ const GH={cfg:null,
    return{sha:d.sha,text:b64ToUtf8(d.content||'')};}
   catch(e){if(e.status===404)return null;throw e;}},
  async put(repo,file,text,sha,branch,msg){const body={message:msg,content:utf8ToB64(text)};if(sha)body.sha=sha;if(branch)body.branch=branch;const d=await this.req('PUT',this.path(repo,file),body);return d.content.sha;},
+ async del(repo,file,sha,branch,msg){const body={message:msg,sha};if(branch)body.branch=branch;return this.req('DELETE',this.path(repo,file),body);},
  repo(name){return this.req('GET',`/repos/${encodeURIComponent(this.cfg.owner)}/${encodeURIComponent(name)}`);}
 };
 const isConflict=e=>e&&(e.status===409||(e.status===422&&/sha/i.test(e.raw||'')));
@@ -600,6 +620,7 @@ async function flush(){
   dataSha=await GH.put(GH.cfg.dataRepo,'data.json',text,dataSha,GH.cfg.dataBranch,'ClassFlow: עדכון נתונים');
   setSync('ok');
   await publish();
+  publishPortals().catch(e=>console.warn('portal',e));
  }catch(e){
   if(isConflict(e))await reloadAfterConflict();
   else{dirty=true;setSync('error',e.message);toast('⚠️ השמירה נכשלה: '+e.message);}
@@ -787,7 +808,7 @@ function lessonRow(l,nowT,isNext){const past=l.time<nowT&&!isNext;
  return `<div class="item" style="${isNext?'border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,111,224,.12);':''}${past?'opacity:.6':''}">
  <div class="tbox"><b>${esc(l.time)}</b><span>${m2t(t2m(l.time)+(+l.duration||60))}</span></div>
  <div class="grow"><div class="b">${esc(sname(l.studentId))}</div><div class="xs-t muted">${esc(l.lang)}</div></div>
- ${l.paid?'<span class="pill green">✓ שולם</span>':`<button class="btn sm ok" data-a="markPaid" data-id="${esc(l.id)}">סמן שולם</button>`}
+ ${l.paid?`<span class="pill green">✓ ${l.payMethod?esc(payLbl(l.payMethod)):'שולם'}</span>`:`<button class="btn sm ok" data-a="markPaid" data-id="${esc(l.id)}">סמן שולם</button>`}
  <button class="btn sm ${isNext?'pri':'ghost'}" data-a="report" data-id="${esc(l.id)}">📝 דיווח</button></div>`;}
 function langBreakdown(){const act=activeLessons();if(!act.length)return emptyBox('','אין שיעורים עדיין');const c={};act.forEach(l=>{const k=l.lang||'אחר';c[k]=(c[k]||0)+1;});
  return Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([k,n])=>{const p=Math.round(n/act.length*100),col=LANG_COLOR[k]||'var(--m)';return `<div class="mb"><div class="row between sm-t mb6"><span>${esc(k)}</span><b style="color:${col}">${p}% · ${n}</b></div><div class="bar" style="--c:${col}"><div style="width:${p}%"></div></div></div>`;}).join('');}
@@ -872,7 +893,7 @@ R.profile=()=>{const s=stu(viewArg);if(!s)return emptyBox('🤷','התלמיד �
    <div class="seg">${[['history','📚 שיעורים',x.all.length,false],['reports','📋 דוחות',(s.reports||[]).length,false],['pay','💳 תשלומים',unpaid,unpaid>0],['edit','✏️ פרטים','',false]].map(([k,t,n,w])=>`<button class="${pTab===k?'on':''}" data-a="pTab" data-id="${k}">${t}${n!==''?`<span class="cnt ${w?'warn':''}">${n}</span>`:''}</button>`).join('')}</div>
    ${pTab==='pay'?payTab(s,x):pTab==='edit'?editTab(s):pTab==='reports'?reportsTab(s,x):histTab(s,x)}
   </div>
-  <div class="pside">${nextCard(s,x)}${creditCard(s,x,pkg)}${factsCard(s,x)}</div>
+  <div class="pside">${nextCard(s,x)}${portalCard(s)}${creditCard(s,x,pkg)}${factsCard(s,x)}</div>
  </div>`;};
 function nextCard(s,x){const tk=todayKey(),now=new Date(),nowT=m2t(now.getHours()*60+now.getMinutes());
  const n=x.act.filter(l=>l.date>tk||(l.date===tk&&l.time>=nowT)).sort(byDT)[0];
@@ -886,16 +907,17 @@ function creditCard(s,x,pkg){const b=+s.bought||0,used=Math.min(x.count,b),p=b?M
    <div class="grow sm-t">${b?`<div class="b">${used} מתוך ${b} נוצלו</div><div class="xs-t muted mt6">${x.remaining===0?'⚠️ הקרדיט נגמר — זה הזמן להציע חבילה חדשה':x.remaining===1?'נשאר שיעור אחד בקרדיט':'הקרדיט מתעדכן אוטומטית עם כל שיעור'}</div>`:'<div class="muted">לא נרכשו שיעורים מראש</div>'}</div></div>
   <select class="sel mt" data-c="assignPkg" data-id="${esc(s.id)}"><option value="">${pkg?'ללא חבילה':'שייך חבילה…'}</option>${DB.packages.map(p=>opt(p.id,`${p.name} · ${p.lessons} שיעורים · ${money(p.price)}`,s.packageId)).join('')}</select>
   <button class="btn ghost sm mt w100" data-a="addCredits" data-id="${esc(s.id)}">＋ הוסף שיעורים לקרדיט</button></div>`;}
-function factsCard(s,x){const lb=learnedBy(s.id);const rows=[...(lb.n?[['📚 מילים שנלמדו',lb.w],['📐 כללים שנלמדו',lb.r],['💬 ביטויים שנלמדו',lb.e],['📖 שיעורים מהקטלוג',lb.n]]:[]),['תעריף לשיעור',money(s.rate??DB.settings.defaultRate)],['מקור הגעה',s.source],['שיעור אחרון',x.last?fmtD(x.last.date):''],['ביטולים',x.cancelled],['איחורים',x.late]].filter(r=>r[1]!==''&&r[1]!=null);
+function hwRate(ls){const r=ls.filter(l=>l.homework&&HWS[l.hwStatus]);if(!r.length)return null;return Math.round(r.reduce((a,l)=>a+(l.hwStatus==='done'?1:l.hwStatus==='partial'?.5:0),0)/r.length*100);}
+function factsCard(s,x){const lb=learnedBy(s.id),hr=hwRate(x.all);const rows=[...(hr!==null?[['📝 שיעורי בית שהוכנו',hr+'%']]:[]),...(lb.n?[['📚 מילים שנלמדו',lb.w],['📐 כללים שנלמדו',lb.r],['💬 ביטויים שנלמדו',lb.e],['📖 שיעורים מהקטלוג',lb.n]]:[]),['תעריף לשיעור',money(s.rate??DB.settings.defaultRate)],['מקור הגעה',s.source],['שיעור אחרון',x.last?fmtD(x.last.date):''],['ביטולים',x.cancelled],['איחורים',x.late]].filter(r=>r[1]!==''&&r[1]!=null);
  return `<div class="card"><div class="card-t mb">ℹ️ פרטים</div><div class="facts">${rows.map(([k,v])=>`<div class="fact"><span>${k}</span><b>${esc(v)}</b></div>`).join('')}</div>
   ${s.notes?`<div class="note mt">📌 ${esc(s.notes)}</div>`:''}</div>`;}
 function lessonEntry(l,tk){const cx=l.status==='cancelled',fut=l.date>tk,d=parseKey(l.date);
  const lc=cx?'var(--m2)':fut?'var(--blue)':l.paid?'var(--green)':'var(--amber)';
  const chips=[cx?'<span class="pill red">בוטל</span>':'',fut&&!cx?'<span class="pill blue">עתידי</span>':'',l.attendance==='late'?'<span class="pill amber">⏰ איחר</span>':'',l.effort==='high'?'<span class="pill">🔥 מאמץ גבוה</span>':l.effort==='low'?'<span class="pill">😴 מאמץ נמוך</span>':'',(()=>{const pl=l.planId&&DB.plans.find(p=>p.id===l.planId);return pl?`<button class="pill blue" style="border:none" data-a="openPlan" data-id="${esc(pl.id)}" title="פתח את תכנית השיעור">📖 ${esc(pl.topic||'תכנית')}</button>`:'';})()].join('');
- const body=[l.topics?`<div style="color:var(--blue);font-weight:600">📌 ${esc(l.topics)}</div>`:'',l.freeText?`<div class="note" style="margin:0">${esc(l.freeText)}</div>`:'',l.homework?`<div>📝 <b>שיעורי בית:</b> ${esc(l.homework)}</div>`:'',l.teacherNotes?`<div class="muted">🔒 ${esc(l.teacherNotes)}</div>`:'',l.notes?`<div class="muted">💬 ${esc(l.notes)}</div>`:''].join('');
+ const body=[l.topics?`<div style="color:var(--blue);font-weight:600">📌 ${esc(l.topics)}</div>`:'',l.freeText?`<div class="note" style="margin:0">${esc(l.freeText)}</div>`:'',l.homework?`<div>📝 <b>שיעורי בית:</b> ${esc(l.homework)} ${HWS[l.hwStatus]?`<span class="pill ${l.hwStatus==='done'?'green':l.hwStatus==='no'?'red':'amber'}">${HWS[l.hwStatus].join(' ')}</span>`:''}</div>`:'',l.teacherNotes?`<div class="muted">🔒 ${esc(l.teacherNotes)}</div>`:'',l.notes?`<div class="muted">💬 ${esc(l.notes)}</div>`:''].join('');
  return `<div class="le ${cx?'cx':''}" style="--lc:${lc}">
   <div class="le-date"><small>${DAYS[d.getDay()]}</small><b>${d.getDate()}</b><span>${MONTHS[d.getMonth()].slice(0,3)}׳ ${String(d.getFullYear()).slice(2)}</span></div>
-  <div class="le-card"><div class="le-top"><span class="le-time">${esc(l.time)}</span><span class="muted sm-t">· ${esc(l.lang)} · ${+l.duration||60} דק׳</span>${chips}${+l.rating?`<span class="stars-s">${'★'.repeat(+l.rating)}</span>`:''}<span class="le-sp"></span>${cx?'':`<span class="pill ${l.paid?'green':fut?'':'amber'}">${l.paid?'✓ שולם · ':''}${money(lessonPrice(l))}</span>`}</div>
+  <div class="le-card"><div class="le-top"><span class="le-time">${esc(l.time)}</span><span class="muted sm-t">· ${esc(l.lang)} · ${+l.duration||60} דק׳</span>${chips}${+l.rating?`<span class="stars-s">${'★'.repeat(+l.rating)}</span>`:''}<span class="le-sp"></span>${cx?'':`<span class="pill ${l.paid?'green':fut?'':'amber'}">${l.paid?'✓ '+(l.payMethod?payLbl(l.payMethod)+' · ':'שולם · '):''}${money(lessonPrice(l))}</span>`}</div>
    ${body?`<div class="le-body">${body}</div>`:''}
    <div class="le-foot">${!cx&&!l.paid?`<button class="btn sm ok" data-a="markPaid" data-id="${esc(l.id)}">💳 סמן שולם</button>`:''}${(()=>{const need=!fut&&!cx&&!l.rating&&!l.freeText;return `<button class="btn sm ${need?'soft':'ghost'}" data-a="report" data-id="${esc(l.id)}">📝 ${need?'כתוב דיווח':'דיווח'}</button>`;})()}<span class="le-sp"></span>${cx||l.date<tk?'':l.calEventId?'<span class="pill green" title="השיעור נמצא ביומן גוגל">📅 ביומן</span>':`<button class="ibtn" data-a="calAdd" data-id="${esc(l.id)}" title="הוסף ליומן גוגל">📅</button>`}<button class="ibtn" data-a="lessonModal" data-id="${esc(l.id)}" title="עריכת שיעור">✏️</button><button class="ibtn" data-a="delLesson" data-id="${esc(l.id)}" title="מחיקת שיעור">🗑️</button></div>
   </div></div>`;}
@@ -923,10 +945,16 @@ A.addCredits=id=>{const s=stu(id);if(!s)return;const n=parseInt(prompt('כמה �
 A.toggleActive=id=>{const s=stu(id);if(!s)return;s.isActive=s.isActive===false;persist();render();toast(s.name+' — '+(s.isActive?'פעיל':'לא פעיל'));};
 A.delStudent=id=>{const s=stu(id);if(!s)return;const n=DB.lessons.filter(l=>l.studentId===id).length;
  ask('מחיקת '+s.name,`פעולה זו תמחק גם ${n} שיעורים של התלמיד מהדוחות.\nאם התלמיד רק הפסיק ללמוד — עדיף "סמן כלא פעיל".\n(הגרסה הקודמת תישאר בהיסטוריה של GitHub)`,'מחק לצמיתות',()=>{
-  const evs=DB.lessons.filter(l=>l.studentId===id&&l.calEventId);DB.students=DB.students.filter(x=>x.id!==id);DB.lessons=DB.lessons.filter(l=>l.studentId!==id);persist();go('students');toast('נמחק');evs.forEach(l=>calRemove(l,true));},{danger:true,icon:'🗑️'});};
-A.markPaid=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;l.paid=true;persist();render();toast('✅ סומן כשולם');};
+  if(s.portal&&s.portal.on)portalDelete(s);const evs=DB.lessons.filter(l=>l.studentId===id&&l.calEventId);DB.students=DB.students.filter(x=>x.id!==id);DB.lessons=DB.lessons.filter(l=>l.studentId!==id);persist();go('students');toast('נמחק');evs.forEach(l=>calRemove(l,true));},{danger:true,icon:'🗑️'});};
+function payChooser(title,sub,ids,defM){openModal(`<div class="mh"><h3>💳 ${esc(title)}</h3><button class="x" data-a="close">✕</button></div>
+ <div class="mbody"><p class="sm-t muted" style="margin:0">${esc(sub)}</p><div class="paygrid">${PAYM.map(([k,i,t])=>`<button class="paybtn ${k===defM?'on':''}" data-a="payPick" data-k="${k}" data-id="${esc(ids.join(','))}"><span>${i}</span>${esc(t)}</button>`).join('')}</div>
+ ${fld('pay-date','תאריך התשלום',todayKey(),'date')}</div>`);}
+function setPaid(ls,m,date){const d=isKey(date)?date:todayKey();ls.forEach(l=>{l.paid=true;l.payMethod=m;l.paidAt=d;const s=stu(l.studentId);if(s)s.lastPay=m;});}
+A.markPaid=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;const s=stu(l.studentId);payChooser('איך שולם?',`${s?s.name+' · ':''}${fmtDS(l.date)} · ${money(lessonPrice(l))}`,[l.id],(s&&s.lastPay)||DB.settings.defaultPay||'');};
+A.payPick=(ids,el)=>{const m=el.dataset.k;if(!PAYM.some(x=>x[0]===m))return;const ls=String(ids).split(',').map(id=>DB.lessons.find(x=>x.id===id)).filter(Boolean);
+ setPaid(ls,m,val('pay-date'));persist();closeModal();render();toast(`✅ ${ls.length>1?ls.length+' שיעורים סומנו':'סומן'} כשולם · ${payLbl(m)}`);};
 A.payAll=sid=>{const tk=todayKey();const ls=DB.lessons.filter(l=>l.studentId===sid&&!l.paid&&l.status!=='cancelled'&&l.date<=tk);
- ask('סימון תשלום',`לסמן ${ls.length} שיעורים (${money(ls.reduce((a,l)=>a+lessonPrice(l),0))}) כשולמו?`,'סמן כשולם',()=>{ls.forEach(l=>l.paid=true);persist();render();toast('✅ סומן');},{icon:'💳'});};
+ if(!ls.length)return toast('אין חוב פתוח');const s=stu(sid);payChooser(`תשלום על ${ls.length} שיעורים`,`${s?s.name+' · ':''}סה״כ ${money(ls.reduce((a,l)=>a+lessonPrice(l),0))}`,ls.map(l=>l.id),(s&&s.lastPay)||DB.settings.defaultPay||'');};
 
 /* ═══════════ LESSON + REPORT ═══════════ */
 A.lessonModal=(id,el)=>{
@@ -941,18 +969,19 @@ A.lessonModal=(id,el)=>{
   <div class="f"><label for="lf-dur">משך (דק׳)</label><select class="sel" id="lf-dur">${[30,45,60,75,90,120].map(d=>opt(d,d,dur)).join('')}</select></div>
   ${fld('lf-price','מחיר ('+DB.settings.currency+')',l?l.price:(s0?s0.rate:DB.settings.defaultRate),'number','min="0"')}
  </div>
- <div class="row wrap" style="gap:18px"><label class="row sm-t"><input type="checkbox" id="lf-paid" ${l&&l.paid?'checked':''}> שולם</label>${l?`<label class="row sm-t"><input type="checkbox" id="lf-cx" ${l.status==='cancelled'?'checked':''}> השיעור בוטל</label>`:''}</div>
+ <div class="row wrap" style="gap:18px"><label class="row sm-t"><input type="checkbox" id="lf-paid" ${l&&l.paid?'checked':''}> שולם</label><select class="sel" id="lf-pm" style="width:auto;padding:5px 30px 5px 10px;font-size:.84rem" aria-label="אמצעי תשלום"><option value="">אמצעי תשלום…</option>${PAYM.map(([k,i,t])=>opt(k,i+' '+t,l?l.payMethod:((s0&&s0.lastPay)||DB.settings.defaultPay||''))).join('')}</select>${l?`<label class="row sm-t"><input type="checkbox" id="lf-cx" ${l.status==='cancelled'?'checked':''}> השיעור בוטל</label>`:''}</div>
  ${area('lf-notes','הערות',l?l.notes:'',2,'','maxlength="2000"')}</div>
  <div class="mf">${l?`<button class="btn ghost" style="color:var(--red);margin-inline-end:auto" data-a="delLesson" data-id="${esc(l.id)}">🗑️ מחיקה</button>`:''}<button class="btn ghost" data-a="close">ביטול</button><button class="btn pri" data-a="saveLesson" data-id="${l?esc(l.id):''}">💾 שמור</button></div>`);};
 C.lfStudent=()=>{const s=stu(val('lf-s'));if(s){$('#lf-lang').value=s.lang||LANGS[0];$('#lf-price').value=s.rate??DB.settings.defaultRate;}};
 A.saveLesson=id=>{
- const d={studentId:val('lf-s'),lang:val('lf-lang'),date:val('lf-date'),time:val('lf-time'),duration:+val('lf-dur')||60,price:Math.max(0,num('lf-price',0)),paid:$('#lf-paid').checked,notes:clamp(val('lf-notes'),2000)};
+ const d={studentId:val('lf-s'),lang:val('lf-lang'),date:val('lf-date'),time:val('lf-time'),duration:+val('lf-dur')||60,price:Math.max(0,num('lf-price',0)),paid:$('#lf-paid').checked,payMethod:$('#lf-paid').checked?val('lf-pm'):'',notes:clamp(val('lf-notes'),2000)};
  const cx=$('#lf-cx');if(cx)d.status=cx.checked?'cancelled':'ok';
  if(!stu(d.studentId))return toast('בחר תלמיד');
  if(!isKey(d.date)||!/^\d{2}:\d{2}$/.test(d.time))return toast('בחר תאריך ושעה');
  const save=()=>{let l=id?DB.lessons.find(x=>x.id===id):null;const isNew=!l;
   if(isNew){l={id:uid(),createdAt:new Date().toISOString(),status:'ok'};DB.lessons.push(l);}
   const before=isNew?'':[l.date,l.time,l.duration,l.status,l.studentId,l.lang].join('|');
+  if(d.paid&&!l.paid)d.paidAt=todayKey();if(!d.paid)d.paidAt='';if(d.payMethod){const st=stu(d.studentId);if(st)st.lastPay=d.payMethod;}
   Object.assign(l,d);persist();closeModal();render();toast(isNew?'✅ השיעור נוסף':'✅ נשמר');
   if(calOn()&&(l.calEventId||l.date>=todayKey())&&before!==[l.date,l.time,l.duration,l.status,l.studentId,l.lang].join('|'))calSync(l,false);};
  const c=d.status==='cancelled'?null:findClash(d.date,d.time,d.duration,id||null);
@@ -1003,25 +1032,29 @@ A.printStudent=id=>{const s=stu(id);if(!s)return;const x=studentStats(s),w=windo
 A.delLesson=id=>ask('מחיקת שיעור','למחוק את השיעור? (אם השיעור בוטל — עדיף לסמן "בוטל" כדי לשמור היסטוריה)'+(DB.lessons.find(l=>l.id===id&&l.calEventId)?'\nהשיעור יוסר גם מיומן גוגל.':''),'מחק',()=>{const l=DB.lessons.find(x=>x.id===id);DB.lessons=DB.lessons.filter(x=>x.id!==id);persist();render();toast('השיעור נמחק');if(l&&l.calEventId)calRemove(l,true);},{danger:true,icon:'🗑️'});
 
 let rp={};
-A.report=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;const s=stu(l.studentId);
- rp={rating:+l.rating||0,att:l.attendance||(l.status==='cancelled'?'absent':'present'),effort:l.effort||'',paid:!!l.paid};
+function prevHW(l){return DB.lessons.filter(x=>x.studentId===l.studentId&&x.id!==l.id&&x.status!=='cancelled'&&x.homework&&(x.date+x.time)<(l.date+l.time)).sort(byDTdesc)[0];}
+const HWS={done:['✅','הוכן'],partial:['◐','חלקית'],no:['❌','לא הוכן']};
+A.report=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;const s=stu(l.studentId);const ph=prevHW(l);
+ rp={hw:ph?ph.hwStatus||'':'',hwId:ph?ph.id:'',rating:+l.rating||0,att:l.attendance||(l.status==='cancelled'?'absent':'present'),effort:l.effort||'',paid:!!l.paid,pm:l.payMethod||((stu(l.studentId)||{}).lastPay)||DB.settings.defaultPay||''};
  const chips=(k,opts,cur)=>`<div class="chips">${opts.map(([v,t])=>`<button class="chip ${String(cur)===String(v)?'on':''}" data-a="rpSet" data-k="${k}" data-id="${v}">${t}</button>`).join('')}</div>`;
  openModal(`<div class="mh"><div><h3>📝 דיווח שיעור — ${esc(s?s.name:'')}</h3><div class="xs-t muted">${esc(l.lang)} · ${fmtDS(l.date)} · ${esc(l.time)}${(()=>{const pl=l.planId&&DB.plans.find(p=>p.id===l.planId);return pl?` · <a href="#" data-a="openPlan" data-id="${esc(pl.id)}">📖 ${esc(pl.topic||"תכנית")}</a>`:"";})()}</div></div><button class="x" data-a="close">✕</button></div>
  <div class="mbody">
+  ${ph?`<div class="hwprev"><div class="lbl mb6">📝 שיעורי הבית מהשיעור הקודם (${fmtDS(ph.date)})</div><div class="note" style="margin:0 0 8px">${esc(ph.homework)}</div>${chips('hw',[['done','✅ הוכן'],['partial','◐ חלקית'],['no','❌ לא הוכן']],rp.hw)}</div>`:''}
   <div><div class="lbl mb6">נוכחות</div>${chips('att',[['present','✅ הגיע'],['late','⏰ איחר'],['absent','❌ לא הגיע / בוטל']],rp.att)}</div>
   <div><div class="lbl mb6">הערכת השיעור</div><div class="stars">${[1,2,3,4,5].map(n=>`<button class="star ${n<=rp.rating?'on':''}" data-a="rpStar" data-id="${n}">⭐</button>`).join('')}<span class="sm-t muted" id="rp-rl" style="margin-inline-start:6px">${RATE_L[rp.rating]||''}</span></div></div>
   <div><div class="lbl mb6">מאמץ התלמיד</div>${chips('effort',[['','—'],['high','🔥 גבוה'],['medium','👍 בינוני'],['low','😴 נמוך']],rp.effort)}</div>
   <div><div class="lbl mb6">נושאים שנלמדו</div><div class="chips mb6">${TOPICS.map(t=>`<button class="chip" data-a="rpTopic" data-id="${esc(t)}">${esc(t)}</button>`).join('')}</div><input class="inp" id="rp-topics" value="${esc(l.topics)}" maxlength="300" placeholder="נושאים נוספים…"></div>
   ${area('rp-free','📋 מה קרה בשיעור',l.freeText,3,'התקדמות, תובנות, קשיים…','maxlength="3000"')}
   <div class="g g2">${area('rp-hw','📝 שיעורי בית',l.homework,2,'','maxlength="1000"')}${area('rp-notes','🔒 הערות פרטיות',l.teacherNotes,2,'','maxlength="2000"')}</div>
-  <div><div class="lbl mb6">תשלום</div>${chips('paid',[['0','💳 לא שולם'],['1','✅ שולם']],rp.paid?'1':'0')}</div>
+  <div><div class="lbl mb6">תשלום</div>${chips('paid',[['0','💳 לא שולם'],['1','✅ שולם']],rp.paid?'1':'0')}<div id="rp-pm" class="mt6" ${rp.paid?'':'hidden'}>${chips('pm',PAYM.map(([k,i,t])=>[k,i+' '+t]),rp.pm)}</div></div>
  </div>
  <div class="mf">${l.rating||l.freeText||l.topics||l.homework||l.teacherNotes?`<button class="btn ghost" style="color:var(--red);margin-inline-end:auto" data-a="clearReport" data-id="${esc(l.id)}">🗑️ מחק דיווח</button>`:''}<button class="btn ghost" data-a="lessonModal" data-id="${esc(l.id)}">✏️ פרטי השיעור</button><button class="btn ghost" data-a="close">ביטול</button><button class="btn pri" data-a="saveReport" data-id="${esc(l.id)}">💾 שמור דיווח</button></div>`);};
-A.rpSet=(v,el)=>{const k=el.dataset.k;rp[k]=k==='paid'?v==='1':v;el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===el));};
+A.rpSet=(v,el)=>{const k=el.dataset.k;rp[k]=k==='paid'?v==='1':v;el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===el));if(k==='paid'){const b=$('#rp-pm');if(b)b.hidden=!rp.paid;}};
 A.rpStar=n=>{rp.rating=+n;$$('#modal .star').forEach((b,i)=>b.classList.toggle('on',i<rp.rating));$('#rp-rl').textContent=RATE_L[rp.rating]||'';};
 A.rpTopic=t=>{const i=$('#rp-topics');const cur=i.value.trim();if(!cur.split(/[,،]\s*/).includes(t))i.value=cur?cur+', '+t:t;};
 A.saveReport=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;
- Object.assign(l,{attendance:rp.att,rating:rp.rating||0,effort:rp.effort,paid:!!rp.paid,topics:clamp(val('rp-topics'),300),freeText:clamp(val('rp-free'),3000),homework:clamp(val('rp-hw'),1000),teacherNotes:clamp(val('rp-notes'),2000)});
+ if(rp.hwId){const pl=DB.lessons.find(x=>x.id===rp.hwId);if(pl&&HWS[rp.hw])pl.hwStatus=rp.hw;}
+ Object.assign(l,{attendance:rp.att,rating:rp.rating||0,effort:rp.effort,paid:!!rp.paid,payMethod:rp.paid?rp.pm:'',paidAt:rp.paid?(l.paidAt||todayKey()):'',topics:clamp(val('rp-topics'),300),freeText:clamp(val('rp-free'),3000),homework:clamp(val('rp-hw'),1000),teacherNotes:clamp(val('rp-notes'),2000)});
  const wasCx=l.status==='cancelled';l.status=rp.att==='absent'?'cancelled':'ok';if(!wasCx&&l.status==='cancelled'&&l.calEventId)setTimeout(()=>calRemove(l,true),0);
  persist();closeModal();render();toast('✅ הדיווח נשמר');};
 
@@ -1064,18 +1097,19 @@ function parseRequest(text){
 }
 R.requests=()=>{const pend=DB.requests.filter(r=>r.status==='pending').sort((a,b)=>byDT(a,b)),done=DB.requests.filter(r=>r.status!=='pending').sort((a,b)=>String(b.handledAt).localeCompare(String(a.handledAt))).slice(0,12);
  const auto=BOOK_RE.test(DB.settings.bookingUrl||'');
- return `<div class="page-h"><div><h1>🔔 בקשות שיעור</h1><p>${auto?'בקשות מדף ההזמנה מגיעות לכאן אוטומטית (בדיקה כל 30 שניות)':'הדבק הודעת וואטסאפ מתלמיד — המערכת מזהה את הפרטים'}</p></div>${auto?'<button class="btn ghost sm" data-a="checkInbox">🔄 בדוק עכשיו</button>':''}</div>
+ return `<div class="page-h"><div><h1>🔔 בקשות שיעור</h1><p>${auto?'בקשות מדף ההזמנה מגיעות לכאן אוטומטית (בדיקה כל 30 שניות)':'הדבק הודעת וואטסאפ מתלמיד — המערכת מזהה את הפרטים'}</p></div><div class="row wrap"><button class="btn ghost sm" data-a="pasteModal">📥 הדבק מוואטסאפ</button>${auto?'<button class="btn ghost sm" data-a="checkInbox">🔄 בדוק עכשיו</button>':''}</div></div>
  ${auto?'':`<div class="alert amber"><span>📨</span><div class="grow sm-t">קבלת בקשות אוטומטית עדיין לא מחוברת — כרגע התלמידים שולחים בוואטסאפ.</div><button class="btn sm ghost" data-a="go" data-id="settings">לחיבור הסקריפט</button></div>`}
  <div class="alert blue"><span>🔗</span><div class="grow sm-t" style="word-break:break-all">דף ההזמנה לתלמידים: <a href="${esc(studentUrl())}" target="_blank" rel="noopener">${esc(studentUrl())}</a></div><button class="btn sm ghost" data-a="copyLink">העתק</button></div>
- <div class="g g-main">
+ <div>
   <div class="card"><div class="card-h"><div class="card-t">⏳ ממתינות לאישור</div><span class="pill amber">${pend.length}</span></div>
    ${pend.length?`<div class="list">${pend.map(reqCard).join('')}</div>`:emptyBox('🎉','אין בקשות ממתינות')}
    ${done.length?`<div class="row between mt mb6"><div class="lbl">טופלו לאחרונה</div><button class="btn sm ghost" data-a="clearDone">🧹 נקה הכל</button></div><div class="list" style="gap:2px">${done.map(r=>`<div class="row sm-t" style="padding:4px 0"><span>${r.status==='approved'?'✅':'✋'}</span><span class="grow">${esc(r.name)} · ${fmtDS(r.date)} ${esc(r.time)}</span><button class="ibtn" data-a="delReq" data-id="${esc(r.id)}" title="מחק מהרשימה">🗑️</button></div>`).join('')}</div>`:''}</div>
-  <div class="card"><div class="card-t mb">📥 הוספה ידנית</div><p class="xs-t muted mb6">קיבלת בקשה בוואטסאפ או בטלפון? הדבק את ההודעה או מלא ידנית.</p>
-   <textarea class="inp" id="rq-paste" rows="4" placeholder="הדבק כאן הודעת וואטסאפ…"></textarea>
-   <div class="row wrap mt"><button class="btn pri sm" data-a="parseReq">🔍 קרא את ההודעה</button><button class="btn ghost sm" data-a="blankReq">✍️ מילוי ידני</button></div>
-   <div id="rq-form">${reqDraft?reqForm(reqDraft):''}</div></div>
  </div>`;};
+A.pasteModal=(_,__,___,draft)=>{openModal(`<div class="mh"><h3>📥 בקשה מוואטסאפ או מהטלפון</h3><button class="x" data-a="close">✕</button></div>
+ <div class="mbody"><p class="xs-t muted" style="margin:0">הדבק את ההודעה שקיבלת — המערכת מזהה שם, טלפון, שפה, תאריך ושעה. או מלא ידנית.</p>
+  <textarea class="inp" id="rq-paste" rows="4" placeholder="הדבק כאן הודעת וואטסאפ…"></textarea>
+  <div class="row wrap"><button class="btn pri sm" data-a="parseReq">🔍 קרא את ההודעה</button><button class="btn ghost sm" data-a="blankReq">✍️ מילוי ידני</button></div>
+  <div id="rq-form">${draft?reqForm(draft):''}</div></div>`,true);setTimeout(()=>{const t=$('#rq-paste');if(t&&!draft)t.focus();},60);};
 A.checkInbox=async(_,btn)=>{btn.disabled=true;await syncInbox();btn.disabled=false;toast('✅ נבדק');};
 function reqForm(d){return `<div class="fade mt" style="border-top:1px dashed var(--b2);padding-top:14px">
  <div class="row between wrap mb"><div class="card-t">${d._id?'✏️ עריכת בקשה':'📋 פרטי הבקשה'}</div>${d.found===false?'<span class="pill amber">לא נמצא קוד הזמנה — בדוק את הפרטים</span>':''}</div>
@@ -1101,12 +1135,12 @@ const readDraft=()=>({name:clamp(val('rq-name'),80),phone:clamp(val('rq-phone'),
 I.rqCheck=()=>{const el=$('#rq-check');if(el)el.innerHTML=reqCheckHTML(readDraft());};
 A.parseReq=()=>{const t=$('#rq-paste').value;if(!t.trim())return toast('הדבק קודם את ההודעה');reqDraft=parseRequest(t);$('#rq-form').innerHTML=reqForm(reqDraft);};
 A.blankReq=()=>{reqDraft={name:'',phone:'',lang:LANGS[0],date:'',time:'',notes:''};$('#rq-form').innerHTML=reqForm(reqDraft);};
-A.clearDraft=()=>{reqDraft=null;render();};
+A.clearDraft=()=>{reqDraft=null;closeModal();};
 A.copyLink=()=>{navigator.clipboard.writeText(studentUrl()).then(()=>toast('✅ הקישור הועתק'),()=>toast(studentUrl()));};
 function trimRequests(){const done=DB.requests.filter(r=>r.status!=='pending').sort((a,b)=>String(b.handledAt).localeCompare(String(a.handledAt)));const keep=new Set(done.slice(0,200).map(r=>r.id));DB.requests=DB.requests.filter(r=>r.status==='pending'||keep.has(r.id));}
 A.pendDraft=()=>{const d=readDraft();if(!d.name)return toast('חסר שם');
  let r=d._id?DB.requests.find(x=>x.id===d._id):null;if(!r){r={id:uid(),createdAt:new Date().toISOString(),status:'pending'};DB.requests.push(r);}
- const {_id,...rest}=d;Object.assign(r,rest);reqDraft=null;persist();render();toast('⏳ נשמר ברשימת הממתינות');};
+ const {_id,...rest}=d;Object.assign(r,rest);reqDraft=null;closeModal();persist();render();toast('⏳ נשמר ברשימת הממתינות');};
 function approveReq(d,reqId){
  if(!d.name)return toast('חסר שם התלמיד');
  if(!isKey(d.date)||!/^\d{2}:\d{2}$/.test(d.time||''))return toast('חסרים תאריך ושעה תקינים');
@@ -1117,7 +1151,7 @@ function approveReq(d,reqId){
   let r=reqId?DB.requests.find(x=>x.id===reqId):null;if(!r){r={id:uid(),createdAt:now};DB.requests.push(r);}
   Object.assign(r,{name:d.name,phone:d.phone,lang:d.lang,date:d.date,time:d.time,notes:d.notes,status:'approved',handledAt:now,lessonId:l.id});trimRequests();
   if(DB.settings.msg.enabled&&d.phone)waOpen(d.phone,buildMsg('ok',d.name,d.date,d.time));
-  reqDraft=null;persist();render();toast('✅ אושר — השיעור נוסף'+(isNew?' · נוצר תלמיד חדש':'')+(calOn()?' · מעדכן את יומן גוגל…':''));if(calOn())calSync(l,false);};
+  reqDraft=null;closeModal();persist();render();toast('✅ אושר — השיעור נוסף'+(isNew?' · נוצר תלמיד חדש':'')+(calOn()?' · מעדכן את יומן גוגל…':''));if(calOn())calSync(l,false);};
  const c=findClash(d.date,d.time,+DB.settings.lessonDuration,null);
  if(c)return ask('השעה תפוסה',`כבר קיים שיעור עם ${sname(c.studentId)} ב-${c.time}. לאשר בכל זאת?`,'אשר בכל זאת',doIt,{icon:'⏰'});
  doIt();}
@@ -1126,7 +1160,7 @@ A.delReq=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;const go2=()=>
 A.clearDone=()=>{const n=DB.requests.filter(r=>r.status!=='pending').length;ask('ניקוי היסטוריה',`למחוק ${n} בקשות שכבר טופלו?\nהשיעורים שנוצרו מהן נשארים.`,'נקה',()=>{DB.requests=DB.requests.filter(r=>r.status==='pending');persist();render();toast('🧹 נוקה');},{danger:true,icon:'🧹'});};
 A.approveDraft=()=>{const d=readDraft();approveReq(d,d._id);};
 A.approvePending=id=>{const r=DB.requests.find(x=>x.id===id);if(r)approveReq({name:r.name,phone:r.phone,lang:r.lang,date:r.date,time:r.time,notes:r.notes},id);};
-A.editPending=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;reqDraft={...r,_id:id};render();setTimeout(()=>{const f=$('#rq-form');if(f)f.scrollIntoView({behavior:'smooth',block:'center'});},60);};
+A.editPending=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;reqDraft={...r,_id:id};A.pasteModal(null,null,null,reqDraft);};
 A.rejectPending=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;
  const done=()=>{r.status='rejected';r.handledAt=new Date().toISOString();trimRequests();persist();render();toast('הבקשה נדחתה');};
  ask('דחיית בקשה',`לדחות את הבקשה של ${r.name}?`,r.phone?'דחה ושלח הודעה':'דחה',()=>{if(r.phone)waOpen(r.phone,buildMsg('no',r.name,r.date,r.time));done();},{alt:r.phone?'דחה בלי הודעה':'',altCb:done,danger:true,icon:'✋'});};
@@ -1365,6 +1399,56 @@ A.planPrint=id=>{const p=DB.plans.find(x=>x.id===id);if(!p)return;normPlan(p);co
  ${sec('✅ מה עבד',p.reflectGood)}${sec('❌ מה היה קשה',p.reflectHard)}${sec('🔄 מה לשנות',p.reflectChange)}${sec('➡️ לשיעור הבא',p.reflectNext)}
  </body></html>`);w.document.close();setTimeout(()=>w.print(),300);};
 
+/* ═══════════ STUDENT PORTAL (encrypted page per student) ═══════════ */
+const b64u=b=>bytesToB64(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const rndId=n=>{const a=new Uint8Array(n);crypto.getRandomValues(a);return [...a].map(x=>'abcdefghijkmnpqrstuvwxyz23456789'[x%32]).join('');};
+const portalLink=s=>s.portal&&s.portal.on?`${studentUrl()}student.html#${s.portal.id}.${s.portal.key}`:'';
+const portalPubMem={};
+function portalPayload(s){const tk=todayKey(),now=new Date(),nowT=m2t(now.getHours()*60+now.getMinutes());
+ const all=DB.lessons.filter(l=>l.studentId===s.id&&l.status!=='cancelled').sort(byDT);
+ const past=all.filter(l=>l.date<tk||(l.date===tk&&l.time<=nowT)),next=all.find(l=>!past.includes(l));
+ const vocab=[],expr=[],rules=[],seenW=new Set(),seenE=new Set(),seenR=new Set();
+ past.forEach(l=>{const p=l.planId&&DB.plans.find(x=>x.id===l.planId);if(!p)return;const t=p.topic||'';
+  (p.vocab||[]).forEach(v=>{if(!v.word||seenW.has(v.word))return;seenW.add(v.word);vocab.push({w:v.word,t:v.translit||'',m:v.meaning||'',e:v.example||'',d:l.date,l:t});});
+  (p.expressions||[]).forEach(x=>{if(!x.phrase||seenE.has(x.phrase))return;seenE.add(x.phrase);expr.push({p:x.phrase,m:x.meaning||'',d:l.date,l:t});});
+  (p.rules||[]).forEach(x=>{if(!x.rule||seenR.has(x.rule))return;seenR.add(x.rule);rules.push({r:x.rule,e:x.example||'',d:l.date,l:t});});});
+ const lessons=past.slice(-40).reverse().map(l=>{const p=l.planId&&DB.plans.find(x=>x.id===l.planId);return{d:l.date,t:l.time,topic:(p&&p.topic)||'',topics:l.topics||'',hw:l.homework||'',hs:HWS[l.hwStatus]?l.hwStatus:''};});
+ return{v:1,name:String(s.name||'').split(' ')[0],lang:s.lang||'',level:s.level||'',teacher:{name:DB.settings.teacherName||'',wa:waNum(DB.settings.whatsapp)},
+  next:next?{d:next.date,t:next.time,dur:+next.duration||60}:null,lessons,vocab,expr,rules,count:past.length,hw:hwRate(past)};}
+async function portalEncrypt(obj,keyB64u){const raw=b64ToBytes(keyB64u.replace(/-/g,'+').replace(/_/g,'/')+'='.repeat((4-keyB64u.length%4)%4));
+ const key=await crypto.subtle.importKey('raw',raw,'AES-GCM',false,['encrypt']),iv=crypto.getRandomValues(new Uint8Array(12)),pt=enc8(JSON.stringify(obj));
+ const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,pt);
+ const h=bytesToB64(new Uint8Array(await crypto.subtle.digest('SHA-256',enc8(keyB64u+JSON.stringify(obj))))).slice(0,32);
+ return{h,text:JSON.stringify({v:1,iv:bytesToB64(iv),ct:bytesToB64(new Uint8Array(ct)),h})};}
+let portalBusy=false;
+async function publishPortals(force){if(!DB||!GH.cfg||portalBusy)return;portalBusy=true;
+ try{for(const s of DB.students.filter(x=>x.portal&&x.portal.on)){
+  const file=`s/${s.portal.id}.json`,{h,text}=await portalEncrypt(portalPayload(s),s.portal.key);
+  if(!force&&portalPubMem[s.portal.id]===h)continue;
+  let cur=null;try{cur=await GH.get(GH.cfg.siteRepo,file,GH.cfg.siteBranch);}catch(e){}
+  let ch=null;try{ch=cur&&JSON.parse(cur.text).h;}catch(e){}
+  if(ch!==h){const {h:h2,text:t2}=await portalEncrypt(portalPayload(s),s.portal.key);await GH.put(GH.cfg.siteRepo,file,t2,cur?cur.sha:undefined,GH.cfg.siteBranch,'ClassFlow: עדכון דף תלמיד');portalPubMem[s.portal.id]=h2;}
+  else portalPubMem[s.portal.id]=h;}}
+ finally{portalBusy=false;}}
+async function portalDelete(s){if(!s.portal||!s.portal.id)return;const file=`s/${s.portal.id}.json`;
+ try{const cur=await GH.get(GH.cfg.siteRepo,file,GH.cfg.siteBranch);if(cur)await GH.del(GH.cfg.siteRepo,file,cur.sha,GH.cfg.siteBranch,'ClassFlow: הסרת דף תלמיד');}catch(e){console.warn(e);}
+ delete portalPubMem[s.portal.id];}
+function portalCard(s){const on=s.portal&&s.portal.on,link=portalLink(s);
+ if(!on)return `<div class="card portal"><div class="card-t mb">🎓 הדף האישי של ${esc(String(s.name||'').split(' ')[0])}</div>
+  <p class="sm-t muted mb">דף פרטי לתלמיד: המילים, הביטויים והכללים שלמד, שיעורי הבית, וכרטיסיות תרגול. מתעדכן לבד אחרי כל שיעור.</p>
+  <button class="btn pri sm w100" data-a="portalOn" data-id="${esc(s.id)}">✨ צור דף אישי</button></div>`;
+ const msg=`שלום ${String(s.name||'').split(' ')[0]} 😊\nזה הדף האישי שלך — המילים שלמדנו, שיעורי הבית וכרטיסיות לתרגול:\n${link}`;
+ return `<div class="card portal on"><div class="card-h"><div class="card-t">🎓 הדף האישי</div><span class="pill green">● פעיל</span></div>
+  <input class="inp" readonly dir="ltr" value="${esc(link)}" style="font-size:.72rem;font-family:monospace" aria-label="קישור לדף האישי">
+  <div class="row wrap mt" style="gap:6px"><button class="btn ghost sm" data-a="portalCopy" data-id="${esc(s.id)}">📋 העתק</button>${s.phone?`<a class="btn wa sm" href="https://wa.me/${esc(waNum(s.phone))}?text=${esc(encodeURIComponent(msg))}" target="_blank" rel="noopener">💬 שלח</a>`:''}<a class="btn ghost sm" href="${esc(link)}" target="_blank" rel="noopener">👁️ צפה</a></div>
+  <div class="row wrap mt" style="gap:6px"><button class="btn ghost sm" data-a="portalNew" data-id="${esc(s.id)}" title="הקישור הישן יפסיק לעבוד">🔄 קישור חדש</button><button class="btn ghost sm" style="color:var(--red)" data-a="portalOff" data-id="${esc(s.id)}">⏸ כבה</button></div>
+  <p class="xs-t muted mt">מוצפן — רק מי שיש לו את הקישור המלא יכול לקרוא. בלי טלפון, תשלומים או הערות פרטיות.</p></div>`;}
+A.portalOn=async(id,btn)=>{const s=stu(id);if(!s)return;btn.disabled=true;s.portal={on:true,id:rndId(16),key:b64u(crypto.getRandomValues(new Uint8Array(32))),createdAt:new Date().toISOString()};
+ persist();await waitIdle();await flush();await waitIdle();try{await publishPortals(true);toast('✨ הדף האישי נוצר — אפשר לשלוח את הקישור');}catch(e){toast('⚠️ הפרסום נכשל: '+e.message);}render();};
+A.portalCopy=id=>{const s=stu(id);navigator.clipboard.writeText(portalLink(s)).then(()=>toast('📋 הקישור הועתק'),()=>toast('סמן והעתק ידנית'));};
+A.portalNew=id=>{const s=stu(id);if(!s)return;ask('קישור חדש','הקישור הישן יפסיק לעבוד, ותצטרך לשלוח לתלמיד את החדש. להמשיך?','צור קישור חדש',async()=>{await portalDelete(s);s.portal={...s.portal,on:true,id:rndId(16),key:b64u(crypto.getRandomValues(new Uint8Array(32)))};persist();await waitIdle();await flush();await waitIdle();await publishPortals(true);render();toast('🔄 נוצר קישור חדש');},{icon:'🔄'});};
+A.portalOff=id=>{const s=stu(id);if(!s)return;ask('כיבוי הדף האישי','הדף יימחק והקישור יפסיק לעבוד. אפשר ליצור דף חדש בכל רגע.','כבה',async()=>{await portalDelete(s);s.portal={on:false};persist();render();toast('הדף האישי כובה');},{danger:true,icon:'⏸'});};
+
 /* ═══════════ STATISTICS ═══════════ */
 let statP='3m',catSort='students',catDir=-1,catQ='';
 const HEAT=['#E6EDFB','#C3D4F6','#94B2EE','#6390E5','#3B6FE0','#2650C0'];
@@ -1397,7 +1481,7 @@ R.stats=()=>{DB.plans.forEach(normPlan);
   ${stat('נוכחות',att,'var(--amber)',`${cx} ביטולים · דירוג ממוצע ${avg}`)}
  </div>
  <div class="card mb"><div class="card-h"><div class="card-t">🧠 מה התלמידים למדו <span class="xs-t muted" style="font-weight:500">· ${PLBL[statP]}</span></div></div>
-  <div class="learn">${[['📚','מילים חדשות',w],['📐','כללי דקדוק',r],['💬','ביטויים',e]].map(([i,t,n])=>`<div class="ln"><span class="ic">${i}</span><b>${n.toLocaleString('he-IL')}</b><span>${t}</span></div>`).join('')}</div>
+  <div class="learn">${[['📚','מילים חדשות',w],['📐','כללי דקדוק',r],['💬','ביטויים',e],['📝','שיעורי בית שהוכנו',(()=>{const h=hwRate(done);return h===null?'—':h+'%';})()]].map(([i,t,n])=>`<div class="ln"><span class="ic">${i}</span><b>${typeof n==='number'?n.toLocaleString('he-IL'):n}</b><span>${t}</span></div>`).join('')}</div>
   <p class="xs-t muted mt">נספר לכל תלמיד פעם אחת לכל תכנית, מתוך שיעורים שהתקיימו ושויכה אליהם תכנית שיעור. ${done.length?`${linkedPct}% מהשיעורים בתקופה משויכים לתכנית${linkedPct<60?' — שייך עוד שיעורים כדי שהספירה תהיה מלאה':''}.`:''}</p></div>
  <div class="g g2 mb" style="align-items:start">
   <div class="card"><div class="card-h"><div class="card-t">📅 שיעורים לפי חודש</div><span class="xs-t muted">12 חודשים</span></div>${monthChart()}</div>
@@ -1441,9 +1525,9 @@ function langBars(ls){if(!ls.length)return emptyBox('🌐','אין שיעורי�
  <table class="tbl mt"><tr><th>שפה</th><th>שיעורים</th><th>שעות</th><th>תלמידים</th></tr>${rows.map(r=>`<tr><td><i class="sw" style="background:${LANG_COLOR[r.g]};margin-inline-end:6px"></i>${esc(r.g)}</td><td>${r.n}</td><td>${r.h.toFixed(1)}</td><td>${r.s}</td></tr>`).join('')}</table>`;}
 function topStudents(ls){if(!ls.length)return emptyBox('🏅','אין שיעורים בתקופה');
  const rows=[...new Set(ls.map(l=>l.studentId))].map(id=>{const s=stu(id);const x=ls.filter(l=>l.studentId===id);const rt=x.filter(l=>+l.rating>0);const lb=learnedBy(id);
-  return{id,name:s?s.name:'תלמיד שנמחק',n:x.length,h:x.reduce((a,l)=>a+(+l.duration||60),0)/60,avg:rt.length?(rt.reduce((a,l)=>a+(+l.rating),0)/rt.length).toFixed(1):'—',lb,last:x.map(l=>l.date).sort().pop()};}).sort((a,b)=>b.n-a.n).slice(0,15);
- return `<div style="overflow-x:auto"><table class="tbl"><tr><th>תלמיד</th><th>שיעורים</th><th>שעות</th><th>דירוג</th><th>📚 מילים</th><th>📐 כללים</th><th>💬 ביטויים</th><th>שיעור אחרון</th></tr>
- ${rows.map(r=>`<tr class="clk" data-a="profile" data-id="${esc(r.id)}"><td class="b">${esc(r.name)}</td><td>${r.n}</td><td>${r.h.toFixed(1)}</td><td>${r.avg}</td><td>${r.lb.w}</td><td>${r.lb.r}</td><td>${r.lb.e}</td><td>${fmtD(r.last)}</td></tr>`).join('')}</table></div>
+  return{id,hw:hwRate(DB.lessons.filter(l=>l.studentId===id)),name:s?s.name:'תלמיד שנמחק',n:x.length,h:x.reduce((a,l)=>a+(+l.duration||60),0)/60,avg:rt.length?(rt.reduce((a,l)=>a+(+l.rating),0)/rt.length).toFixed(1):'—',lb,last:x.map(l=>l.date).sort().pop()};}).sort((a,b)=>b.n-a.n).slice(0,15);
+ return `<div style="overflow-x:auto"><table class="tbl"><tr><th>תלמיד</th><th>שיעורים</th><th>שעות</th><th>דירוג</th><th>📚 מילים</th><th>📐 כללים</th><th>💬 ביטויים</th><th>📝 ש״ב</th><th>שיעור אחרון</th></tr>
+ ${rows.map(r=>`<tr class="clk" data-a="profile" data-id="${esc(r.id)}"><td class="b">${esc(r.name)}</td><td>${r.n}</td><td>${r.h.toFixed(1)}</td><td>${r.avg}</td><td>${r.lb.w}</td><td>${r.lb.r}</td><td>${r.lb.e}</td><td>${r.hw===null?'—':r.hw+'%'}</td><td>${fmtD(r.last)}</td></tr>`).join('')}</table></div>
  <p class="xs-t muted mt">מילים, כללים וביטויים — סך התוכן מכל התכניות שהתלמיד למד (מאז ומעולם).</p>`;}
 
 /* ── lesson catalog ── */
@@ -1487,7 +1571,11 @@ function incSummary(){const act=activeLessons(),tk=todayKey(),ym=tk.slice(0,7),p
  return `<div class="g g4 mb">${stat('סה״כ התקבל',money(tot),'var(--green)',paid.length+' שיעורים ששולמו')}${stat('חובות פתוחים',money(debt.sum),'var(--amber)',debt.count+' תלמידים')}${stat('התקבל החודש',money(month),'var(--blue)',MONTHS[new Date().getMonth()])}${stat('צפוי משיעורים עתידיים',money(future),'var(--violet)','')}</div>
  <div class="g g-main"><div class="card"><div class="card-t mb">לפי תלמיד</div>${rows.length?rows.map(({s,x})=>{const pct=x.paid+x.debt?Math.round(x.paid/(x.paid+x.debt)*100):100;
   return `<div style="padding:11px 0;border-bottom:1px solid var(--b)"><div class="row wrap mb6"><div class="grow"><b class="sm-t" style="cursor:pointer" data-a="profile" data-id="${esc(s.id)}">${esc(s.name)}</b><div class="xs-t muted">${x.count} שיעורים · ${money(s.rate)} לשיעור</div></div><span class="pill green">${money(x.paid)}</span>${x.debt?`<span class="pill red">חוב ${money(x.debt)}</span><button class="btn sm ok" data-a="payAll" data-id="${esc(s.id)}">שולם</button>`:''}</div><div class="bar"><div style="width:${pct}%"></div></div></div>`;}).join(''):emptyBox('','אין עדיין שיעורים')}</div>
- <div class="card"><div class="card-t mb">📊 6 חודשים אחרונים</div>${chart6()}</div></div>`;}
+ <div class="g" style="align-content:start"><div class="card"><div class="card-t mb">📊 6 חודשים אחרונים</div>${chart6()}</div><div class="card"><div class="card-t mb">💳 לפי אמצעי תשלום</div>${payBreakdown(paid)}</div></div></div>`;}
+function payBreakdown(paid){if(!paid.length)return emptyBox('','אין תשלומים עדיין');const tot=paid.reduce((a,l)=>a+lessonPrice(l),0);
+ const rows=[...PAYM.map(([k,i,t])=>({k,lbl:i+' '+t,ls:paid.filter(l=>l.payMethod===k)})),{k:'',lbl:'❔ לא צוין',ls:paid.filter(l=>!l.payMethod||!PAYM.some(x=>x[0]===l.payMethod))}].map(r=>({...r,v:r.ls.reduce((a,l)=>a+lessonPrice(l),0)})).filter(r=>r.ls.length).sort((a,b)=>b.v-a.v);
+ const max=Math.max(1,...rows.map(r=>r.v));
+ return `<div class="hbars">${rows.map(r=>`<div class="hb" ${tipAttr(`${r.lbl}: ${money(r.v)} · ${r.ls.length} תשלומים`)}><div class="hb-l">${esc(r.lbl)}</div><div class="hb-t"><span style="width:${Math.round(r.v/max*100)}%;background:${r.k?'var(--green)':'var(--m2)'}"></span></div><div class="hb-v"><b>${money(r.v)}</b> · ${Math.round(r.v/tot*100)}%</div></div>`).join('')}</div>`;}
 function chart6(){const now=new Date(),data=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1),ym=d.getFullYear()+'-'+pad(d.getMonth()+1);data.push({l:MONTHS[d.getMonth()].slice(0,3),v:activeLessons().filter(l=>l.paid&&String(l.date).slice(0,7)===ym).reduce((a,l)=>a+lessonPrice(l),0)});}
  const max=Math.max(1,...data.map(d=>d.v));return `<div class="chart">${data.map(d=>`<div class="cb"><div class="cv">${d.v?money(d.v):''}</div><div class="cbar" style="height:${Math.max(3,Math.round(d.v/max*140))}px"></div><div class="cl">${d.l}</div></div>`).join('')}</div>`;}
 function incPackages(){return `<div class="row between wrap mb"><p class="muted sm-t">שיוך חבילה לתלמיד (בפרופיל שלו) מוסיף קרדיט שיעורים ומעדכן את התעריף לשיעורים הבאים.</p><button class="btn pri sm" data-a="pkgAdd">＋ חבילה</button></div>
@@ -1502,8 +1590,8 @@ A.pkgAdd=()=>{DB.packages.push({id:uid(),name:'חבילה חדשה',lessons:4,pr
 A.pkgDel=id=>{const p=DB.packages.find(x=>x.id===id);if(!p)return;ask('מחיקת חבילה',`למחוק את "${p.name}"? קרדיט קיים של תלמידים לא ישתנה.`,'מחק',()=>{DB.packages=DB.packages.filter(x=>x.id!==id);persist();render();},{danger:true,icon:'📦'});};
 function incHistory(){const paid=activeLessons().filter(l=>l.paid).sort(byDTdesc);
  return `<div class="card"><div class="card-h"><div class="card-t">🧾 תשלומים (${paid.length})</div><button class="btn ghost sm" data-a="exportPayments">⬇️ CSV</button></div>
- ${paid.length?`<div style="overflow-x:auto"><table class="tbl"><tr><th>תאריך</th><th>תלמיד</th><th>שפה</th><th style="text-align:left">סכום</th></tr>${paid.slice(0,400).map(l=>`<tr><td>${fmtD(l.date)}</td><td class="b">${esc(sname(l.studentId))}</td><td class="muted">${esc(l.lang)}</td><td style="text-align:left;color:var(--green);font-weight:700">${money(lessonPrice(l))}</td></tr>`).join('')}</table></div>`:emptyBox('','אין תשלומים עדיין')}</div>`;}
-A.exportPayments=()=>{const rows=[['תאריך','שעה','תלמיד','שפה','סכום','שולם','סטטוס']];DB.lessons.slice().sort(byDT).forEach(l=>rows.push([l.date,l.time,sname(l.studentId),l.lang,lessonPrice(l),l.paid?'כן':'לא',l.status==='cancelled'?'בוטל':'']));downloadCSV('payments.csv',rows);};
+ ${paid.length?`<div style="overflow-x:auto"><table class="tbl"><tr><th>תאריך</th><th>תלמיד</th><th>שפה</th><th>אמצעי תשלום</th><th style="text-align:left">סכום</th></tr>${paid.slice(0,400).map(l=>`<tr><td>${fmtD(l.date)}</td><td class="b">${esc(sname(l.studentId))}</td><td class="muted">${esc(l.lang)}</td><td>${l.payMethod?esc(payLbl(l.payMethod)):'<span class="muted">—</span>'}</td><td style="text-align:left;color:var(--green);font-weight:700">${money(lessonPrice(l))}</td></tr>`).join('')}</table></div>`:emptyBox('','אין תשלומים עדיין')}</div>`;}
+A.exportPayments=()=>{const rows=[['תאריך','שעה','תלמיד','שפה','סכום','שולם','אמצעי תשלום','תאריך תשלום','סטטוס']];DB.lessons.slice().sort(byDT).forEach(l=>rows.push([l.date,l.time,sname(l.studentId),l.lang,lessonPrice(l),l.paid?'כן':'לא',l.paid&&l.payMethod?(PAYM.find(x=>x[0]===l.payMethod)||[])[2]||'':'',l.paidAt||'',l.status==='cancelled'?'בוטל':'']));downloadCSV('payments.csv',rows);};
 
 /* ═══════════ SETTINGS ═══════════ */
 R.settings=()=>{const st=DB.settings,m=st.msg,c=GH.cfg,lock=localStorage.getItem('cf_autolock')||'20',old=oldLocal();
@@ -1515,6 +1603,7 @@ R.settings=()=>{const st=DB.settings,m=st.msg,c=GH.cfg,lock=localStorage.getItem
    <div class="f"><label for="st-dur">משך שיעור</label><select class="sel" id="st-dur">${[30,45,60,75,90,120].map(d=>opt(d,d+' דקות',st.lessonDuration)).join('')}</select></div>
    ${fld('st-brk','הפסקה בין שיעורים (דק׳)',st.breakMinutes,'number','min="0" max="120" step="5"')}
    ${fld('st-rate','תעריף ברירת מחדל',st.defaultRate,'number','min="0" step="10"')}
+   <div class="f"><label for="st-dpay">אמצעי תשלום מועדף</label><select class="sel" id="st-dpay"><option value="">— ללא —</option>${PAYM.map(([k,i,t])=>opt(k,i+' '+t,st.defaultPay)).join('')}</select></div>
    <div class="f"><label for="st-cur">מטבע</label><select class="sel" id="st-cur">${['₪','$','€'].map(x=>opt(x,x,st.currency)).join('')}</select></div></div>
    <button class="btn pri mt" data-a="saveDefaults">💾 שמור</button></div>
   <div class="card" style="grid-column:1/-1;border-top:4px solid ${BOOK_RE.test(st.bookingUrl||'')?'var(--green)':'var(--amber)'}"><div class="card-h wrap"><div class="card-t">📨 קבלת בקשות אוטומטית (Google Script)</div>${BOOK_RE.test(st.bookingUrl||'')?'<span class="pill green">● מחובר</span>':'<span class="pill amber">לא מחובר — התלמידים שולחים בוואטסאפ</span>'}</div>
@@ -1535,6 +1624,11 @@ R.settings=()=>{const st=DB.settings,m=st.msg,c=GH.cfg,lock=localStorage.getItem
    <div class="g g2">${area('st-mhe','✅ אישור — עברית',m.he,5)}${area('st-mar','✅ אישור — ערבית',m.ar,5)}${area('st-mdhe','✋ דחייה — עברית',m.declineHe,4)}${area('st-mdar','✋ דחייה — ערבית',m.declineAr,4)}</div>
    <p class="xs-t muted mt">משתנים: {name} שם התלמיד · {date} תאריך · {time} שעה</p>
    <div class="row mt"><button class="btn pri" data-a="saveMsgs">💾 שמור</button><button class="btn ghost" data-a="resetMsgs">שחזר ברירת מחדל</button></div></div>
+  <div class="card" style="grid-column:1/-1"><div class="card-h wrap"><div class="card-t">📱 אפליקציה בטלפון ובמחשב</div>${isStandalone()?'<span class="pill green">● מותקן</span>':''}</div>
+   ${isStandalone()?'<p class="sm-t muted">הלוח פתוח כאפליקציה. 👍</p>':installEvt?'<p class="sm-t muted mb">התקן את הלוח כאפליקציה — אייקון במסך הבית, פתיחה מהירה בלי שורת הדפדפן.</p><button class="btn pri" data-a="installApp">📲 התקן את ClassFlow</button>'
+   :`<div class="g g2"><div class="note" style="margin:0"><b>📱 אנדרואיד (Chrome):</b>
+תפריט ⋮ ← "הוספה למסך הבית" / "התקנת אפליקציה"</div><div class="note" style="margin:0"><b>🍎 אייפון (Safari):</b>
+כפתור השיתוף ⬆️ ← "הוסף למסך הבית"</div></div><p class="xs-t muted mt">במחשב (Chrome / Edge): אייקון ההתקנה בצד ימין של שורת הכתובת.</p>`}</div>
   <div class="card"><div class="card-t mb">🔐 אבטחה</div>
    <div class="g">${fld('st-op','סיסמה נוכחית','','password','autocomplete="current-password"')}${fld('st-np','סיסמה חדשה (לפחות 8 תווים)','','password','autocomplete="new-password"')}${fld('st-np2','אימות סיסמה חדשה','','password','autocomplete="new-password"')}</div>
    <button class="btn ghost sm mt" data-a="changePass">🔑 שנה סיסמה</button>
@@ -1567,7 +1661,7 @@ A.calSyncAll=async(_,btn)=>{const tk=todayKey(),ls=DB.lessons.filter(l=>l.status
 A.clearBooking=()=>ask('ניתוק הסקריפט','דף ההזמנה יחזור לשליחת בקשות בוואטסאפ.','נתק',()=>{DB.settings.bookingUrl='';persist();render();},{icon:'📨'});
 A.saveProfile=()=>{const st=DB.settings,wa=val('st-wa');if(wa&&wa.replace(/\D/g,'').length<9)return toast('מספר וואטסאפ לא תקין');
  st.teacherName=clamp(val('st-name'),60);st.bio=clamp(val('st-bio'),120);st.whatsapp=clamp(wa,20);st.email=clamp(val('st-email'),120);persist();render();toast('✅ הפרופיל נשמר ויתפרסם בדף ההזמנה');};
-A.saveDefaults=()=>{const st=DB.settings;st.lessonDuration=+val('st-dur')||60;st.breakMinutes=Math.max(0,Math.min(120,Math.round(num('st-brk',0))));st.defaultRate=Math.max(0,num('st-rate',150));const c=val('st-cur');st.currency=['₪','$','€'].includes(c)?c:'₪';persist();render();toast('✅ נשמר');};
+A.saveDefaults=()=>{const st=DB.settings;st.lessonDuration=+val('st-dur')||60;st.breakMinutes=Math.max(0,Math.min(120,Math.round(num('st-brk',0))));st.defaultRate=Math.max(0,num('st-rate',150));const c=val('st-cur');st.currency=['₪','$','€'].includes(c)?c:'₪';st.defaultPay=PAYM.some(x=>x[0]===val('st-dpay'))?val('st-dpay'):'';persist();render();toast('✅ נשמר');};
 A.saveMsgs=()=>{const m=DB.settings.msg;m.enabled=$('#st-men').checked;m.lang=['both','he','ar'].includes(val('st-mlang'))?val('st-mlang'):'both';m.he=clamp(val('st-mhe'),2000);m.ar=clamp(val('st-mar'),2000);m.declineHe=clamp(val('st-mdhe'),2000);m.declineAr=clamp(val('st-mdar'),2000);persist();toast('✅ ההודעות נשמרו');};
 A.resetMsgs=()=>{Object.assign(DB.settings.msg,MSG_DEF);persist();render();toast('שוחזרו הודעות ברירת המחדל');};
 C.setAutoLock=(_,el)=>{localStorage.setItem('cf_autolock',el.value);toast('✅ נעילה אוטומטית אחרי '+el.value+' דקות');};
@@ -1663,6 +1757,13 @@ setInterval(()=>{if(!GH.cfg||!DB)return;const min=+localStorage.getItem('cf_auto
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&dirty)flush();if(document.visibilityState==='visible'&&GH.cfg&&DB&&Date.now()-inboxAt>10000)syncInbox();});
 addEventListener('beforeunload',e=>{if(dirty||saving){e.preventDefault();e.returnValue='';}});
 
+/* ═══════════ INSTALL AS APP ═══════════ */
+let installEvt=null;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;if(view==='settings'&&DB)render();});
+addEventListener('appinstalled',()=>{installEvt=null;toast('📱 ClassFlow הותקן כאפליקציה');});
+const isStandalone=()=>!!((window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true);
+A.installApp=async()=>{if(!installEvt)return;installEvt.prompt();await installEvt.userChoice.catch(()=>{});installEvt=null;render();};
+if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 /* ═══════════ BOOT ═══════════ */
 if(!window.crypto||!crypto.subtle){document.body.innerHTML='<p style="padding:2rem;text-align:center">יש לפתוח את הדף בכתובת https (GitHub Pages)</p>';}
 else gate(hasVault()?'unlock':'setup');

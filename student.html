@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="theme-color" content="#4B7FCC">
+<title>הדף שלי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#4B7FCC;--blue-d:#3A6AB8;--blue-dim:rgba(75,127,204,.1);--green:#2F8F63;--green-bg:#E3F4EB;--amber:#C9822F;--amber-bg:#FBF0E1;--red:#C0504A;--red-bg:#FBE9E8;
+ --bg:#F2F5F9;--white:#fff;--border:#E2E8F0;--text:#1A2332;--soft:#4A5668;--muted:#7A8BA0;--shadow:0 2px 16px rgba(0,0,0,.07)}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+button,input{font-family:inherit;color:inherit}button{cursor:pointer;border:none;background:none}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid rgba(75,127,204,.45);outline-offset:2px;border-radius:8px}
+.page{max-width:640px;margin:0 auto;padding:1.5rem 1rem 4rem}
+.ar,[lang="ar"]{font-family:'Amiri','Times New Roman',serif}
+.hero{text-align:center;padding:1.5rem .5rem 1rem}
+.avatar{width:76px;height:76px;border-radius:50%;background:var(--blue);color:#fff;font-size:2rem;font-weight:800;display:grid;place-items:center;margin:0 auto .7rem;box-shadow:0 6px 20px rgba(75,127,204,.4)}
+.hero h1{font-size:1.75rem;font-weight:800}
+.hero p{color:var(--muted);font-size:.92rem;margin-top:2px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:1rem 0}
+.kpi{background:var(--white);border-radius:16px;padding:12px 6px;text-align:center;box-shadow:var(--shadow)}
+.kpi b{display:block;font-size:1.45rem;font-weight:900;color:var(--blue);line-height:1.2}
+.kpi span{font-size:.72rem;color:var(--muted);font-weight:600}
+.next{background:linear-gradient(135deg,#4B7FCC,#3A6AB8);color:#fff;border-radius:20px;padding:16px 18px;margin-bottom:.9rem;display:flex;align-items:center;gap:14px;box-shadow:0 6px 18px rgba(75,127,204,.35)}
+.next .ic{font-size:1.8rem}
+.next small{display:block;opacity:.8;font-size:.78rem}
+.next b{font-size:1.1rem}
+.tabs{display:flex;background:var(--white);border-radius:16px;padding:4px;gap:3px;margin-bottom:.9rem;box-shadow:var(--shadow);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1;padding:10px 12px;border-radius:12px;font-size:.86rem;font-weight:700;color:var(--muted);white-space:nowrap}
+.tab.on{background:var(--blue);color:#fff;box-shadow:0 3px 10px rgba(75,127,204,.3)}
+.card{background:var(--white);border-radius:20px;padding:1.1rem 1.2rem;box-shadow:var(--shadow);margin-bottom:.85rem}
+.card-t{font-size:.84rem;font-weight:700;color:var(--muted);margin-bottom:.8rem;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.search{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;font-size:.95rem;outline:none;margin-bottom:.8rem}
+.search:focus{border-color:var(--blue);background:#fff}
+.group{font-size:.74rem;font-weight:700;color:var(--muted);margin:14px 0 6px;display:flex;align-items:center;gap:8px}
+.group::after{content:'';flex:1;height:1px;background:var(--border)}
+.w{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px;padding:10px 4px;border-bottom:1px solid var(--border);align-items:baseline}
+.w:last-child{border-bottom:none}
+.w .wd{font-size:1.3rem;font-weight:700;line-height:1.4}
+.w .tr{font-size:.8rem;color:var(--muted);direction:ltr;text-align:right}
+.w .mn{font-size:.95rem;color:var(--soft)}
+.w .ex{grid-column:1/-1;font-size:.84rem;color:var(--muted);background:var(--bg);border-radius:8px;padding:4px 10px;margin-top:2px}
+.rule{padding:10px 4px;border-bottom:1px solid var(--border)}.rule:last-child{border-bottom:none}
+.rule b{display:block;font-size:.98rem}.rule span{display:block;font-size:1.05rem;color:var(--soft);margin-top:3px}
+.hw{display:flex;gap:12px;align-items:flex-start;padding:12px 4px;border-bottom:1px solid var(--border)}.hw:last-child{border-bottom:none}
+.hw .st{font-size:.74rem;font-weight:700;border-radius:99px;padding:3px 10px;white-space:nowrap}
+.st-done{background:var(--green-bg);color:var(--green)}.st-partial{background:var(--amber-bg);color:var(--amber)}.st-no{background:var(--red-bg);color:var(--red)}.st-open{background:var(--blue-dim);color:var(--blue)}
+.hw small{display:block;color:var(--muted);font-size:.76rem;margin-bottom:2px}
+.ls{display:flex;gap:12px;padding:12px 4px;border-bottom:1px solid var(--border)}.ls:last-child{border-bottom:none}
+.ls .dt{min-width:54px;text-align:center;background:var(--blue-dim);color:var(--blue);border-radius:12px;padding:6px 4px;font-weight:800;font-size:.9rem;height:fit-content}
+.ls .dt small{display:block;font-size:.66rem;font-weight:600;color:var(--muted)}
+.empty{text-align:center;color:var(--muted);padding:1.6rem 1rem;line-height:1.7;font-size:.92rem}
+/* flashcards */
+.fc-opts{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.8rem}
+.chip{border:1.5px solid var(--border);background:var(--bg);border-radius:99px;padding:6px 13px;font-size:.82rem;font-weight:600;color:var(--soft)}
+.chip.on{border-color:var(--blue);background:var(--blue-dim);color:var(--blue)}
+.prog{height:6px;background:var(--bg);border-radius:99px;overflow:hidden;margin-bottom:.9rem}.prog span{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .3s}
+.flip{perspective:1200px;height:250px;margin-bottom:.9rem;cursor:pointer;outline:none}
+.flip-in{position:relative;width:100%;height:100%;transition:transform .45s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d}
+.flip.show .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;gap:8px}
+.front{background:var(--white);border:2px solid var(--border);box-shadow:var(--shadow)}
+.back{background:linear-gradient(135deg,#4B7FCC,#3A6AB8);color:#fff;transform:rotateY(180deg)}
+.face .big{font-size:2.3rem;font-weight:700;line-height:1.35;word-break:break-word}
+.face .big.he{font-family:'Heebo',sans-serif;font-weight:800;font-size:1.8rem}
+.face .sub{font-size:.95rem;opacity:.85}
+.face .tap{position:absolute;bottom:12px;font-size:.72rem;color:var(--muted)}
+.back .tap{color:rgba(255,255,255,.7)}
+.fc-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fbtn{border-radius:14px;padding:14px;font-size:1rem;font-weight:800}
+.fbtn.no{background:var(--amber-bg);color:var(--amber)}.fbtn.yes{background:var(--green);color:#fff}
+.fbtn[disabled]{opacity:.45;pointer-events:none}
+.done{text-align:center;padding:1.2rem .5rem}.done .big{font-size:2.6rem}.done h3{font-size:1.3rem;margin:.4rem 0}.done p{color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:12px;padding:11px 18px;font-weight:700;font-size:.92rem;background:var(--blue);color:#fff;text-decoration:none}
+.btn.ghost{background:var(--bg);color:var(--text);border:1.5px solid var(--border)}
+.wa{background:#25D366}
+.foot{text-align:center;color:var(--muted);font-size:.76rem;margin-top:1.4rem;line-height:1.6}
+.spin{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:440px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.face .big{font-size:2rem}.w{grid-template-columns:1fr}.w .tr{text-align:right}}
+</style>
+</head>
+<body>
+<div class="page" id="app"><div class="card empty"><div class="spin"></div>טוען את הדף שלך…</div></div>
+<script>
+'use strict';
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??'').replace(/[&<>"'`]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'}[c]));
+const DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+const pk=k=>{const [y,m,d]=String(k).split('-').map(Number);return new Date(y,m-1,d,12);};
+const fmtD=k=>{const d=pk(k);return d.getDate()+'/'+(d.getMonth()+1);};
+const isAr=t=>/[؀-ۿ]/.test(String(t||''));
+const arCls=t=>isAr(t)?' ar" lang="ar':'';
+const HWS={done:['✅ הוכן','st-done'],partial:['◐ חלקית','st-partial'],no:['❌ לא הוכן','st-no']};
+let D=null,ID='',tab='cards',q='';
+const fail=(t,s)=>{$('#app').innerHTML=`<div class="card empty" style="margin-top:3rem"><div style="font-size:2.4rem">🔒</div><b style="display:block;color:var(--text);font-size:1.1rem;margin:6px 0">${t}</b>${s||''}</div>`;};
+const b64=s=>Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')+'='.repeat((4-s.length%4)%4)),c=>c.charCodeAt(0));
+async function load(){
+ const m=location.hash.slice(1).match(/^([a-z0-9]{16})\.([A-Za-z0-9_-]{43})$/);
+ if(!m)return fail('הקישור לא שלם','בקש מהמורה לשלוח לך שוב את הקישור המלא.');
+ ID=m[1];
+ if(!window.crypto||!crypto.subtle)return fail('הדפדפן לא נתמך','נסה לפתוח את הקישור בכרום או בספארי.');
+ let f;try{const r=await fetch('s/'+ID+'.json?t='+Date.now(),{cache:'no-store'});if(r.status===404)return fail('הקישור כבר לא פעיל','ייתכן שהמורה יצר קישור חדש — בקש ממנו את הקישור העדכני.');if(!r.ok)throw 0;f=await r.json();}
+ catch(e){return fail('לא הצלחנו לטעון','בדוק את החיבור לאינטרנט ונסה שוב.');}
+ try{const key=await crypto.subtle.importKey('raw',b64(m[2]),'AES-GCM',false,['decrypt']);
+  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(f.iv)},key,b64(f.ct));D=JSON.parse(new TextDecoder().decode(pt));}
+ catch(e){return fail('הקישור לא תקין','בקש מהמורה לשלוח לך שוב את הקישור המלא.');}
+ document.title='הדף של '+(D.name||'');render();}
+function deckAll(){const v=(D.vocab||[]).map(x=>({k:'w:'+x.w,f:x.w,b:x.m,t:x.t,e:x.e,l:x.l})),e=(D.expr||[]).map(x=>({k:'e:'+x.p,f:x.p,b:x.m,t:'',e:'',l:x.l}));return v.concat(e).filter(x=>x.f&&x.b);}
+const known=()=>{try{return new Set(JSON.parse(localStorage.getItem('cf_known_'+ID)||'[]'));}catch(e){return new Set();}};
+const saveKnown=s=>{try{localStorage.setItem('cf_known_'+ID,JSON.stringify([...s]));}catch(e){}};
+let fc={src:'all',dir:'f',queue:[],i:0,ok:0,again:0,shown:false};
+function buildDeck(){let d=deckAll();if(fc.src==='last'){const l=(D.lessons||[]).find(x=>x.topic)?.topic;d=d.filter(x=>x.l===l);}else if(fc.src==='new'){const k=known();d=d.filter(x=>!k.has(x.k));}
+ for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]];}fc.queue=d;fc.i=0;fc.ok=0;fc.again=0;fc.shown=false;}
+function render(){
+ const v=D.vocab||[],ex=D.expr||[],ru=D.rules||[],hwl=(D.lessons||[]).filter(l=>l.hw);
+ const t=D.teacher||{};
+ $('#app').innerHTML=`
+ <div class="hero"><div class="avatar">${esc((D.name||'·').trim()[0]||'·')}</div><h1>שלום ${esc(D.name||'')} 👋</h1><p>${esc([D.lang,D.level].filter(Boolean).join(' · '))}${t.name?' · עם '+esc(t.name):''}</p></div>
+ <div class="kpis"><div class="kpi"><b>${D.count||0}</b><span>שיעורים</span></div><div class="kpi"><b>${v.length}</b><span>מילים</span></div><div class="kpi"><b>${ex.length}</b><span>ביטויים</span></div><div class="kpi"><b>${D.hw==null?'—':D.hw+'%'}</b><span>שיעורי בית</span></div></div>
+ ${D.next?`<div class="next"><span class="ic">📅</span><div><small>השיעור הבא</small><b>יום ${DAYS[pk(D.next.d).getDay()]} ${fmtD(D.next.d)} · ${esc(D.next.t)}</b></div></div>`:''}
+ <div class="tabs" role="tablist">${[['cards','🃏 תרגול'],['words','📚 מילים'],['expr','💬 ביטויים'],['rules','📐 כללים'],['hw','📝 שיעורי בית'],['lessons','📅 שיעורים']].map(([k,n])=>`<button class="tab ${tab===k?'on':''}" data-tab="${k}" role="tab" aria-selected="${tab===k}">${n}</button>`).join('')}</div>
+ <div id="pane">${pane()}</div>
+ ${t.wa?`<div style="text-align:center;margin-top:1rem"><a class="btn wa" href="https://wa.me/${esc(t.wa)}" target="_blank" rel="noopener">💬 שאלה למורה</a></div>`:''}
+ <p class="foot">הדף מתעדכן אחרי כל שיעור.<br>הקישור אישי — אל תשתף אותו.</p>`;
+ if(tab==='cards')bindCard();}
+function grouped(list,row){if(!list.length)return '';let out='',last=null;const ql=q.toLowerCase();
+ list.filter(x=>!ql||JSON.stringify(x).toLowerCase().includes(ql)).sort((a,b)=>String(b.d).localeCompare(String(a.d))).forEach(x=>{if(x.l!==last){out+=`<div class="group">${esc(x.l||'שיעור')} · ${fmtD(x.d)}</div>`;last=x.l;}out+=row(x);});return out||'<div class="empty">לא נמצא</div>';}
+function pane(){
+ if(tab==='words'){const v=D.vocab||[];if(!v.length)return emptyMsg('המילים שתלמד יופיעו כאן אחרי השיעור');
+  return `<div class="card"><input class="search" id="q" placeholder="🔍 חיפוש מילה…" value="${esc(q)}">${grouped(v,x=>`<div class="w"><div class="wd${arCls(x.w)}" dir="auto">${esc(x.w)}</div><div class="mn" dir="auto">${esc(x.m)}${x.t?`<div class="tr">${esc(x.t)}</div>`:''}</div>${x.e?`<div class="ex${arCls(x.e)}" dir="auto">${esc(x.e)}</div>`:''}</div>`)}</div>`;}
+ if(tab==='expr'){const v=D.expr||[];if(!v.length)return emptyMsg('הביטויים שתלמד יופיעו כאן');
+  return `<div class="card"><input class="search" id="q" placeholder="🔍 חיפוש ביטוי…" value="${esc(q)}">${grouped(v,x=>`<div class="w"><div class="wd${arCls(x.p)}" dir="auto">${esc(x.p)}</div><div class="mn" dir="auto">${esc(x.m)}</div></div>`)}</div>`;}
+ if(tab==='rules'){const v=D.rules||[];if(!v.length)return emptyMsg('כללי הדקדוק שתלמד יופיעו כאן');
+  return `<div class="card">${grouped(v,x=>`<div class="rule"><b dir="auto">${esc(x.r)}</b>${x.e?`<span class="${isAr(x.e)?'ar':''}" dir="auto">${esc(x.e)}</span>`:''}</div>`)}</div>`;}
+ if(tab==='hw'){const h=(D.lessons||[]).filter(l=>l.hw);if(!h.length)return emptyMsg('אין כרגע שיעורי בית 🎉');
+  return `<div class="card">${h.map((l,i)=>{const s=HWS[l.hs]||(i===0?['🕐 לשיעור הבא','st-open']:['—','st-open']);return `<div class="hw"><div style="flex:1"><small>מהשיעור של יום ${DAYS[pk(l.d).getDay()]} ${fmtD(l.d)}${l.topic?' · '+esc(l.topic):''}</small><div dir="auto">${esc(l.hw)}</div></div><span class="st ${s[1]}">${s[0]}</span></div>`;}).join('')}</div>`;}
+ if(tab==='lessons'){const ls=D.lessons||[];if(!ls.length)return emptyMsg('עוד לא התקיימו שיעורים');
+  return `<div class="card">${ls.map(l=>`<div class="ls"><div class="dt">${fmtD(l.d)}<small>${DAYS[pk(l.d).getDay()]}</small></div><div><b>${esc(l.topic||'שיעור')}</b>${l.topics?`<div style="font-size:.86rem;color:var(--soft);margin-top:2px">📌 ${esc(l.topics)}</div>`:''}${l.hw?`<div style="font-size:.84rem;color:var(--muted);margin-top:3px">📝 ${esc(l.hw)}</div>`:''}</div></div>`).join('')}</div>`;}
+ return cardsPane();}
+const emptyMsg=t=>`<div class="card empty">${t}</div>`;
+function cardsPane(){const all=deckAll();if(!all.length)return emptyMsg('כרטיסיות התרגול ייבנו מהמילים והביטויים שתלמד בשיעורים 🃏');
+ if(!fc.queue.length&&fc.i===0)buildDeck();
+ const k=known(),tot=fc.queue.length,c=fc.queue[fc.i];
+ const opts=`<div class="fc-opts">${[['all','הכל'],['new','רק מה שעוד לא יודע'],['last','השיעור האחרון']].map(([v,t])=>`<button class="chip ${fc.src===v?'on':''}" data-src="${v}">${t}</button>`).join('')}<button class="chip" data-dir="1" title="החלף כיוון">${fc.dir==='f'?'מילה ← משמעות':'משמעות ← מילה'} ⇄</button></div>`;
+ if(!tot)return `<div class="card">${opts}<div class="done"><div class="big">🏆</div><h3>${fc.src==='new'?'אתה כבר יודע הכל!':'אין כרטיסיות כאן'}</h3><p>${k.size} מתוך ${all.length} מסומנים כ"יודע".</p><div style="margin-top:12px"><button class="btn ghost" data-reset="1">התחל מחדש את הכל</button></div></div></div>`;
+ if(!c)return `<div class="card">${opts}<div class="done"><div class="big">🎉</div><h3>סיימת סבב!</h3><p>ידעת ${fc.ok} · לחזרה ${fc.again}</p><div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn" data-restart="1">🔁 סבב נוסף</button><button class="btn ghost" data-src="new">רק מה שעוד לא יודע</button></div></div></div>`;
+ const front=fc.dir==='f'?c.f:c.b,back=fc.dir==='f'?c.b:c.f;
+ return `<div class="card">${opts}<div class="prog"><span style="width:${Math.round(fc.i/tot*100)}%"></span></div>
+  <div class="flip ${fc.shown?'show':''}" id="flip" tabindex="0" role="button" aria-label="הפוך כרטיס"><div class="flip-in">
+   <div class="face front"><div class="big${isAr(front)?' ar':' he'}" dir="auto">${esc(front)}</div>${fc.dir==='f'&&c.t?'':''}<span class="tap">לחץ כדי לראות את התשובה · ${fc.i+1}/${tot}</span></div>
+   <div class="face back"><div class="big${isAr(back)?' ar':' he'}" dir="auto">${esc(back)}</div>${c.t?`<div class="sub" dir="ltr">${esc(c.t)}</div>`:''}${c.e?`<div class="sub${isAr(c.e)?' ar':''}" dir="auto">${esc(c.e)}</div>`:''}<span class="tap">${esc(c.l||'')}</span></div>
+  </div></div>
+  <div class="fc-btns"><button class="fbtn no" data-ans="0" ${fc.shown?'':'disabled'}>🔁 עוד לא</button><button class="fbtn yes" data-ans="1" ${fc.shown?'':'disabled'}>✅ ידעתי</button></div></div>`;}
+function bindCard(){}
+function answer(ok){const c=fc.queue[fc.i];if(!c)return;const k=known();if(ok){k.add(c.k);fc.ok++;}else{k.delete(c.k);fc.again++;fc.queue.push({...c});}saveKnown(k);fc.i++;fc.shown=false;
+ if(fc.queue.length>fc.i+60)fc.queue=fc.queue.slice(0,fc.i+60);$('#pane').innerHTML=pane();}
+document.addEventListener('click',e=>{
+ const tb=e.target.closest('[data-tab]');if(tb){tab=tb.dataset.tab;q='';render();return;}
+ if(e.target.closest('#flip')){fc.shown=!fc.shown;$('#flip').classList.toggle('show',fc.shown);document.querySelectorAll('[data-ans]').forEach(b=>b.disabled=!fc.shown);return;}
+ const a=e.target.closest('[data-ans]');if(a)return answer(a.dataset.ans==='1');
+ const s=e.target.closest('[data-src]');if(s){fc.src=s.dataset.src;buildDeck();$('#pane').innerHTML=pane();return;}
+ if(e.target.closest('[data-dir]')){fc.dir=fc.dir==='f'?'b':'f';fc.shown=false;$('#pane').innerHTML=pane();return;}
+ if(e.target.closest('[data-restart]')){buildDeck();$('#pane').innerHTML=pane();return;}
+ if(e.target.closest('[data-reset]')){saveKnown(new Set());fc.src='all';buildDeck();$('#pane').innerHTML=pane();}
+});
+document.addEventListener('input',e=>{if(e.target.id==='q'){q=e.target.value;const pos=e.target.selectionStart;$('#pane').innerHTML=pane();const n=$('#q');n.focus();n.setSelectionRange(pos,pos);}});
+document.addEventListener('keydown',e=>{if(tab!=='cards'||!D)return;if(e.target.tagName==='INPUT')return;
+ if(e.key===' '||e.key==='Enter'){const f=$('#flip');if(f){e.preventDefault();f.click();}}
+ else if(fc.shown&&(e.key==='ArrowLeft'||e.key==='1'))answer(true);else if(fc.shown&&(e.key==='ArrowRight'||e.key==='2'))answer(false);});
+addEventListener('hashchange',()=>location.reload());
+load();
+</script>
+</body>
+</html>
