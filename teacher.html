@@ -81,6 +81,10 @@ h1,h2,h3{letter-spacing:-.01em;line-height:1.25}
 .mt{margin-top:14px}.mt6{margin-top:6px}.mb{margin-bottom:14px}.mb6{margin-bottom:6px}
 
 /* portal + hw */
+.hwsub{background:var(--s2);border:1px solid var(--b);border-radius:12px;padding:10px 12px;margin-top:6px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.hwsub.new{border-color:rgba(59,111,224,.4);background:var(--blue-dim)}
+.hwsub small{color:var(--m);font-size:.72rem}
+.hwsub .fb{background:var(--green-dim);color:var(--t);border-radius:8px;padding:6px 10px;font-size:.84rem;width:100%}
 .hwprev{background:var(--amber-dim);border:1px solid rgba(224,138,30,.25);border-radius:14px;padding:12px}
 .portal.on{border-top:4px solid var(--green)}
 /* pay */
@@ -653,13 +657,19 @@ async function syncInbox(){
   const f=await GH.get(GH.cfg.dataRepo,'inbox.json',GH.cfg.dataBranch);inboxAt=Date.now();
   if(!f||!DB)return;let box;try{box=JSON.parse(f.text);}catch(e){return;}
   const items=(box&&Array.isArray(box.requests)?box.requests:[]).filter(x=>x&&x.id);if(!items.length)return;
-  const known=new Set(DB.requests.map(r=>String(r.id)));
-  const fresh=items.filter(x=>!known.has(String(x.id)));
-  fresh.forEach(x=>DB.requests.push({id:String(x.id).slice(0,40),name:clamp(x.name,80),phone:clamp(x.phone,30),lang:LANGS.includes(x.lang)?x.lang:'',date:isKey(x.date)?x.date:'',time:/^\d{2}:\d{2}$/.test(x.time||'')?x.time:'',notes:clamp(x.notes,500),status:'pending',source:'web',createdAt:clamp(x.createdAt,40)||new Date().toISOString()}));
+  const known=new Set(DB.requests.map(r=>String(r.id)));DB.lessons.forEach(l=>{if(l.hwSub&&l.hwSub.id)known.add(l.hwSub.id);});
+  const fresh=items.filter(x=>!known.has(String(x.id))),hwNew=[];
+  fresh.filter(x=>x.pid).forEach(x=>{const st=DB.students.find(y=>y.portal&&y.portal.on&&y.portal.id===x.pid);if(!st)return;const id=String(x.id).slice(0,40),now=new Date().toISOString();
+   const base={id,name:st.name,phone:st.phone||'',lang:st.lang||'',studentId:st.id,date:isKey(x.date)?x.date:'',time:/^\d{2}:\d{2}$/.test(x.time||'')?x.time:'',notes:clamp(x.notes,500),status:'pending',source:'portal',createdAt:clamp(x.createdAt,40)||now};
+   if(x.kind==='cancel'){const l=DB.lessons.find(y=>y.studentId===st.id&&y.date===base.date&&y.time===base.time&&y.status!=='cancelled');DB.requests.push({...base,kind:'cancel',lessonId:l?l.id:''});}
+   else if(x.kind==='hw'){const l=DB.lessons.filter(y=>y.studentId===st.id&&y.homework&&y.date<=base.date&&y.status!=='cancelled').sort(byDTdesc)[0];if(l){l.hwSub={id,text:clamp(x.text,3000),at:base.createdAt,seen:false};hwNew.push(st.name);}else DB.requests.push({...base,kind:'note',notes:clamp(x.text,500)});}
+   else DB.requests.push(base);});
+  fresh.filter(x=>!x.pid).forEach(x=>DB.requests.push({id:String(x.id).slice(0,40),name:clamp(x.name,80),phone:clamp(x.phone,30),lang:LANGS.includes(x.lang)?x.lang:'',date:isKey(x.date)?x.date:'',time:/^\d{2}:\d{2}$/.test(x.time||'')?x.time:'',notes:clamp(x.notes,500),status:'pending',source:'web',createdAt:clamp(x.createdAt,40)||new Date().toISOString()}));
   if(fresh.length){
    dirty=true;await waitIdle();await flush();
-   if(!DB||dirty||!fresh.every(x=>DB.requests.some(r=>r.id===String(x.id).slice(0,40))))return; // not safely saved yet — keep inbox, retry next time
-   toast('🔔 '+(fresh.length===1?'בקשה חדשה מ'+fresh[0].name:fresh.length+' בקשות חדשות'));
+   if(!DB||dirty)return; // not safely saved yet — keep inbox, retry next time
+   const reqN=fresh.length-hwNew.length;
+   toast(hwNew.length&&!reqN?`📨 ${hwNew[0]} הגיש/ה שיעורי בית`:'🔔 '+(reqN===1?'בקשה חדשה'+(fresh[0].name?' מ'+fresh[0].name:''):reqN+' בקשות חדשות')+(hwNew.length?` · 📨 ${hwNew.length} הגשות`:''));
    if(view==='home'||(view==='requests'&&!reqDraft))render();else renderNav();
   }
   const ids=new Set(items.map(x=>String(x.id)));
@@ -697,7 +707,7 @@ async function startSession(cfg){
   const cut=dkey(addDays(new Date(),-30));Object.keys(DB.schedule).forEach(k=>{if(k<cut){delete DB.schedule[k];dirty=true;}});
   $('#gate').hidden=true;$('#app').hidden=false;lastAct=Date.now();
   view='home';render();
-  flush().then(syncInbox);
+  flush().then(syncInbox).then(()=>syncPortalIndex()).catch(()=>{});
  }catch(e){GH.cfg=null;DB=null;gate('unlock',e.message+(e.status===401?' — לחץ "חיבור מחדש" והזן טוקן חדש (הנתונים שמורים ב-GitHub)':''));}
 }
 async function lock(force){
@@ -786,6 +796,7 @@ R.home=()=>{
   <div class="row wrap"><button class="btn ghost" data-a="go" data-id="requests">📥 בקשה מוואטסאפ</button><button class="btn pri" data-a="lessonModal">＋ שיעור חדש</button></div></div>
  ${!st.whatsapp?`<div class="alert red"><span>⚠️</span><div class="grow">עדיין לא הוגדר מספר וואטסאפ — תלמידים לא יוכלו לשלוח בקשות.</div><button class="btn sm ghost" data-a="go" data-id="settings">להגדרות</button></div>`:''}
  ${next?`<div class="alert blue"><span>⏰</span><div class="grow"><b>השיעור הבא: ${esc(sname(next.studentId))}</b> <span class="muted">· ${esc(next.time)} · בעוד ${t2m(next.time)-t2m(nowT)} דק׳</span></div><button class="btn sm ghost" data-a="report" data-id="${esc(next.id)}">דיווח</button></div>`:''}
+ ${(()=>{const n=DB.lessons.filter(l=>l.hwSub&&!l.hwSub.seen).length;return n?`<div class="alert blue"><span>📨</span><div class="grow"><b>${n} הגשות שיעורי בית חדשות</b> <span class="muted">· מהדפים האישיים</span></div><button class="btn sm ghost" data-a="hwInbox">לקריאה</button></div>`:'';})()}
  ${pend.length?`<div class="alert amber"><span>🔔</span><div class="grow"><b>${pend.length} בקשות ממתינות לאישור</b></div><button class="btn sm ghost" data-a="go" data-id="requests">לבקשות</button></div>`:''}
  ${debt.count?`<div class="alert amber"><span>💳</span><div class="grow"><b>${debt.count} תלמידים עם חוב פתוח</b> <span class="muted">· ${money(debt.sum)}</span></div><button class="btn sm ghost" data-a="go" data-id="income">להכנסות</button></div>`:''}
  <div class="g g4 mb">
@@ -914,7 +925,7 @@ function factsCard(s,x){const lb=learnedBy(s.id),hr=hwRate(x.all);const rows=[..
 function lessonEntry(l,tk){const cx=l.status==='cancelled',fut=l.date>tk,d=parseKey(l.date);
  const lc=cx?'var(--m2)':fut?'var(--blue)':l.paid?'var(--green)':'var(--amber)';
  const chips=[cx?'<span class="pill red">בוטל</span>':'',fut&&!cx?'<span class="pill blue">עתידי</span>':'',l.attendance==='late'?'<span class="pill amber">⏰ איחר</span>':'',l.effort==='high'?'<span class="pill">🔥 מאמץ גבוה</span>':l.effort==='low'?'<span class="pill">😴 מאמץ נמוך</span>':'',(()=>{const pl=l.planId&&DB.plans.find(p=>p.id===l.planId);return pl?`<button class="pill blue" style="border:none" data-a="openPlan" data-id="${esc(pl.id)}" title="פתח את תכנית השיעור">📖 ${esc(pl.topic||'תכנית')}</button>`:'';})()].join('');
- const body=[l.topics?`<div style="color:var(--blue);font-weight:600">📌 ${esc(l.topics)}</div>`:'',l.freeText?`<div class="note" style="margin:0">${esc(l.freeText)}</div>`:'',l.homework?`<div>📝 <b>שיעורי בית:</b> ${esc(l.homework)} ${HWS[l.hwStatus]?`<span class="pill ${l.hwStatus==='done'?'green':l.hwStatus==='no'?'red':'amber'}">${HWS[l.hwStatus].join(' ')}</span>`:''}</div>`:'',l.teacherNotes?`<div class="muted">🔒 ${esc(l.teacherNotes)}</div>`:'',l.notes?`<div class="muted">💬 ${esc(l.notes)}</div>`:''].join('');
+ const body=[l.topics?`<div style="color:var(--blue);font-weight:600">📌 ${esc(l.topics)}</div>`:'',l.freeText?`<div class="note" style="margin:0">${esc(l.freeText)}</div>`:'',l.homework?`<div>📝 <b>שיעורי בית:</b> ${esc(l.homework)} ${l.hwSub?`<div class="hwsub ${l.hwSub.seen?'':'new'}"><small>📨 התלמיד הגיש · ${esc(new Date(l.hwSub.at).toLocaleDateString('he-IL'))}</small><div dir="auto">${esc(l.hwSub.text)}</div>${l.hwFeedback?`<div class="fb">💬 ${esc(l.hwFeedback)}</div>`:''}<button class="btn sm ${l.hwSub.seen?'ghost':'pri'}" data-a="hwFeedback" data-id="${esc(l.id)}">${l.hwFeedback?'✏️ ערוך משוב':'💬 כתוב משוב'}</button></div>`:''} ${HWS[l.hwStatus]?`<span class="pill ${l.hwStatus==='done'?'green':l.hwStatus==='no'?'red':'amber'}">${HWS[l.hwStatus].join(' ')}</span>`:''}</div>`:'',l.teacherNotes?`<div class="muted">🔒 ${esc(l.teacherNotes)}</div>`:'',l.notes?`<div class="muted">💬 ${esc(l.notes)}</div>`:''].join('');
  return `<div class="le ${cx?'cx':''}" style="--lc:${lc}">
   <div class="le-date"><small>${DAYS[d.getDay()]}</small><b>${d.getDate()}</b><span>${MONTHS[d.getMonth()].slice(0,3)}׳ ${String(d.getFullYear()).slice(2)}</span></div>
   <div class="le-card"><div class="le-top"><span class="le-time">${esc(l.time)}</span><span class="muted sm-t">· ${esc(l.lang)} · ${+l.duration||60} דק׳</span>${chips}${+l.rating?`<span class="stars-s">${'★'.repeat(+l.rating)}</span>`:''}<span class="le-sp"></span>${cx?'':`<span class="pill ${l.paid?'green':fut?'':'amber'}">${l.paid?'✓ '+(l.payMethod?payLbl(l.payMethod)+' · ':'שולם · '):''}${money(lessonPrice(l))}</span>`}</div>
@@ -945,7 +956,7 @@ A.addCredits=id=>{const s=stu(id);if(!s)return;const n=parseInt(prompt('כמה �
 A.toggleActive=id=>{const s=stu(id);if(!s)return;s.isActive=s.isActive===false;persist();render();toast(s.name+' — '+(s.isActive?'פעיל':'לא פעיל'));};
 A.delStudent=id=>{const s=stu(id);if(!s)return;const n=DB.lessons.filter(l=>l.studentId===id).length;
  ask('מחיקת '+s.name,`פעולה זו תמחק גם ${n} שיעורים של התלמיד מהדוחות.\nאם התלמיד רק הפסיק ללמוד — עדיף "סמן כלא פעיל".\n(הגרסה הקודמת תישאר בהיסטוריה של GitHub)`,'מחק לצמיתות',()=>{
-  if(s.portal&&s.portal.on)portalDelete(s);const evs=DB.lessons.filter(l=>l.studentId===id&&l.calEventId);DB.students=DB.students.filter(x=>x.id!==id);DB.lessons=DB.lessons.filter(l=>l.studentId!==id);persist();go('students');toast('נמחק');evs.forEach(l=>calRemove(l,true));},{danger:true,icon:'🗑️'});};
+  if(s.portal&&s.portal.on){portalDelete(s);setTimeout(()=>syncPortalIndex().catch(()=>{}),2500);}const evs=DB.lessons.filter(l=>l.studentId===id&&l.calEventId);DB.students=DB.students.filter(x=>x.id!==id);DB.lessons=DB.lessons.filter(l=>l.studentId!==id);persist();go('students');toast('נמחק');evs.forEach(l=>calRemove(l,true));},{danger:true,icon:'🗑️'});};
 function payChooser(title,sub,ids,defM){openModal(`<div class="mh"><h3>💳 ${esc(title)}</h3><button class="x" data-a="close">✕</button></div>
  <div class="mbody"><p class="sm-t muted" style="margin:0">${esc(sub)}</p><div class="paygrid">${PAYM.map(([k,i,t])=>`<button class="paybtn ${k===defM?'on':''}" data-a="payPick" data-k="${k}" data-id="${esc(ids.join(','))}"><span>${i}</span>${esc(t)}</button>`).join('')}</div>
  ${fld('pay-date','תאריך התשלום',todayKey(),'date')}</div>`);}
@@ -1032,6 +1043,16 @@ A.printStudent=id=>{const s=stu(id);if(!s)return;const x=studentStats(s),w=windo
 A.delLesson=id=>ask('מחיקת שיעור','למחוק את השיעור? (אם השיעור בוטל — עדיף לסמן "בוטל" כדי לשמור היסטוריה)'+(DB.lessons.find(l=>l.id===id&&l.calEventId)?'\nהשיעור יוסר גם מיומן גוגל.':''),'מחק',()=>{const l=DB.lessons.find(x=>x.id===id);DB.lessons=DB.lessons.filter(x=>x.id!==id);persist();render();toast('השיעור נמחק');if(l&&l.calEventId)calRemove(l,true);},{danger:true,icon:'🗑️'});
 
 let rp={};
+A.hwFeedback=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;const s=stu(l.studentId);rp={hw:l.hwStatus||''};
+ openModal(`<div class="mh"><div><h3>💬 משוב על שיעורי בית — ${esc(s?s.name:'')}</h3><div class="xs-t muted">מהשיעור של ${fmtDS(l.date)}</div></div><button class="x" data-a="close">✕</button></div>
+ <div class="mbody"><div><div class="lbl mb6">📝 המשימה</div><div class="note" style="margin:0">${esc(l.homework)}</div></div>
+  ${l.hwSub?`<div><div class="lbl mb6">📨 מה התלמיד הגיש</div><div class="note" style="margin:0;white-space:pre-wrap" dir="auto">${esc(l.hwSub.text)}</div></div>`:''}
+  <div><div class="lbl mb6">הערכה</div><div class="chips">${[['done','✅ הוכן'],['partial','◐ חלקית'],['no','❌ לא הוכן']].map(([v,t])=>`<button class="chip ${rp.hw===v?'on':''}" data-a="rpSet" data-k="hw" data-id="${v}">${t}</button>`).join('')}</div></div>
+  ${area('hf-text','💬 משוב לתלמיד (יופיע בדף האישי שלו)',l.hwFeedback||'',4,'כל הכבוד! שים לב ל…','maxlength="2000"')}</div>
+ <div class="mf"><button class="btn ghost" data-a="close">ביטול</button><button class="btn pri" data-a="hwFeedbackSave" data-id="${esc(l.id)}">💾 שמור</button></div>`);};
+A.hwFeedbackSave=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;l.hwFeedback=clamp(val('hf-text'),2000);if(HWS[rp.hw])l.hwStatus=rp.hw;if(l.hwSub)l.hwSub.seen=true;persist();closeModal();render();toast('✅ המשוב נשמר — יופיע בדף האישי של התלמיד');};
+A.hwInbox=()=>{const ls=DB.lessons.filter(l=>l.hwSub&&!l.hwSub.seen).sort((a,b)=>String(b.hwSub.at).localeCompare(String(a.hwSub.at)));if(!ls.length)return toast('אין הגשות חדשות');if(ls.length===1)return A.hwFeedback(ls[0].id);
+ openModal(`<div class="mh"><h3>📨 הגשות שיעורי בית (${ls.length})</h3><button class="x" data-a="close">✕</button></div><div class="mbody"><div class="list">${ls.map(l=>`<div class="item"><div class="grow"><b>${esc(sname(l.studentId))}</b><div class="xs-t muted">${esc(l.homework)}</div><div class="sm-t mt6" dir="auto">${esc(String(l.hwSub.text).slice(0,140))}${String(l.hwSub.text).length>140?'…':''}</div></div><button class="btn sm pri" data-a="hwFeedback" data-id="${esc(l.id)}">💬 משוב</button></div>`).join('')}</div></div>`);};
 function prevHW(l){return DB.lessons.filter(x=>x.studentId===l.studentId&&x.id!==l.id&&x.status!=='cancelled'&&x.homework&&(x.date+x.time)<(l.date+l.time)).sort(byDTdesc)[0];}
 const HWS={done:['✅','הוכן'],partial:['◐','חלקית'],no:['❌','לא הוכן']};
 A.report=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;const s=stu(l.studentId);const ph=prevHW(l);
@@ -1039,7 +1060,7 @@ A.report=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;const s=stu(l.s
  const chips=(k,opts,cur)=>`<div class="chips">${opts.map(([v,t])=>`<button class="chip ${String(cur)===String(v)?'on':''}" data-a="rpSet" data-k="${k}" data-id="${v}">${t}</button>`).join('')}</div>`;
  openModal(`<div class="mh"><div><h3>📝 דיווח שיעור — ${esc(s?s.name:'')}</h3><div class="xs-t muted">${esc(l.lang)} · ${fmtDS(l.date)} · ${esc(l.time)}${(()=>{const pl=l.planId&&DB.plans.find(p=>p.id===l.planId);return pl?` · <a href="#" data-a="openPlan" data-id="${esc(pl.id)}">📖 ${esc(pl.topic||"תכנית")}</a>`:"";})()}</div></div><button class="x" data-a="close">✕</button></div>
  <div class="mbody">
-  ${ph?`<div class="hwprev"><div class="lbl mb6">📝 שיעורי הבית מהשיעור הקודם (${fmtDS(ph.date)})</div><div class="note" style="margin:0 0 8px">${esc(ph.homework)}</div>${chips('hw',[['done','✅ הוכן'],['partial','◐ חלקית'],['no','❌ לא הוכן']],rp.hw)}</div>`:''}
+  ${ph?`<div class="hwprev"><div class="lbl mb6">📝 שיעורי הבית מהשיעור הקודם (${fmtDS(ph.date)})</div><div class="note" style="margin:0 0 8px">${esc(ph.homework)}</div>${ph.hwSub?`<div class="hwsub" style="margin:0 0 8px"><small>📨 התלמיד הגיש:</small><div dir="auto">${esc(ph.hwSub.text)}</div></div>`:''}${chips('hw',[['done','✅ הוכן'],['partial','◐ חלקית'],['no','❌ לא הוכן']],rp.hw)}</div>`:''}
   <div><div class="lbl mb6">נוכחות</div>${chips('att',[['present','✅ הגיע'],['late','⏰ איחר'],['absent','❌ לא הגיע / בוטל']],rp.att)}</div>
   <div><div class="lbl mb6">הערכת השיעור</div><div class="stars">${[1,2,3,4,5].map(n=>`<button class="star ${n<=rp.rating?'on':''}" data-a="rpStar" data-id="${n}">⭐</button>`).join('')}<span class="sm-t muted" id="rp-rl" style="margin-inline-start:6px">${RATE_L[rp.rating]||''}</span></div></div>
   <div><div class="lbl mb6">מאמץ התלמיד</div>${chips('effort',[['','—'],['high','🔥 גבוה'],['medium','👍 בינוני'],['low','😴 נמוך']],rp.effort)}</div>
@@ -1053,7 +1074,7 @@ A.rpSet=(v,el)=>{const k=el.dataset.k;rp[k]=k==='paid'?v==='1':v;el.parentElemen
 A.rpStar=n=>{rp.rating=+n;$$('#modal .star').forEach((b,i)=>b.classList.toggle('on',i<rp.rating));$('#rp-rl').textContent=RATE_L[rp.rating]||'';};
 A.rpTopic=t=>{const i=$('#rp-topics');const cur=i.value.trim();if(!cur.split(/[,،]\s*/).includes(t))i.value=cur?cur+', '+t:t;};
 A.saveReport=id=>{const l=DB.lessons.find(x=>x.id===id);if(!l)return;
- if(rp.hwId){const pl=DB.lessons.find(x=>x.id===rp.hwId);if(pl&&HWS[rp.hw])pl.hwStatus=rp.hw;}
+ if(rp.hwId){const pl=DB.lessons.find(x=>x.id===rp.hwId);if(pl&&HWS[rp.hw]){pl.hwStatus=rp.hw;if(pl.hwSub)pl.hwSub.seen=true;}}
  Object.assign(l,{attendance:rp.att,rating:rp.rating||0,effort:rp.effort,paid:!!rp.paid,payMethod:rp.paid?rp.pm:'',paidAt:rp.paid?(l.paidAt||todayKey()):'',topics:clamp(val('rp-topics'),300),freeText:clamp(val('rp-free'),3000),homework:clamp(val('rp-hw'),1000),teacherNotes:clamp(val('rp-notes'),2000)});
  const wasCx=l.status==='cancelled';l.status=rp.att==='absent'?'cancelled':'ok';if(!wasCx&&l.status==='cancelled'&&l.calEventId)setTimeout(()=>calRemove(l,true),0);
  persist();closeModal();render();toast('✅ הדיווח נשמר');};
@@ -1103,7 +1124,7 @@ R.requests=()=>{const pend=DB.requests.filter(r=>r.status==='pending').sort((a,b
  <div>
   <div class="card"><div class="card-h"><div class="card-t">⏳ ממתינות לאישור</div><span class="pill amber">${pend.length}</span></div>
    ${pend.length?`<div class="list">${pend.map(reqCard).join('')}</div>`:emptyBox('🎉','אין בקשות ממתינות')}
-   ${done.length?`<div class="row between mt mb6"><div class="lbl">טופלו לאחרונה</div><button class="btn sm ghost" data-a="clearDone">🧹 נקה הכל</button></div><div class="list" style="gap:2px">${done.map(r=>`<div class="row sm-t" style="padding:4px 0"><span>${r.status==='approved'?'✅':'✋'}</span><span class="grow">${esc(r.name)} · ${fmtDS(r.date)} ${esc(r.time)}</span><button class="ibtn" data-a="delReq" data-id="${esc(r.id)}" title="מחק מהרשימה">🗑️</button></div>`).join('')}</div>`:''}</div>
+   ${done.length?`<div class="row between mt mb6"><div class="lbl">טופלו לאחרונה</div><button class="btn sm ghost" data-a="clearDone">🧹 נקה הכל</button></div><div class="list" style="gap:2px">${done.map(r=>`<div class="row sm-t" style="padding:4px 0"><span>${r.kind==='cancel'?'🚫':r.status==='approved'?'✅':'✋'}</span><span class="grow">${esc(r.name)} · ${fmtDS(r.date)} ${esc(r.time||'')}${r.kind==='cancel'?' · ביטול':''}</span><button class="ibtn" data-a="delReq" data-id="${esc(r.id)}" title="מחק מהרשימה">🗑️</button></div>`).join('')}</div>`:''}</div>
  </div>`;};
 A.pasteModal=(_,__,___,draft)=>{openModal(`<div class="mh"><h3>📥 בקשה מוואטסאפ או מהטלפון</h3><button class="x" data-a="close">✕</button></div>
  <div class="mbody"><p class="xs-t muted" style="margin:0">הדבק את ההודעה שקיבלת — המערכת מזהה שם, טלפון, שפה, תאריך ושעה. או מלא ידנית.</p>
@@ -1127,8 +1148,13 @@ function reqCheckHTML(d){const out=[],s=d.phone&&DB.students.find(x=>samePhone(x
   else if(!(DB.schedule[d.date]||[]).includes(d.time))out.push('<span class="pill amber">ℹ️ השעה לא מוגדרת בזמינות</span>');
   else out.push('<span class="pill green">✓ השעה פנויה</span>');}
  return `<div class="chips">${out.join('')}</div>`;}
-function reqCard(r){return `<div class="item" style="flex-direction:column;align-items:stretch;gap:8px">
- <div class="row"><div class="av" style="background:var(--amber)">${esc(initials(r.name))}</div><div class="grow"><b>${esc(r.name)}</b> ${r.source==='web'?'<span class="pill blue">🌐 מהאתר</span>':''}<div class="xs-t muted">${esc(r.lang)} · ${fmtDS(r.date)||'?'} · ${esc(r.time)}${r.phone?' · 📱 '+esc(r.phone):''}</div></div></div>
+function reqCard(r){if(r.kind==='cancel'||r.kind==='note'){const l=r.kind==='cancel'&&(DB.lessons.find(x=>x.id===r.lessonId)||DB.lessons.find(x=>x.studentId===r.studentId&&x.date===r.date&&x.time===r.time));
+  return `<div class="item" style="flex-direction:column;align-items:stretch;gap:8px;border-inline-start:4px solid ${r.kind==='cancel'?'var(--red)':'var(--blue)'}">
+  <div class="row"><div class="av" style="background:${r.kind==='cancel'?'var(--red)':'var(--blue)'}">${esc(initials(r.name))}</div><div class="grow"><b>${esc(r.name)}</b> <span class="pill ${r.kind==='cancel'?'red':'blue'}">${r.kind==='cancel'?'🚫 בקשת ביטול':'💬 הודעה'}</span> <span class="pill">🎓 מהדף האישי</span><div class="xs-t muted">${r.date?fmtDS(r.date):''} ${esc(r.time||'')}</div></div></div>
+  ${r.notes?`<div class="note">💬 ${esc(r.notes)}</div>`:''}${r.kind==='cancel'?(l?(l.status==='cancelled'?'<span class="pill">השיעור כבר מבוטל</span>':`<span class="pill amber">📅 ${esc(l.lang)} · ${fmtDS(l.date)} ${esc(l.time)}</span>`):'<span class="pill red">⚠️ לא נמצא שיעור תואם</span>'):''}
+  <div class="row wrap"><button class="btn sm ${r.kind==='cancel'?'dan':'ok'}" data-a="approvePending" data-id="${esc(r.id)}">${r.kind==='cancel'?'🚫 אשר ביטול':'✓ טופל'}</button>${r.kind==='cancel'?`<button class="btn sm ghost" data-a="keepLesson" data-id="${esc(r.id)}">השיעור נשאר</button>`:''}<button class="btn sm ghost" data-a="delReq" data-id="${esc(r.id)}">🗑️</button>${r.phone?`<a class="btn sm wa" href="https://wa.me/${esc(waNum(r.phone))}" target="_blank" rel="noopener">💬</a>`:''}</div></div>`;}
+ return `<div class="item" style="flex-direction:column;align-items:stretch;gap:8px">
+ <div class="row"><div class="av" style="background:var(--amber)">${esc(initials(r.name))}</div><div class="grow"><b>${esc(r.name)}</b> ${r.source==='web'?'<span class="pill blue">🌐 מהאתר</span>':r.source==='portal'?'<span class="pill green">🎓 מהדף האישי</span>':''}<div class="xs-t muted">${esc(r.lang)} · ${fmtDS(r.date)||'?'} · ${esc(r.time)}${r.phone?' · 📱 '+esc(r.phone):''}</div></div></div>
  ${r.notes?`<div class="note">💬 ${esc(r.notes)}</div>`:''}${reqCheckHTML(r)}
  <div class="row wrap"><button class="btn sm ok" data-a="approvePending" data-id="${esc(r.id)}">✅ אשר</button><button class="btn sm ghost" data-a="editPending" data-id="${esc(r.id)}">✏️</button><button class="btn sm ghost" style="color:var(--red)" data-a="rejectPending" data-id="${esc(r.id)}">✋ דחה</button><button class="btn sm ghost" data-a="delReq" data-id="${esc(r.id)}" title="מחק בלי לשלוח הודעה">🗑️</button>${r.phone?`<a class="btn sm wa" href="https://wa.me/${esc(waNum(r.phone))}" target="_blank" rel="noopener">💬</a>`:''}</div></div>`;}
 const readDraft=()=>({name:clamp(val('rq-name'),80),phone:clamp(val('rq-phone'),30),lang:val('rq-lang'),date:val('rq-date'),time:val('rq-time'),notes:clamp(val('rq-notes'),500),_id:reqDraft?reqDraft._id:undefined});
@@ -1145,7 +1171,7 @@ function approveReq(d,reqId){
  if(!d.name)return toast('חסר שם התלמיד');
  if(!isKey(d.date)||!/^\d{2}:\d{2}$/.test(d.time||''))return toast('חסרים תאריך ושעה תקינים');
  const doIt=()=>{const now=new Date().toISOString();
-  let s=d.phone?DB.students.find(x=>samePhone(x.phone,d.phone)):null,isNew=false;
+  let s=(d.studentId&&stu(d.studentId))||(d.phone?DB.students.find(x=>samePhone(x.phone,d.phone)):null),isNew=false;
   if(!s){s={id:uid(),name:d.name,phone:d.phone,lang:d.lang,level:'מתחיל',rate:DB.settings.defaultRate,bought:0,isActive:true,startDate:todayKey(),notes:'',createdAt:now};DB.students.push(s);isNew=true;}
   const l={id:uid(),studentId:s.id,lang:d.lang||s.lang,date:d.date,time:d.time,duration:+DB.settings.lessonDuration||60,price:+s.rate||DB.settings.defaultRate,paid:false,status:'ok',notes:d.notes||'',createdAt:now};DB.lessons.push(l);
   let r=reqId?DB.requests.find(x=>x.id===reqId):null;if(!r){r={id:uid(),createdAt:now};DB.requests.push(r);}
@@ -1159,7 +1185,12 @@ A.delReq=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;const go2=()=>
  if(r.status==='pending')ask('מחיקת בקשה',`למחוק את הבקשה של ${r.name}?\nהתלמיד לא יקבל הודעה.`,'מחק',go2,{danger:true,icon:'🗑️'});else go2();};
 A.clearDone=()=>{const n=DB.requests.filter(r=>r.status!=='pending').length;ask('ניקוי היסטוריה',`למחוק ${n} בקשות שכבר טופלו?\nהשיעורים שנוצרו מהן נשארים.`,'נקה',()=>{DB.requests=DB.requests.filter(r=>r.status==='pending');persist();render();toast('🧹 נוקה');},{danger:true,icon:'🧹'});};
 A.approveDraft=()=>{const d=readDraft();approveReq(d,d._id);};
-A.approvePending=id=>{const r=DB.requests.find(x=>x.id===id);if(r)approveReq({name:r.name,phone:r.phone,lang:r.lang,date:r.date,time:r.time,notes:r.notes},id);};
+A.approvePending=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;if(r.kind==='cancel')return A.approveCancel(id);if(r.kind==='note'){r.status='approved';r.handledAt=new Date().toISOString();persist();render();return;}approveReq({name:r.name,phone:r.phone,lang:r.lang,date:r.date,time:r.time,notes:r.notes,studentId:r.studentId},id);};
+A.keepLesson=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;r.status='rejected';r.handledAt=new Date().toISOString();trimRequests();persist();render();toast('הבקשה נסגרה — השיעור נשאר');if(r.phone)waOpen(r.phone,`שלום ${String(r.name||'').split(' ')[0]}, קיבלתי את בקשת הביטול לשיעור ביום ${fmtDS(r.date)} ${r.time}. `);};
+A.approveCancel=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;const l=DB.lessons.find(x=>x.id===r.lessonId)||DB.lessons.find(x=>x.studentId===r.studentId&&x.date===r.date&&x.time===r.time&&x.status!=='cancelled');
+ const done=sendMsg=>{if(l){l.status='cancelled';l.attendance='absent';if(l.calEventId)calRemove(l,true);}r.status='approved';r.handledAt=new Date().toISOString();trimRequests();persist();render();toast('✅ השיעור בוטל');
+  if(sendMsg&&r.phone)waOpen(r.phone,`שלום ${String(r.name||'').split(' ')[0]} 🙏\nהשיעור ביום ${fmtDS(r.date)} בשעה ${r.time} בוטל כבקשתך.\nמחכה לראות אותך בשיעור הבא!\n\nمرحباً، تم إلغاء الدرس بتاريخ ${fmtD(r.date)} الساعة ${r.time} حسب طلبك.`);};
+ ask('אישור ביטול',`לבטל את השיעור של ${r.name} ביום ${fmtDS(r.date)} ${r.time}?${l?'':'\n(לא נמצא שיעור תואם ביומן — הבקשה רק תסומן כטופלה)'}`,r.phone?'בטל ושלח הודעה':'בטל',()=>done(true),{alt:r.phone?'בטל בלי הודעה':'',altCb:()=>done(false),icon:'🚫'});};
 A.editPending=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;reqDraft={...r,_id:id};A.pasteModal(null,null,null,reqDraft);};
 A.rejectPending=id=>{const r=DB.requests.find(x=>x.id===id);if(!r)return;
  const done=()=>{r.status='rejected';r.handledAt=new Date().toISOString();trimRequests();persist();render();toast('הבקשה נדחתה');};
@@ -1412,14 +1443,22 @@ function portalPayload(s){const tk=todayKey(),now=new Date(),nowT=m2t(now.getHou
   (p.vocab||[]).forEach(v=>{if(!v.word||seenW.has(v.word))return;seenW.add(v.word);vocab.push({w:v.word,t:v.translit||'',m:v.meaning||'',e:v.example||'',d:l.date,l:t});});
   (p.expressions||[]).forEach(x=>{if(!x.phrase||seenE.has(x.phrase))return;seenE.add(x.phrase);expr.push({p:x.phrase,m:x.meaning||'',d:l.date,l:t});});
   (p.rules||[]).forEach(x=>{if(!x.rule||seenR.has(x.rule))return;seenR.add(x.rule);rules.push({r:x.rule,e:x.example||'',d:l.date,l:t});});});
- const lessons=past.slice(-40).reverse().map(l=>{const p=l.planId&&DB.plans.find(x=>x.id===l.planId);return{d:l.date,t:l.time,topic:(p&&p.topic)||'',topics:l.topics||'',hw:l.homework||'',hs:HWS[l.hwStatus]?l.hwStatus:''};});
+ const lessons=past.slice(-40).reverse().map(l=>{const p=l.planId&&DB.plans.find(x=>x.id===l.planId);return{d:l.date,t:l.time,topic:(p&&p.topic)||'',topics:l.topics||'',hw:l.homework||'',hs:HWS[l.hwStatus]?l.hwStatus:'',sub:l.hwSub?{x:l.hwSub.text,at:l.hwSub.at}:null,fb:l.hwFeedback||''};});
+ const upcoming=all.filter(l=>!past.includes(l)).slice(0,8).map(l=>({d:l.date,t:l.time,dur:+l.duration||60,lang:l.lang||''}));
+ const pendCx=DB.requests.filter(r=>r.kind==='cancel'&&r.status==='pending'&&r.studentId===s.id).map(r=>r.date+'T'+r.time);
  return{v:1,name:String(s.name||'').split(' ')[0],lang:s.lang||'',level:s.level||'',teacher:{name:DB.settings.teacherName||'',wa:waNum(DB.settings.whatsapp)},
-  next:next?{d:next.date,t:next.time,dur:+next.duration||60}:null,lessons,vocab,expr,rules,count:past.length,hw:hwRate(past)};}
+  next:next?{d:next.date,t:next.time,dur:+next.duration||60}:null,upcoming,pendCx,pid:s.portal.id,book:BOOK_RE.test(DB.settings.bookingUrl||'')?DB.settings.bookingUrl:'',lessons,vocab,expr,rules,count:past.length,hw:hwRate(past)};}
 async function portalEncrypt(obj,keyB64u){const raw=b64ToBytes(keyB64u.replace(/-/g,'+').replace(/_/g,'/')+'='.repeat((4-keyB64u.length%4)%4));
  const key=await crypto.subtle.importKey('raw',raw,'AES-GCM',false,['encrypt']),iv=crypto.getRandomValues(new Uint8Array(12)),pt=enc8(JSON.stringify(obj));
  const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,pt);
  const h=bytesToB64(new Uint8Array(await crypto.subtle.digest('SHA-256',enc8(keyB64u+JSON.stringify(obj))))).slice(0,32);
  return{h,text:JSON.stringify({v:1,iv:bytesToB64(iv),ct:bytesToB64(new Uint8Array(ct)),h})};}
+const hexOf=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+const sha256hex=async t=>hexOf(await crypto.subtle.digest('SHA-256',enc8(t)));
+const portalWt=key=>sha256hex('w:'+key);
+async function syncPortalIndex(){if(!DB||!GH.cfg)return;const idx={};for(const s of DB.students)if(s.portal&&s.portal.on&&s.portal.key)idx[s.portal.id]=await sha256hex(await portalWt(s.portal.key));
+ const text=JSON.stringify(idx);let cur=null;try{cur=await GH.get(GH.cfg.dataRepo,'portals.json',GH.cfg.dataBranch);}catch(e){}
+ if(cur&&cur.text.trim()===text)return;await GH.put(GH.cfg.dataRepo,'portals.json',text,cur?cur.sha:undefined,GH.cfg.dataBranch,'ClassFlow: עדכון הרשאות דפים אישיים');}
 let portalBusy=false;
 async function publishPortals(force){if(!DB||!GH.cfg||portalBusy)return;portalBusy=true;
  try{for(const s of DB.students.filter(x=>x.portal&&x.portal.on)){
@@ -1444,10 +1483,10 @@ function portalCard(s){const on=s.portal&&s.portal.on,link=portalLink(s);
   <div class="row wrap mt" style="gap:6px"><button class="btn ghost sm" data-a="portalNew" data-id="${esc(s.id)}" title="הקישור הישן יפסיק לעבוד">🔄 קישור חדש</button><button class="btn ghost sm" style="color:var(--red)" data-a="portalOff" data-id="${esc(s.id)}">⏸ כבה</button></div>
   <p class="xs-t muted mt">מוצפן — רק מי שיש לו את הקישור המלא יכול לקרוא. בלי טלפון, תשלומים או הערות פרטיות.</p></div>`;}
 A.portalOn=async(id,btn)=>{const s=stu(id);if(!s)return;btn.disabled=true;s.portal={on:true,id:rndId(16),key:b64u(crypto.getRandomValues(new Uint8Array(32))),createdAt:new Date().toISOString()};
- persist();await waitIdle();await flush();await waitIdle();try{await publishPortals(true);toast('✨ הדף האישי נוצר — אפשר לשלוח את הקישור');}catch(e){toast('⚠️ הפרסום נכשל: '+e.message);}render();};
+ persist();await waitIdle();await flush();await waitIdle();try{await publishPortals(true);await syncPortalIndex();toast('✨ הדף האישי נוצר — יהיה זמין לצפייה בעוד כדקה');}catch(e){toast('⚠️ הפרסום נכשל: '+e.message);}render();};
 A.portalCopy=id=>{const s=stu(id);navigator.clipboard.writeText(portalLink(s)).then(()=>toast('📋 הקישור הועתק'),()=>toast('סמן והעתק ידנית'));};
-A.portalNew=id=>{const s=stu(id);if(!s)return;ask('קישור חדש','הקישור הישן יפסיק לעבוד, ותצטרך לשלוח לתלמיד את החדש. להמשיך?','צור קישור חדש',async()=>{await portalDelete(s);s.portal={...s.portal,on:true,id:rndId(16),key:b64u(crypto.getRandomValues(new Uint8Array(32)))};persist();await waitIdle();await flush();await waitIdle();await publishPortals(true);render();toast('🔄 נוצר קישור חדש');},{icon:'🔄'});};
-A.portalOff=id=>{const s=stu(id);if(!s)return;ask('כיבוי הדף האישי','הדף יימחק והקישור יפסיק לעבוד. אפשר ליצור דף חדש בכל רגע.','כבה',async()=>{await portalDelete(s);s.portal={on:false};persist();render();toast('הדף האישי כובה');},{danger:true,icon:'⏸'});};
+A.portalNew=id=>{const s=stu(id);if(!s)return;ask('קישור חדש','הקישור הישן יפסיק לעבוד, ותצטרך לשלוח לתלמיד את החדש. להמשיך?','צור קישור חדש',async()=>{await portalDelete(s);s.portal={...s.portal,on:true,id:rndId(16),key:b64u(crypto.getRandomValues(new Uint8Array(32)))};persist();await waitIdle();await flush();await waitIdle();await publishPortals(true);await syncPortalIndex().catch(()=>{});render();toast('🔄 נוצר קישור חדש — פעיל בעוד כדקה');},{icon:'🔄'});};
+A.portalOff=id=>{const s=stu(id);if(!s)return;ask('כיבוי הדף האישי','הדף יימחק והקישור יפסיק לעבוד. אפשר ליצור דף חדש בכל רגע.','כבה',async()=>{await portalDelete(s);s.portal={on:false};persist();syncPortalIndex().catch(()=>{});render();toast('הדף האישי כובה');},{danger:true,icon:'⏸'});};
 
 /* ═══════════ STATISTICS ═══════════ */
 let statP='3m',catSort='students',catDir=-1,catQ='';

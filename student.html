@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="theme-color" content="#4B7FCC">
 <title>הדף שלי</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,9 +33,10 @@ button,input{font-family:inherit;color:inherit}button{cursor:pointer;border:none
 .next .ic{font-size:1.8rem}
 .next small{display:block;opacity:.8;font-size:.78rem}
 .next b{font-size:1.1rem}
-.tabs{display:flex;background:var(--white);border-radius:16px;padding:4px;gap:3px;margin-bottom:.9rem;box-shadow:var(--shadow);overflow-x:auto;scrollbar-width:none}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);background:var(--white);border-radius:16px;padding:4px;gap:3px;margin-bottom:.9rem;box-shadow:var(--shadow)}
+@media(min-width:620px){.tabs{grid-template-columns:repeat(6,1fr)}}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:1;padding:10px 12px;border-radius:12px;font-size:.86rem;font-weight:700;color:var(--muted);white-space:nowrap}
+.tab{padding:10px 6px;text-align:center;border-radius:12px;font-size:.86rem;font-weight:700;color:var(--muted);white-space:nowrap}
 .tab.on{background:var(--blue);color:#fff;box-shadow:0 3px 10px rgba(75,127,204,.3)}
 .card{background:var(--white);border-radius:20px;padding:1.1rem 1.2rem;box-shadow:var(--shadow);margin-bottom:.85rem}
 .card-t{font-size:.84rem;font-weight:700;color:var(--muted);margin-bottom:.8rem;display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -88,96 +89,250 @@ button,input{font-family:inherit;color:inherit}button{cursor:pointer;border:none
 @keyframes spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media (max-width:440px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.face .big{font-size:2rem}.w{grid-template-columns:1fr}.w .tr{text-align:right}}
+
+/* today / srs */
+.today{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
+.ring{width:108px;height:108px;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring b{font-size:1.5rem;font-weight:900;line-height:1}.ring span{font-size:.7rem;color:var(--muted);font-weight:600}
+.streak{display:inline-flex;align-items:center;gap:6px;background:var(--amber-bg);color:var(--amber);border-radius:99px;padding:4px 12px;font-weight:800;font-size:.9rem}
+.streak.off{background:var(--bg);color:var(--muted)}
+.todo{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.todo span{background:var(--bg);border-radius:10px;padding:6px 10px;font-size:.84rem;font-weight:600}
+.todo b{color:var(--blue)}
+.master{height:12px;border-radius:99px;overflow:hidden;display:flex;gap:2px;background:var(--bg);margin-top:4px}
+.master i{display:block;height:100%}
+.mleg{display:flex;gap:12px;flex-wrap:wrap;font-size:.74rem;color:var(--soft);margin-top:6px}
+.mleg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-inline-end:4px;vertical-align:middle}
+.big-btn{width:100%;margin-top:12px;padding:15px;font-size:1.05rem;border-radius:16px}
+.goal{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-top:10px}
+.goal .chip{padding:3px 10px;font-size:.76rem}
+.tag-new{position:absolute;top:12px;inset-inline-start:12px;font-size:.7rem;font-weight:800;background:var(--amber-bg);color:var(--amber);border-radius:99px;padding:2px 9px}
+/* forms */
+.ta{width:100%;font-family:inherit;color:var(--text);background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:10px 12px;font-size:.95rem;outline:none;resize:vertical;min-height:80px;line-height:1.6}
+.ta:focus{border-color:var(--blue);background:#fff}
+.sent{background:var(--blue-dim);border-radius:10px;padding:8px 12px;font-size:.88rem;margin-top:8px;white-space:pre-wrap}
+.sent small,.fbk small{display:block;font-size:.72rem;color:var(--muted);margin-bottom:2px}
+.fbk{background:var(--green-bg);border-radius:10px;padding:8px 12px;font-size:.9rem;margin-top:8px}
+.slots{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.slots::-webkit-scrollbar{display:none}
+.dchip{flex:0 0 auto;border:1.5px solid var(--border);background:var(--bg);border-radius:14px;padding:8px 12px;text-align:center;min-width:64px}
+.dchip small{display:block;font-size:.68rem;color:var(--muted);font-weight:700}.dchip b{font-size:1.05rem}
+.dchip.on{border-color:var(--blue);background:var(--blue);color:#fff}.dchip.on small{color:rgba(255,255,255,.8)}
+.tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.tchip{border:1.5px solid var(--border);background:var(--bg);border-radius:10px;padding:9px 0;font-weight:700}
+.tchip.on{border-color:var(--blue);background:var(--blue);color:#fff}
+.up{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--border)}.up:last-child{border-bottom:none}
+.pill{font-size:.72rem;font-weight:700;border-radius:99px;padding:3px 10px;white-space:nowrap}
+.p-amber{background:var(--amber-bg);color:var(--amber)}.p-blue{background:var(--blue-dim);color:var(--blue)}
+.lnk{background:none;border:none;color:var(--red);font-weight:700;font-size:.82rem;text-decoration:underline}
+.ovl{position:fixed;inset:0;background:rgba(20,26,38,.5);z-index:100;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.ovl.open{opacity:1;pointer-events:auto}
+.sheet{background:#fff;border-radius:22px 22px 0 0;padding:22px 20px;width:100%;max-width:520px}
+@media(min-width:560px){.ovl{align-items:center}.sheet{border-radius:22px}}
+#toast{position:fixed;top:14px;left:50%;transform:translate(-50%,-16px);background:#1A2332;color:#fff;padding:10px 18px;border-radius:12px;font-size:.88rem;z-index:999;opacity:0;transition:.25s;pointer-events:none;max-width:92vw;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media (max-width:440px){.today{grid-template-columns:1fr;justify-items:center;text-align:center}.todo{justify-content:center}.tgrid{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
+<div id="toast" role="status" aria-live="polite"></div><div class="ovl" id="ovl"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
 <div class="page" id="app"><div class="card empty"><div class="spin"></div>טוען את הדף שלך…</div></div>
 <script>
 'use strict';
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"'`]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'}[c]));
 const DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+const DSH=['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ש׳'];
+const pad=n=>String(n).padStart(2,'0');
+const dk=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const pk=k=>{const [y,m,d]=String(k).split('-').map(Number);return new Date(y,m-1,d,12);};
+const addD=(k,n)=>{const d=pk(k);d.setDate(d.getDate()+n);return dk(d);};
+const today=()=>dk(new Date());
 const fmtD=k=>{const d=pk(k);return d.getDate()+'/'+(d.getMonth()+1);};
+const dayL=k=>`יום ${DAYS[pk(k).getDay()]} ${fmtD(k)}`;
 const isAr=t=>/[؀-ۿ]/.test(String(t||''));
 const arCls=t=>isAr(t)?' ar" lang="ar':'';
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const HWS={done:['✅ הוכן','st-done'],partial:['◐ חלקית','st-partial'],no:['❌ לא הוכן','st-no']};
-let D=null,ID='',tab='cards',q='';
+const INT=[0,1,2,4,7,15,30];
+const ERR={slot_unavailable:'השעה הזאת כבר לא פנויה — בחר שעה אחרת',slot_pending:'מישהו ביקש את השעה הזאת ממש עכשיו — בחר שעה אחרת',rate_limited:'נשלחו הרבה בקשות בשעה האחרונה — נסה שוב מאוחר יותר',unauthorized:'הקישור כבר לא פעיל — בקש מהמורה קישור חדש',bad_slot:'בחר תאריך ושעה',empty:'כתוב משהו לפני השליחה',network:'אין חיבור — נסה שוב בעוד רגע'};
+let D=null,ID='',KEY='',WT='',tab='today',q='';
+let _tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),3200);}
 const fail=(t,s)=>{$('#app').innerHTML=`<div class="card empty" style="margin-top:3rem"><div style="font-size:2.4rem">🔒</div><b style="display:block;color:var(--text);font-size:1.1rem;margin:6px 0">${t}</b>${s||''}</div>`;};
 const b64=s=>Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')+'='.repeat((4-s.length%4)%4)),c=>c.charCodeAt(0));
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+const LS={get(k,d){try{const v=JSON.parse(localStorage.getItem(k+'_'+ID));return v==null?d:v;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k+'_'+ID,JSON.stringify(v));}catch(e){}}};
+
 async function load(){
  const m=location.hash.slice(1).match(/^([a-z0-9]{16})\.([A-Za-z0-9_-]{43})$/);
  if(!m)return fail('הקישור לא שלם','בקש מהמורה לשלוח לך שוב את הקישור המלא.');
- ID=m[1];
+ ID=m[1];KEY=m[2];
  if(!window.crypto||!crypto.subtle)return fail('הדפדפן לא נתמך','נסה לפתוח את הקישור בכרום או בספארי.');
- let f;try{const r=await fetch('s/'+ID+'.json?t='+Date.now(),{cache:'no-store'});if(r.status===404)return fail('הקישור כבר לא פעיל','ייתכן שהמורה יצר קישור חדש — בקש ממנו את הקישור העדכני.');if(!r.ok)throw 0;f=await r.json();}
- catch(e){return fail('לא הצלחנו לטעון','בדוק את החיבור לאינטרנט ונסה שוב.');}
- try{const key=await crypto.subtle.importKey('raw',b64(m[2]),'AES-GCM',false,['decrypt']);
+ let f=null;
+ for(let i=0;i<14&&!f;i++){
+  try{const r=await fetch('s/'+ID+'.json?t='+Date.now(),{cache:'no-store'});
+   if(r.ok){f=await r.json();break;}
+   if(r.status!==404)throw 0;
+   if(i===13)return fail('הדף לא נמצא','אם המורה יצר את הדף ממש עכשיו — נסה שוב בעוד דקה. אם עבר זמן, ייתכן שנוצר קישור חדש: בקש מהמורה את הקישור העדכני.');
+   $('#app').innerHTML=`<div class="card empty" style="margin-top:3rem"><div class="spin"></div><b style="display:block;color:var(--text);font-size:1.05rem;margin:6px 0">הדף שלך בהכנה…</b>דף חדש מתפרסם תוך דקה בערך. הדף יתעדכן לבד.</div>`;
+   await sleep(10000);}
+  catch(e){return fail('לא הצלחנו לטעון','בדוק את החיבור לאינטרנט ונסה שוב.');}}
+ try{const key=await crypto.subtle.importKey('raw',b64(KEY),'AES-GCM',false,['decrypt']);
   const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(f.iv)},key,b64(f.ct));D=JSON.parse(new TextDecoder().decode(pt));}
  catch(e){return fail('הקישור לא תקין','בקש מהמורה לשלוח לך שוב את הקישור המלא.');}
- document.title='הדף של '+(D.name||'');render();}
+ WT=hex(await crypto.subtle.digest('SHA-256',new TextEncoder().encode('w:'+KEY)));
+ document.title='הדף של '+(D.name||'');
+ // forget local "sent" markers the teacher already handled
+ const sent=LS.get('cf_sent',{hw:{},book:[],cx:[]});const up=new Set((D.upcoming||[]).map(u=>u.d+'T'+u.t));
+ sent.book=(sent.book||[]).filter(b=>!up.has(b.d+'T'+b.t)&&b.at>Date.now()-4*864e5);
+ sent.cx=(sent.cx||[]).filter(x=>up.has(x));
+ Object.keys(sent.hw||{}).forEach(d=>{const l=(D.lessons||[]).find(x=>x.d===d);if(l&&(l.sub||l.hs))delete sent.hw[d];});
+ LS.set('cf_sent',sent);
+ render();}
+
+/* ── spaced repetition ── */
 function deckAll(){const v=(D.vocab||[]).map(x=>({k:'w:'+x.w,f:x.w,b:x.m,t:x.t,e:x.e,l:x.l})),e=(D.expr||[]).map(x=>({k:'e:'+x.p,f:x.p,b:x.m,t:'',e:'',l:x.l}));return v.concat(e).filter(x=>x.f&&x.b);}
-const known=()=>{try{return new Set(JSON.parse(localStorage.getItem('cf_known_'+ID)||'[]'));}catch(e){return new Set();}};
-const saveKnown=s=>{try{localStorage.setItem('cf_known_'+ID,JSON.stringify([...s]));}catch(e){}};
-let fc={src:'all',dir:'f',queue:[],i:0,ok:0,again:0,shown:false};
-function buildDeck(){let d=deckAll();if(fc.src==='last'){const l=(D.lessons||[]).find(x=>x.topic)?.topic;d=d.filter(x=>x.l===l);}else if(fc.src==='new'){const k=known();d=d.filter(x=>!k.has(x.k));}
- for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]];}fc.queue=d;fc.i=0;fc.ok=0;fc.again=0;fc.shown=false;}
-function render(){
- const v=D.vocab||[],ex=D.expr||[],ru=D.rules||[],hwl=(D.lessons||[]).filter(l=>l.hw);
- const t=D.teacher||{};
+const S=()=>{const s=LS.get('cf_srs',null)||{};s.c=s.c||{};s.d=s.d||{};s.goal=s.goal||15;s.newPer=s.newPer||5;return s;};
+function plan(){const s=S(),t=today(),all=deckAll();const due=all.filter(c=>s.c[c.k]&&s.c[c.k].due<=t).sort((a,b)=>s.c[a.k].due.localeCompare(s.c[b.k].due));
+ const intro=(s.d[t]&&s.d[t].n)||0;const fresh=all.filter(c=>!s.c[c.k]).slice(0,Math.max(0,s.newPer-intro));return{s,all,due,fresh};}
+function streak(s){let n=0,d=today();if(!(s.d[d]&&s.d[d].r))d=addD(d,-1);while(s.d[d]&&s.d[d].r){n++;d=addD(d,-1);}return n;}
+let ses=null; // {mode,queue,i,ok,again,shown}
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+function startSrs(){const {due,fresh}=plan();ses={mode:'srs',queue:due.concat(shuffle(fresh.map(c=>({...c,isNew:1})))),i:0,ok:0,again:0,shown:false,dir:'f'};paint();}
+let freeSrc='all';
+function startFree(){let d=deckAll();if(freeSrc==='last'){const l=(D.lessons||[]).find(x=>x.topic)?.topic;d=d.filter(x=>x.l===l);}else if(freeSrc==='weak'){const s=S();d=d.filter(x=>!s.c[x.k]||s.c[x.k].b<3);}
+ ses={mode:'free',queue:shuffle(d),i:0,ok:0,again:0,shown:false,dir:ses&&ses.dir||'f'};if(!d.length){ses=null;toast('אין כרטיסיות בבחירה הזאת');}paint();}
+function answer(ok){const c=ses.queue[ses.i];if(!c)return;
+ if(ses.mode==='srs'){const s=S(),t=today(),st=s.c[c.k]||{b:0};s.d[t]=s.d[t]||{r:0,n:0};
+  if(!s.c[c.k]&&!c.again)s.d[t].n++;s.d[t].r++;
+  if(ok){st.b=Math.min(6,(st.b||0)+1);st.due=addD(t,INT[st.b]);}else{st.b=1;st.due=t;ses.queue.push({...c,again:1});}
+  s.c[c.k]=st;const keys=Object.keys(s.d).sort();if(keys.length>120)keys.slice(0,keys.length-120).forEach(k=>delete s.d[k]);LS.set('cf_srs',s);}
+ else if(!ok)ses.queue.push({...c,again:1});
+ ok?ses.ok++:ses.again++;ses.i++;ses.shown=false;if(ses.queue.length>ses.i+80)ses.queue.length=ses.i+80;paint();}
+
+/* ── render ── */
+function render(){const v=D.vocab||[],ex=D.expr||[],t=D.teacher||{};
  $('#app').innerHTML=`
  <div class="hero"><div class="avatar">${esc((D.name||'·').trim()[0]||'·')}</div><h1>שלום ${esc(D.name||'')} 👋</h1><p>${esc([D.lang,D.level].filter(Boolean).join(' · '))}${t.name?' · עם '+esc(t.name):''}</p></div>
  <div class="kpis"><div class="kpi"><b>${D.count||0}</b><span>שיעורים</span></div><div class="kpi"><b>${v.length}</b><span>מילים</span></div><div class="kpi"><b>${ex.length}</b><span>ביטויים</span></div><div class="kpi"><b>${D.hw==null?'—':D.hw+'%'}</b><span>שיעורי בית</span></div></div>
- ${D.next?`<div class="next"><span class="ic">📅</span><div><small>השיעור הבא</small><b>יום ${DAYS[pk(D.next.d).getDay()]} ${fmtD(D.next.d)} · ${esc(D.next.t)}</b></div></div>`:''}
- <div class="tabs" role="tablist">${[['cards','🃏 תרגול'],['words','📚 מילים'],['expr','💬 ביטויים'],['rules','📐 כללים'],['hw','📝 שיעורי בית'],['lessons','📅 שיעורים']].map(([k,n])=>`<button class="tab ${tab===k?'on':''}" data-tab="${k}" role="tab" aria-selected="${tab===k}">${n}</button>`).join('')}</div>
+ ${D.next?`<div class="next"><span class="ic">📅</span><div><small>השיעור הבא</small><b>${dayL(D.next.d)} · ${esc(D.next.t)}</b></div></div>`:''}
+ <div class="tabs" role="tablist">${[['today','🎯 היום'],['words','📚 מילים'],['expr','💬 ביטויים'],['rules','📐 כללים'],['hw','📝 שיעורי בית'],['book','📅 שיעורים']].map(([k,n])=>`<button class="tab ${tab===k?'on':''}" data-tab="${k}" role="tab" aria-selected="${tab===k}">${n}</button>`).join('')}</div>
  <div id="pane">${pane()}</div>
  ${t.wa?`<div style="text-align:center;margin-top:1rem"><a class="btn wa" href="https://wa.me/${esc(t.wa)}" target="_blank" rel="noopener">💬 שאלה למורה</a></div>`:''}
  <p class="foot">הדף מתעדכן אחרי כל שיעור.<br>הקישור אישי — אל תשתף אותו.</p>`;
- if(tab==='cards')bindCard();}
-function grouped(list,row){if(!list.length)return '';let out='',last=null;const ql=q.toLowerCase();
+ if(tab==='book')loadSlots();}
+function paint(){const p=$('#pane');if(p)p.innerHTML=pane();if(tab==='book')loadSlots(true);}
+const emptyMsg=t=>`<div class="card empty">${t}</div>`;
+function grouped(list,row){let out='',last=null;const ql=q.toLowerCase();
  list.filter(x=>!ql||JSON.stringify(x).toLowerCase().includes(ql)).sort((a,b)=>String(b.d).localeCompare(String(a.d))).forEach(x=>{if(x.l!==last){out+=`<div class="group">${esc(x.l||'שיעור')} · ${fmtD(x.d)}</div>`;last=x.l;}out+=row(x);});return out||'<div class="empty">לא נמצא</div>';}
 function pane(){
- if(tab==='words'){const v=D.vocab||[];if(!v.length)return emptyMsg('המילים שתלמד יופיעו כאן אחרי השיעור');
-  return `<div class="card"><input class="search" id="q" placeholder="🔍 חיפוש מילה…" value="${esc(q)}">${grouped(v,x=>`<div class="w"><div class="wd${arCls(x.w)}" dir="auto">${esc(x.w)}</div><div class="mn" dir="auto">${esc(x.m)}${x.t?`<div class="tr">${esc(x.t)}</div>`:''}</div>${x.e?`<div class="ex${arCls(x.e)}" dir="auto">${esc(x.e)}</div>`:''}</div>`)}</div>`;}
+ if(tab==='words'){const v=D.vocab||[];if(!v.length)return emptyMsg('המילים שתלמד יופיעו כאן אחרי השיעור');const s=S();
+  return `<div class="card"><input class="search" id="q" placeholder="🔍 חיפוש מילה…" value="${esc(q)}">${grouped(v,x=>{const st=s.c['w:'+x.w];return `<div class="w"><div class="wd${arCls(x.w)}" dir="auto">${esc(x.w)} ${st&&st.b>=4?'<span title="שולט" style="font-size:.8rem">⭐</span>':''}</div><div class="mn" dir="auto">${esc(x.m)}${x.t?`<div class="tr">${esc(x.t)}</div>`:''}</div>${x.e?`<div class="ex${arCls(x.e)}" dir="auto">${esc(x.e)}</div>`:''}</div>`;})}</div>`;}
  if(tab==='expr'){const v=D.expr||[];if(!v.length)return emptyMsg('הביטויים שתלמד יופיעו כאן');
   return `<div class="card"><input class="search" id="q" placeholder="🔍 חיפוש ביטוי…" value="${esc(q)}">${grouped(v,x=>`<div class="w"><div class="wd${arCls(x.p)}" dir="auto">${esc(x.p)}</div><div class="mn" dir="auto">${esc(x.m)}</div></div>`)}</div>`;}
  if(tab==='rules'){const v=D.rules||[];if(!v.length)return emptyMsg('כללי הדקדוק שתלמד יופיעו כאן');
   return `<div class="card">${grouped(v,x=>`<div class="rule"><b dir="auto">${esc(x.r)}</b>${x.e?`<span class="${isAr(x.e)?'ar':''}" dir="auto">${esc(x.e)}</span>`:''}</div>`)}</div>`;}
- if(tab==='hw'){const h=(D.lessons||[]).filter(l=>l.hw);if(!h.length)return emptyMsg('אין כרגע שיעורי בית 🎉');
-  return `<div class="card">${h.map((l,i)=>{const s=HWS[l.hs]||(i===0?['🕐 לשיעור הבא','st-open']:['—','st-open']);return `<div class="hw"><div style="flex:1"><small>מהשיעור של יום ${DAYS[pk(l.d).getDay()]} ${fmtD(l.d)}${l.topic?' · '+esc(l.topic):''}</small><div dir="auto">${esc(l.hw)}</div></div><span class="st ${s[1]}">${s[0]}</span></div>`;}).join('')}</div>`;}
- if(tab==='lessons'){const ls=D.lessons||[];if(!ls.length)return emptyMsg('עוד לא התקיימו שיעורים');
-  return `<div class="card">${ls.map(l=>`<div class="ls"><div class="dt">${fmtD(l.d)}<small>${DAYS[pk(l.d).getDay()]}</small></div><div><b>${esc(l.topic||'שיעור')}</b>${l.topics?`<div style="font-size:.86rem;color:var(--soft);margin-top:2px">📌 ${esc(l.topics)}</div>`:''}${l.hw?`<div style="font-size:.84rem;color:var(--muted);margin-top:3px">📝 ${esc(l.hw)}</div>`:''}</div></div>`).join('')}</div>`;}
- return cardsPane();}
-const emptyMsg=t=>`<div class="card empty">${t}</div>`;
-function cardsPane(){const all=deckAll();if(!all.length)return emptyMsg('כרטיסיות התרגול ייבנו מהמילים והביטויים שתלמד בשיעורים 🃏');
- if(!fc.queue.length&&fc.i===0)buildDeck();
- const k=known(),tot=fc.queue.length,c=fc.queue[fc.i];
- const opts=`<div class="fc-opts">${[['all','הכל'],['new','רק מה שעוד לא יודע'],['last','השיעור האחרון']].map(([v,t])=>`<button class="chip ${fc.src===v?'on':''}" data-src="${v}">${t}</button>`).join('')}<button class="chip" data-dir="1" title="החלף כיוון">${fc.dir==='f'?'מילה ← משמעות':'משמעות ← מילה'} ⇄</button></div>`;
- if(!tot)return `<div class="card">${opts}<div class="done"><div class="big">🏆</div><h3>${fc.src==='new'?'אתה כבר יודע הכל!':'אין כרטיסיות כאן'}</h3><p>${k.size} מתוך ${all.length} מסומנים כ"יודע".</p><div style="margin-top:12px"><button class="btn ghost" data-reset="1">התחל מחדש את הכל</button></div></div></div>`;
- if(!c)return `<div class="card">${opts}<div class="done"><div class="big">🎉</div><h3>סיימת סבב!</h3><p>ידעת ${fc.ok} · לחזרה ${fc.again}</p><div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn" data-restart="1">🔁 סבב נוסף</button><button class="btn ghost" data-src="new">רק מה שעוד לא יודע</button></div></div></div>`;
- const front=fc.dir==='f'?c.f:c.b,back=fc.dir==='f'?c.b:c.f;
- return `<div class="card">${opts}<div class="prog"><span style="width:${Math.round(fc.i/tot*100)}%"></span></div>
-  <div class="flip ${fc.shown?'show':''}" id="flip" tabindex="0" role="button" aria-label="הפוך כרטיס"><div class="flip-in">
-   <div class="face front"><div class="big${isAr(front)?' ar':' he'}" dir="auto">${esc(front)}</div>${fc.dir==='f'&&c.t?'':''}<span class="tap">לחץ כדי לראות את התשובה · ${fc.i+1}/${tot}</span></div>
+ if(tab==='hw')return hwPane();
+ if(tab==='book')return bookPane();
+ return todayPane();}
+
+/* today */
+function todayPane(){const all=deckAll();
+ if(!all.length)return emptyMsg('🃏 כרטיסיות התרגול ייבנו מהמילים והביטויים שתלמד בשיעורים.<br>אחרי השיעור הקרוב — כאן יחכה לך תרגול יומי.');
+ if(ses)return sessionPane();
+ const {s,due,fresh}=plan(),t=today(),done=(s.d[t]&&s.d[t].r)||0,goal=s.goal,pct=Math.min(1,done/goal),st=streak(s);
+ const mastered=all.filter(c=>s.c[c.k]&&s.c[c.k].b>=4).length,learning=all.filter(c=>s.c[c.k]&&s.c[c.k].b<4).length,nw=all.length-mastered-learning;
+ const R=46,C=2*Math.PI*R;
+ return `<div class="card"><div class="today">
+  <div class="ring"><svg width="108" height="108" viewBox="0 0 108 108"><circle cx="54" cy="54" r="${R}" fill="none" stroke="#EEF2F7" stroke-width="10"/><circle cx="54" cy="54" r="${R}" fill="none" stroke="${pct>=1?'#2F8F63':'#4B7FCC'}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/></svg><div class="in"><b>${done}</b><span>מתוך ${goal}</span></div></div>
+  <div><span class="streak ${st?'':'off'}">🔥 ${st?st+' '+(st===1?'יום':'ימים')+' ברצף':'התחל רצף היום'}</span>
+   <div class="todo"><span>📌 <b>${due.length}</b> לחזרה</span><span>✨ <b>${fresh.length}</b> חדשות</span></div>
+   <div style="font-size:.84rem;color:var(--soft)">${pct>=1?'🎉 עמדת במטרה היומית!':'המטרה היומית: '+goal+' כרטיסיות'}</div></div></div>
+  ${due.length+fresh.length?`<button class="btn big-btn" data-go="srs">▶ ${done?'המשך':'התחל'} תרגול יומי (${due.length+fresh.length})</button>`:`<div class="done" style="padding:.8rem 0 0"><h3 style="font-size:1.05rem">✅ סיימת את החזרות של היום</h3><p>הכרטיסיות הבאות יחכו לך מחר.</p></div>`}
+  <div style="margin-top:16px"><div style="display:flex;justify-content:space-between;font-size:.8rem;font-weight:700"><span>ההתקדמות שלי</span><span style="color:var(--green)">${mastered} מתוך ${all.length} שולט</span></div>
+   <div class="master">${mastered?`<i style="flex:${mastered};background:#2F8F63"></i>`:''}${learning?`<i style="flex:${learning};background:#4B7FCC"></i>`:''}${nw?`<i style="flex:${nw};background:#D5DDEA"></i>`:''}</div>
+   <div class="mleg"><span><i style="background:#2F8F63"></i>שולט (${mastered})</span><span><i style="background:#4B7FCC"></i>בלמידה (${learning})</span><span><i style="background:#D5DDEA"></i>חדש (${nw})</span></div></div>
+  <div class="goal">מטרה יומית: ${[10,15,25].map(g=>`<button class="chip ${goal===g?'on':''}" data-goal="${g}">${g}</button>`).join('')} · מילים חדשות ביום: ${[3,5,10].map(g=>`<button class="chip ${s.newPer===g?'on':''}" data-newper="${g}">${g}</button>`).join('')}</div></div>
+ <div class="card"><div class="card-t">🃏 תרגול חופשי <span style="font-weight:500">לא משפיע על החזרות</span></div>
+  <div class="fc-opts">${[['all','הכל'],['weak','מה שעוד קשה לי'],['last','השיעור האחרון']].map(([v,t])=>`<button class="chip ${freeSrc===v?'on':''}" data-free="${v}">${t}</button>`).join('')}</div>
+  <button class="btn ghost" data-go="free" style="width:100%">▶ תרגול חופשי</button></div>`;}
+function sessionPane(){const c=ses.queue[ses.i],tot=ses.queue.length;
+ const head=`<div class="card-t"><span>${ses.mode==='srs'?'🎯 תרגול יומי':'🃏 תרגול חופשי'}</span><span><button class="chip" data-dir="1" title="החלף כיוון">${ses.dir==='f'?'מילה ← משמעות':'משמעות ← מילה'} ⇄</button> <button class="chip" data-stop="1">סיום</button></span></div>`;
+ if(!c){const s=S(),t=today(),done=(s.d[t]&&s.d[t].r)||0,goalMet=done>=s.goal;
+  return `<div class="card">${head}<div class="done"><div class="big">${goalMet?'🏆':'🎉'}</div><h3>${ses.mode==='srs'?'סיימת את התרגול היומי!':'סיימת סבב!'}</h3><p>ידעת ${ses.ok} · לחזרה ${ses.again}${ses.mode==='srs'?` · 🔥 ${streak(s)} ימים ברצף`:''}</p><div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn" data-stop="1">חזרה למסך היום</button></div></div></div>`;}
+ const front=ses.dir==='f'?c.f:c.b,back=ses.dir==='f'?c.b:c.f;
+ return `<div class="card">${head}<div class="prog"><span style="width:${Math.round(ses.i/tot*100)}%"></span></div>
+  <div class="flip ${ses.shown?'show':''}" id="flip" tabindex="0" role="button" aria-label="הפוך כרטיס"><div class="flip-in">
+   <div class="face front">${c.isNew&&!c.again?'<span class="tag-new">✨ חדשה</span>':''}<div class="big${isAr(front)?' ar':' he'}" dir="auto">${esc(front)}</div><span class="tap">לחץ כדי לראות את התשובה · ${ses.i+1}/${tot}</span></div>
    <div class="face back"><div class="big${isAr(back)?' ar':' he'}" dir="auto">${esc(back)}</div>${c.t?`<div class="sub" dir="ltr">${esc(c.t)}</div>`:''}${c.e?`<div class="sub${isAr(c.e)?' ar':''}" dir="auto">${esc(c.e)}</div>`:''}<span class="tap">${esc(c.l||'')}</span></div>
   </div></div>
-  <div class="fc-btns"><button class="fbtn no" data-ans="0" ${fc.shown?'':'disabled'}>🔁 עוד לא</button><button class="fbtn yes" data-ans="1" ${fc.shown?'':'disabled'}>✅ ידעתי</button></div></div>`;}
-function bindCard(){}
-function answer(ok){const c=fc.queue[fc.i];if(!c)return;const k=known();if(ok){k.add(c.k);fc.ok++;}else{k.delete(c.k);fc.again++;fc.queue.push({...c});}saveKnown(k);fc.i++;fc.shown=false;
- if(fc.queue.length>fc.i+60)fc.queue=fc.queue.slice(0,fc.i+60);$('#pane').innerHTML=pane();}
-document.addEventListener('click',e=>{
- const tb=e.target.closest('[data-tab]');if(tb){tab=tb.dataset.tab;q='';render();return;}
- if(e.target.closest('#flip')){fc.shown=!fc.shown;$('#flip').classList.toggle('show',fc.shown);document.querySelectorAll('[data-ans]').forEach(b=>b.disabled=!fc.shown);return;}
+  <div class="fc-btns"><button class="fbtn no" data-ans="0" ${ses.shown?'':'disabled'}>🔁 עוד לא</button><button class="fbtn yes" data-ans="1" ${ses.shown?'':'disabled'}>✅ ידעתי</button></div></div>`;}
+
+/* homework */
+function hwPane(){const h=(D.lessons||[]).filter(l=>l.hw);if(!h.length)return emptyMsg('אין כרגע שיעורי בית 🎉');const sent=LS.get('cf_sent',{hw:{}});
+ return `<div class="card">${h.map((l,i)=>{const ls=sent.hw&&sent.hw[l.d],sub=l.sub?l.sub.x:ls,st=HWS[l.hs]||(sub?['📨 הוגש','st-open']:i===0?['🕐 לשיעור הבא','st-open']:['—','st-open']);
+  const canSend=D.book&&!l.hs&&!sub&&i<3;
+  return `<div class="hw" style="flex-direction:column;align-items:stretch"><div style="display:flex;gap:12px;align-items:flex-start"><div style="flex:1"><small>מהשיעור של ${dayL(l.d)}${l.topic?' · '+esc(l.topic):''}</small><div dir="auto">${esc(l.hw)}</div></div><span class="st ${st[1]}">${st[0]}</span></div>
+   ${sub?`<div class="sent"><small>📨 מה ששלחת${l.sub?'':' (נשלח — המורה יקרא)'}</small><div dir="auto">${esc(sub)}</div></div>`:''}
+   ${l.fb?`<div class="fbk"><small>💬 משוב מהמורה</small><div dir="auto">${esc(l.fb)}</div></div>`:''}
+   ${canSend?`<div style="margin-top:8px"><textarea class="ta" id="hw-${esc(l.d)}" dir="auto" maxlength="3000" placeholder="כתוב כאן את התשובה / המשפטים / מה שהכנת…"></textarea><button class="btn" style="margin-top:8px" data-hwsend="${esc(l.d)}">📨 שלח למורה</button></div>`:''}</div>`;}).join('')}</div>`;}
+
+/* lessons & booking */
+let SL=null,slD='',slT='';
+function bookPane(){const sent=LS.get('cf_sent',{book:[],cx:[]}),cx=new Set([...(D.pendCx||[]),...(sent.cx||[])]),up=D.upcoming||[],past=D.lessons||[];
+ return `<div class="card"><div class="card-t">📅 השיעורים הקרובים</div>
+  ${up.length?up.map(u=>`<div class="up"><div class="ls" style="padding:0;border:none"><div class="dt">${fmtD(u.d)}<small>${DAYS[pk(u.d).getDay()]}</small></div></div><div style="flex:1"><b>${esc(u.t)}</b> <span style="color:var(--muted);font-size:.84rem">· ${u.dur} דק׳${u.lang?' · '+esc(u.lang):''}</span></div>${cx.has(u.d+'T'+u.t)?'<span class="pill p-amber">בקשת ביטול נשלחה</span>':D.book?`<button class="lnk" data-cx="${esc(u.d+'T'+u.t)}">בקש ביטול</button>`:''}</div>`).join(''):'<div class="empty" style="padding:.6rem">אין כרגע שיעורים מתוכננים</div>'}
+  ${(sent.book||[]).map(b=>`<div class="up"><div class="ls" style="padding:0;border:none"><div class="dt">${fmtD(b.d)}<small>${DAYS[pk(b.d).getDay()]}</small></div></div><div style="flex:1"><b>${esc(b.t)}</b></div><span class="pill p-blue">⏳ ממתין לאישור</span></div>`).join('')}</div>
+ <div class="card"><div class="card-t">➕ קביעת שיעור חדש</div><div id="slots">${D.book?'<div class="empty" style="padding:.6rem"><div class="spin"></div></div>':`<p style="color:var(--soft);font-size:.9rem;margin-bottom:10px">לקביעת שיעור — כתוב למורה:</p>${D.teacher&&D.teacher.wa?`<a class="btn wa" href="https://wa.me/${esc(D.teacher.wa)}" target="_blank" rel="noopener">💬 וואטסאפ</a>`:''}`}</div></div>
+ ${past.length?`<div class="card"><div class="card-t">✔️ שיעורים שהתקיימו</div>${past.map(l=>`<div class="ls"><div class="dt">${fmtD(l.d)}<small>${DAYS[pk(l.d).getDay()]}</small></div><div><b>${esc(l.topic||'שיעור')}</b>${l.topics?`<div style="font-size:.86rem;color:var(--soft);margin-top:2px">📌 ${esc(l.topics)}</div>`:''}${l.hw?`<div style="font-size:.84rem;color:var(--muted);margin-top:3px">📝 ${esc(l.hw)}</div>`:''}</div></div>`).join('')}</div>`:''}`;}
+async function loadSlots(keep){const box=$('#slots');if(!box||!D.book)return;
+ if(!SL||!keep){try{const r=await fetch('availability.json?t='+Date.now(),{cache:'no-store'});const a=await r.json();SL=a.slots||{};}catch(e){SL={};}}
+ const from=addD(today(),1),days=Object.keys(SL).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)&&d>=from&&Array.isArray(SL[d])&&SL[d].length).sort().slice(0,21);
+ const b=$('#slots');if(!b)return;
+ if(!days.length){b.innerHTML=`<div class="empty" style="padding:.6rem">אין כרגע שעות פנויות — שעות חדשות נפתחות מדי שבוע.</div>`;return;}
+ if(slD&&!days.includes(slD)){slD='';slT='';}
+ b.innerHTML=`<div class="slots">${days.map(d=>`<button class="dchip ${slD===d?'on':''}" data-sd="${d}"><small>${DSH[pk(d).getDay()]}</small><b>${fmtD(d)}</b></button>`).join('')}</div>
+  ${slD?`<div class="tgrid">${SL[slD].filter(t=>/^\d{2}:\d{2}$/.test(t)).sort().map(t=>`<button class="tchip ${slT===t?'on':''}" data-st="${t}">${t}</button>`).join('')}</div>`:'<p style="color:var(--muted);font-size:.84rem;margin-top:8px">בחר יום</p>'}
+  ${slD&&slT?`<textarea class="ta" id="bk-notes" style="margin-top:10px;min-height:56px" maxlength="300" placeholder="הערה למורה (לא חובה)"></textarea><button class="btn" style="width:100%;margin-top:10px" data-book="1">📩 בקש שיעור ב${dayL(slD)} · ${slT}</button>`:''}`;}
+
+/* ── sending to teacher (via the teacher's Google script) ── */
+async function send(body){const a=new Uint8Array(12);crypto.getRandomValues(a);const rid=[...a].map(x=>(x%36).toString(36)).join('');
+ let res=null;const c=new AbortController(),t=setTimeout(()=>c.abort(),30000);
+ try{const r=await fetch(D.book,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'portal',pid:ID,wt:WT,rid,...body}),signal:c.signal});res=await r.json();}catch(e){res=null;}finally{clearTimeout(t);}
+ if(!res||res.error==='server'){for(let i=0;i<4;i++){await sleep(i?2500:1200);try{const r=await fetch(D.book+'?check='+rid,{cache:'no-store'});const j=await r.json();if(j&&j.received)return{ok:true};}catch(e){}}}
+ return res||{ok:false,error:'network'};}
+async function busy(btn,fn){if(btn.disabled)return;const old=btn.innerHTML;btn.disabled=true;btn.innerHTML='<span class="spin" style="width:16px;height:16px;border-width:2px;margin:0;display:inline-block;border-color:rgba(255,255,255,.4);border-top-color:#fff"></span> שולח…';try{await fn();}finally{btn.disabled=false;btn.innerHTML=old;}}
+function sheet(html){$('#sheet').innerHTML=html;$('#ovl').classList.add('open');}
+const closeSheet=()=>$('#ovl').classList.remove('open');
+
+document.addEventListener('click',async e=>{
+ const tb=e.target.closest('[data-tab]');if(tb){tab=tb.dataset.tab;q='';ses=tab==='today'?ses:null;render();return;}
+ if(e.target.closest('#flip')){ses.shown=!ses.shown;$('#flip').classList.toggle('show',ses.shown);document.querySelectorAll('[data-ans]').forEach(b=>b.disabled=!ses.shown);return;}
  const a=e.target.closest('[data-ans]');if(a)return answer(a.dataset.ans==='1');
- const s=e.target.closest('[data-src]');if(s){fc.src=s.dataset.src;buildDeck();$('#pane').innerHTML=pane();return;}
- if(e.target.closest('[data-dir]')){fc.dir=fc.dir==='f'?'b':'f';fc.shown=false;$('#pane').innerHTML=pane();return;}
- if(e.target.closest('[data-restart]')){buildDeck();$('#pane').innerHTML=pane();return;}
- if(e.target.closest('[data-reset]')){saveKnown(new Set());fc.src='all';buildDeck();$('#pane').innerHTML=pane();}
+ const g=e.target.closest('[data-go]');if(g)return g.dataset.go==='srs'?startSrs():startFree();
+ if(e.target.closest('[data-stop]')){ses=null;paint();return;}
+ if(e.target.closest('[data-dir]')){ses.dir=ses.dir==='f'?'b':'f';ses.shown=false;paint();return;}
+ const fr=e.target.closest('[data-free]');if(fr){freeSrc=fr.dataset.free;paint();return;}
+ const gl=e.target.closest('[data-goal]');if(gl){const s=S();s.goal=+gl.dataset.goal;LS.set('cf_srs',s);paint();return;}
+ const np=e.target.closest('[data-newper]');if(np){const s=S();s.newPer=+np.dataset.newper;LS.set('cf_srs',s);paint();return;}
+ const sd=e.target.closest('[data-sd]');if(sd){slD=sd.dataset.sd;slT='';loadSlots(true);return;}
+ const stt=e.target.closest('[data-st]');if(stt){slT=stt.dataset.st;loadSlots(true);return;}
+ const bk=e.target.closest('[data-book]');if(bk)return busy(bk,async()=>{const r=await send({type:'book',date:slD,time:slT,notes:($('#bk-notes')||{}).value||''});
+  if(r.ok){const s=LS.get('cf_sent',{hw:{},book:[],cx:[]});s.book=(s.book||[]).concat({d:slD,t:slT,at:Date.now()});LS.set('cf_sent',s);if(SL[slD])SL[slD]=SL[slD].filter(t=>t!==slT);slD='';slT='';paint();toast('✅ הבקשה נשלחה — המורה יאשר בוואטסאפ');}
+  else{toast(ERR[r.error]||'השליחה נכשלה — נסה שוב');if(r.error==='slot_unavailable'||r.error==='slot_pending'){SL=null;slT='';loadSlots();}}});
+ const cxb=e.target.closest('[data-cx]');if(cxb){const [d,t]=cxb.dataset.cx.split('T');
+  sheet(`<h3 style="font-size:1.15rem;font-weight:800;margin-bottom:6px">בקשת ביטול</h3><p style="color:var(--soft);font-size:.92rem;margin-bottom:10px">השיעור ב${dayL(d)} בשעה ${esc(t)}. המורה יאשר את הביטול.</p><textarea class="ta" id="cx-notes" maxlength="300" placeholder="סיבה (לא חובה)"></textarea><div style="display:flex;gap:8px;margin-top:12px"><button class="btn" style="flex:1;background:var(--red)" data-cxsend="${esc(cxb.dataset.cx)}">שלח בקשת ביטול</button><button class="btn ghost" data-close="1">חזרה</button></div>`);return;}
+ const cxs=e.target.closest('[data-cxsend]');if(cxs){const [d,t]=cxs.dataset.cxsend.split('T');return busy(cxs,async()=>{const r=await send({type:'cancel',date:d,time:t,notes:($('#cx-notes')||{}).value||''});
+  if(r.ok){const s=LS.get('cf_sent',{hw:{},book:[],cx:[]});s.cx=(s.cx||[]).concat(cxs.dataset.cxsend);LS.set('cf_sent',s);closeSheet();paint();toast('✅ בקשת הביטול נשלחה');}else toast(ERR[r.error]||'השליחה נכשלה — נסה שוב');});}
+ if(e.target.closest('[data-close]')||e.target.id==='ovl'){closeSheet();return;}
+ const hs=e.target.closest('[data-hwsend]');if(hs){const d=hs.dataset.hwsend,ta=document.getElementById('hw-'+d),text=(ta&&ta.value||'').trim();if(!text)return toast(ERR.empty);
+  return busy(hs,async()=>{const r=await send({type:'hw',date:d,text});if(r.ok){const s=LS.get('cf_sent',{hw:{},book:[],cx:[]});s.hw=s.hw||{};s.hw[d]=text;LS.set('cf_sent',s);paint();toast('📨 נשלח למורה!');}else toast(ERR[r.error]||'השליחה נכשלה — נסה שוב');});}
 });
 document.addEventListener('input',e=>{if(e.target.id==='q'){q=e.target.value;const pos=e.target.selectionStart;$('#pane').innerHTML=pane();const n=$('#q');n.focus();n.setSelectionRange(pos,pos);}});
-document.addEventListener('keydown',e=>{if(tab!=='cards'||!D)return;if(e.target.tagName==='INPUT')return;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();if(!ses||!D||tab!=='today')return;if(['INPUT','TEXTAREA'].includes(e.target.tagName))return;
  if(e.key===' '||e.key==='Enter'){const f=$('#flip');if(f){e.preventDefault();f.click();}}
- else if(fc.shown&&(e.key==='ArrowLeft'||e.key==='1'))answer(true);else if(fc.shown&&(e.key==='ArrowRight'||e.key==='2'))answer(false);});
+ else if(ses.shown&&(e.key==='ArrowLeft'||e.key==='1'))answer(true);else if(ses.shown&&(e.key==='ArrowRight'||e.key==='2'))answer(false);});
 addEventListener('hashchange',()=>location.reload());
 load();
 </script>
