@@ -12,12 +12,11 @@
  "lessonDuration": 60,
  "slots": {
   "2026-10-27": [
-   "13:00",
    "14:00",
    "15:00",
    "16:00"
   ]
  },
  "bookingUrl": "https://script.google.com/macros/s/AKfycbysPIyabIvKqTxHGrmF7dpgFQczV65EQzoTYlcGYIqsKqSiXeBXlcLUomW77TmbXF98/exec",
- "updatedAt": "2026-10-09T08:56:34.800Z"
+ "updatedAt": "2026-10-09T09:19:32.096Z"
 }
